@@ -1,8 +1,8 @@
 {
     "copyright": "© 2016 David West",
-    "description": "When you absolutely need to work with ADO.NET but want to ditch 95% of the boilerplate code. Perfect fit if you need to create queries and/or map data to complex objects that you won't trust to your ORM. Intuitively parameterize queries and commands, stream records, process multiple result sets with ease, batch operations into a single transaction, build scripts with dynamically-generated parameters, and if you wish, do things asynchronously.  Fast and featherweight.",
+    "description": "When you absolutely need to work with ADO.NET but want to ditch 95% of the boilerplate code. Perfect fit if you need to create queries and/or map data to complex objects that you won't trust to your ORM.",
     "title": "FluidDbClient",
-    "version": "1.0.0.0",
+    "version": "1.0.1",
 
     "dependencies": {
         "Microsoft.CSharp": "4.0.1",
@@ -17,7 +17,8 @@
         },
         "netstandard1.6": {
             "imports": "dnxcore50"
-        }
+        },
+        "net452": {}
     },
 
     "scripts": {

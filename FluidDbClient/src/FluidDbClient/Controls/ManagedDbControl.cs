@@ -34,7 +34,7 @@ namespace FluidDbClient
 
         public int Timeout { get; set; }
 
-        public IReadOnlyCollection<DbParameter> Parameters => _parameters.Values;
+        public IReadOnlyCollection<DbParameter> Parameters => _parameters.Values.ToArray();
         
         public object this[string parameterName]
         {

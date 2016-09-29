@@ -2,7 +2,7 @@
     "title": "FluidDbClient.Sandbox",
     "copyright": "© 2016 David West",
     "description": "FluidDbClient demos and examples",
-    "version": "1.0.0-0",
+    "version": "1.0.0",
   "buildOptions": {
     "emitEntryPoint": true
   },
@@ -13,8 +13,8 @@
             "type": "platform",
             "version": "1.0.1"
         },
-        "FluidDbClient": "1.0.0-*",
-        "FluidDbClient.Sql": "1.0.0-*",
+        "FluidDbClient": "1.0.1",
+        "FluidDbClient.Sql": "1.0.1",
         "System.Dynamic.Runtime": "4.0.11"
     },
 
