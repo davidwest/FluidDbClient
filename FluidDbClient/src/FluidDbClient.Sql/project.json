@@ -2,7 +2,7 @@
     "copyright": "© 2016 David West",
     "title": "FluidDbClient.Sql",
     "description": "Sql Server provider for FluidDbClient.  This library also makes building data for Table-Valued Parameters a snap.",
-    "version": "1.0.0-0",
+    "version": "1.0.0.0",
 
     "dependencies": {
         "NETStandard.Library": "1.6.0",
@@ -17,5 +17,11 @@
         "netstandard1.6": {
             "imports": "dnxcore50"
         }
+    },
+
+    "scripts": {
+        "postcompile": [
+            "dotnet pack --no-build --configuration %compile:Configuration%"
+        ]
     }
 }
