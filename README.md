@@ -1,0 +1,2 @@
+# FluidDbClient
+When you absolutely need to work with ADO.NET but want to ditch 95% of the boilerplate code. Perfect fit if you need to create queries and/or map data to complex objects that you won't trust to your ORM. Intuitively parameterize queries and commands, stream records, process multiple result sets with ease, batch operations into a single transaction, build scripts with dynamically-generated parameters, and if you wish, do things asynchronously.  Fast and featherweight.
