@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D2C3E169-5C9E-4495-A1E7-515EC291D387}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6757D949-58ED-4D3C-A257-D894FBAF249A}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidDbClient", "src\FluidDbClient\FluidDbClient.xproj", "{4FC4AE22-3362-4112-A309-0BD2FE2B9A51}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluidDbClient.Sql", "src\FluidDbClient.Sql\FluidDbClient.Sql.xproj", "{5B956103-15AF-4387-A55D-C64B37372A66}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sandbox", "src\Sandbox\Sandbox.xproj", "{5B294028-A55C-4828-9F17-74AB63D6A0EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4FC4AE22-3362-4112-A309-0BD2FE2B9A51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC4AE22-3362-4112-A309-0BD2FE2B9A51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC4AE22-3362-4112-A309-0BD2FE2B9A51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC4AE22-3362-4112-A309-0BD2FE2B9A51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B956103-15AF-4387-A55D-C64B37372A66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B956103-15AF-4387-A55D-C64B37372A66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B956103-15AF-4387-A55D-C64B37372A66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B956103-15AF-4387-A55D-C64B37372A66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B294028-A55C-4828-9F17-74AB63D6A0EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B294028-A55C-4828-9F17-74AB63D6A0EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B294028-A55C-4828-9F17-74AB63D6A0EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B294028-A55C-4828-9F17-74AB63D6A0EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4FC4AE22-3362-4112-A309-0BD2FE2B9A51} = {D2C3E169-5C9E-4495-A1E7-515EC291D387}
+		{5B956103-15AF-4387-A55D-C64B37372A66} = {D2C3E169-5C9E-4495-A1E7-515EC291D387}
+		{5B294028-A55C-4828-9F17-74AB63D6A0EC} = {D2C3E169-5C9E-4495-A1E7-515EC291D387}
+	EndGlobalSection
+EndGlobal

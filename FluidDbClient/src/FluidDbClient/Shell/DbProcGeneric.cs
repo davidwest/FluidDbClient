@@ -1,0 +1,324 @@
+﻿
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+
+namespace FluidDbClient.Shell
+{
+    public static class DbProc<TDatabase> where TDatabase : Database
+    {
+        #region --- Synchronous Queries ---
+
+        public static T GetScalar<T>(string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).GetScalar<T>();
+        }
+
+        public static T GetScalar<T>(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(session, script, parameters).GetScalar<T>();
+        }
+
+        public static T GetScalar<T>(string script, T dbNullSubstitute, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).GetScalar(dbNullSubstitute);
+        }
+
+        public static T GetScalar<T>(DbSession<TDatabase> session, string script, T dbNullSubstitute, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(session, script, parameters).GetScalar(dbNullSubstitute);
+        }
+
+
+
+        public static IDataRecord GetRecord(string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).GetRecord();
+        }
+
+        public static IDataRecord GetRecord(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(session, script, parameters).GetRecord();
+        }
+
+
+
+        public static IEnumerable<IDataRecord> GetResultSet(string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).GetResultSet();
+        }
+
+        public static IEnumerable<IDataRecord> GetResultSet(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(session, script, parameters).GetResultSet();
+        }
+
+
+
+        public static void ProcessResultSets(string script, object parameters, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new StoredProcedureDbQuery<TDatabase>(script, parameters).ProcessResultSets(processes);
+        }
+
+        public static void ProcessResultSets(DbSession<TDatabase> session, string script, object parameters, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new StoredProcedureDbQuery<TDatabase>(session, script, parameters).ProcessResultSets(processes);
+        }
+
+        public static void ProcessResultSets(string script, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new StoredProcedureDbQuery<TDatabase>(script).ProcessResultSets(processes);
+        }
+
+        public static void ProcessResultSets(DbSession<TDatabase> session, string script, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new StoredProcedureDbQuery<TDatabase>(session, script).ProcessResultSets(processes);
+        }
+        
+
+
+        public static List<IDataRecord>[] CollectResultSets(int resultCount, string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSets(resultCount);
+        }
+
+        public static List<IDataRecord>[] CollectResultSets(DbSession<TDatabase> session, int resultCount, string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSets(resultCount);
+        }
+        
+        public static List<dynamic>[] CollectResultSetsDynamic(int resultCount, string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSetsDynamic(resultCount);
+        }
+
+        public static List<dynamic>[] CollectResultSetsDynamic(DbSession<TDatabase> session, int resultCount, string script, object parameters = null)
+        {
+            return new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSetsDynamic(resultCount);
+        }
+
+        #endregion
+
+
+        #region --- Async Queries ---
+
+        public static async Task<T> GetScalarAsync<T>(string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).GetScalarAsync<T>();
+        }
+
+        public static async Task<T> GetScalarAsync<T>(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).GetScalarAsync<T>();
+        }
+
+        public static async Task<T> GetScalarAsync<T>(string script, T dbNullSubstitute, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).GetScalarAsync(dbNullSubstitute);
+        }
+
+        public static async Task<T> GetScalarAsync<T>(DbSession<TDatabase> session, T dbNullSubstitute, string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).GetScalarAsync(dbNullSubstitute);
+        }
+
+
+
+        public static async Task<IDataRecord> GetRecordAsync(string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).GetRecordAsync();
+        }
+
+        public static async Task<IDataRecord> GetRecordAsync(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).GetRecordAsync();
+        }
+
+
+
+        public static async Task ProcessResultSetAsync(string script, Action<IDataRecord> process)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(script).ProcessResultSetAsync(process);
+        }
+
+        public static async Task ProcessResultSetAsync(DbSession<TDatabase> session, string script, Action<IDataRecord> process)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(session, script).ProcessResultSetAsync(process);
+        }
+
+        public static async Task ProcessResultSetAsync(string script, object parameters, Action<IDataRecord> process)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(script, parameters).ProcessResultSetAsync(process);
+        }
+
+        public static async Task ProcessResultSetAsync(DbSession<TDatabase> session, string script, object parameters, Action<IDataRecord> process)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).ProcessResultSetAsync(process);
+        }
+
+
+
+        public static async Task<List<IDataRecord>> CollectResultSetAsync(string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSetAsync();
+        }
+
+        public static async Task<List<IDataRecord>> CollectResultSetAsync(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).CollectResultSetAsync();
+        }
+
+
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(string script, Func<IDataRecord, T> map)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script).CollectResultSetAsync(map);
+        }
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(DbSession<TDatabase> session, string script, Func<IDataRecord, T> map)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script).CollectResultSetAsync(map);
+        }
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(string script, object parameters, Func<IDataRecord, T> map)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSetAsync(map);
+        }
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(DbSession<TDatabase> session, string script, object parameters, Func<IDataRecord, T> map)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).CollectResultSetAsync(map);
+        }
+
+
+
+        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSetDynamicAsync();
+        }
+
+        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).CollectResultSetDynamicAsync();
+        }
+
+
+
+        public static async Task ProcessResultSetsAsync(string script, params Action<IDataRecord>[] processes)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(script).ProcessResultSetsAsync(processes);
+        }
+
+        public static async Task ProcessResultSetsAsync(DbSession<TDatabase> session, string script, params Action<IDataRecord>[] processes)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(session, script).ProcessResultSetsAsync(processes);
+        }
+
+        public static async Task ProcessResultSetsAsync(string script, object parameters, params Action<IDataRecord>[] processes)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(script, parameters).ProcessResultSetsAsync(processes);
+        }
+
+        public static async Task ProcessResultSetsAsync(DbSession<TDatabase> session, string script, object parameters, params Action<IDataRecord>[] processes)
+        {
+            await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).ProcessResultSetsAsync(processes);
+        }
+
+
+
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(string script, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script).CollectResultSetsAsync(resultCount);
+        }
+
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSession<TDatabase> session, string script, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script).CollectResultSetsAsync(resultCount);
+        }
+
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(string script, object parameters, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSetsAsync(resultCount);
+        }
+
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSession<TDatabase> session, string script, object parameters, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).CollectResultSetsAsync(resultCount);
+        }
+
+
+
+        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script).CollectResultSetsDynamicAsync(resultCount);
+        }
+
+        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSession<TDatabase> session, string script, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script).CollectResultSetsDynamicAsync(resultCount);
+        }
+
+        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, object parameters, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(script, parameters).CollectResultSetsDynamicAsync(resultCount);
+        }
+
+        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSession<TDatabase> session, string script, object parameters, int resultCount)
+        {
+            return await new StoredProcedureDbQuery<TDatabase>(session, script, parameters).CollectResultSetsDynamicAsync(resultCount);
+        }
+
+        #endregion 
+
+
+        #region --- Synchronous Commands ---
+
+        public static void Execute(string script, object parameters = null)
+        {
+            new StoredProcedureDbCommand<TDatabase>(script, parameters).Execute();
+        }
+
+        public static void Execute(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            new StoredProcedureDbCommand<TDatabase>(session, script, parameters).Execute();
+        }
+
+        public static void Execute(IsolationLevel isolationLevel, string script, object parameters = null)
+        {
+            new StoredProcedureDbCommand<TDatabase>(script, parameters).Execute(isolationLevel);
+        }
+
+        public static void Execute(DbSession<TDatabase> session, IsolationLevel isolationLevel, string script, object parameters = null)
+        {
+            new StoredProcedureDbCommand<TDatabase>(session, script, parameters).Execute(isolationLevel);
+        }
+
+        #endregion
+
+
+        #region --- Async Commands ---
+
+        public static async Task ExecuteAsync(string script, object parameters = null)
+        {
+            await new StoredProcedureDbCommand<TDatabase>(script, parameters).ExecuteAsync();
+        }
+
+        public static async Task ExecuteAsync(DbSession<TDatabase> session, string script, object parameters = null)
+        {
+            await new StoredProcedureDbCommand<TDatabase>(session, script, parameters).ExecuteAsync();
+        }
+
+        public static async Task ExecuteAsync(IsolationLevel isolationLevel, string script, object parameters = null)
+        {
+            await new StoredProcedureDbCommand<TDatabase>(script, parameters).ExecuteAsync(isolationLevel);
+        }
+
+        public static async Task ExecuteAsync(DbSession<TDatabase> session, IsolationLevel isolationLevel, string script, object parameters = null)
+        {
+            await new StoredProcedureDbCommand<TDatabase>(session, script, parameters).ExecuteAsync(isolationLevel);
+        }
+
+        #endregion
+    }
+}
