@@ -14,12 +14,12 @@ namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
             InitializeData.Start();
             Debug.WriteLine("\n!!! Initialized Data !!!\n");
 
-            /*-----------------------------------------------------------------------------------
+            /*-------------------------------------------------------------------------
             
-                This works directly with the default StructuredDataBuilder<TDatabase> class.
+                This works directly with the default StructuredDataBuilder class.
                 Meta data is derived from the object's property names and values.
 
-            ------------------------------------------------------------------------------------*/
+            ---------------------------------------------------------------------------*/
 
             var data = 
                 new StructuredDataBuilder("NewRobots")
