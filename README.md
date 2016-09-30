@@ -63,9 +63,39 @@ There are 4 concrete classes that expose all functionality:
 3. `StoredProcedureDbQuery<TDatabase>` : specify a stored procedure to return data
 4. `StoredProcedureDbCommand<TDatabase>` : specify as stored procedure to execute a command
 
-The type parameter is only essential if you are not targeting the *default database* (see above).  If you are targeting the *default database*, the type parameter can be dropped.
+**Important** : The type parameter is only essential if you are not targeting the *default database* (see above).  If you are targeting the *default database*, the type parameter can be dropped.
 
 Command operations run atomically (inside their own transaction) unless a `DbSession` instance is specified in the command object's constructor.  In this case, the command operation takes on the transaction defined by the `DbSession` object. Queries can also be constructed with a `DbSession` instance, allowing them to participate in the atomic session.
 
 Please see the included **Sandbox** console project for examples of all these classes in action.
 
+##Shell Wrapper Methods
+To keep code terse, you can use one of the many built-in "shell" wrapper methods.  These create query or command objects on your behalf and use the supplied parameters to perform the operation.
+
+###Examples
+
+Creates and invokes method on `ScriptDbQuery` targeting the default database:
+```
+var widgets = Db.GetResultSet("SELECT * FROM Widget")
+              .Select(record => record.MapToWidget());
+```
+
+
+Creates and invokes method on `StoredProcedureDbQuery<NorthwindDb>`:
+```
+var applications = DbProc<NorthwindDb>.GetResultSet("GetApplications")
+                   .Select(record => record.MapToApplication());
+```
+
+
+Creates and invokes async method on `ScriptDbCommand` targeting the default database:
+```
+await Db.ExecuteAsync("UPDATE Robot SET Name = @name WHERE id = @id", 
+                      new {name = "Terminator", id = 6});
+```
+
+Creates and invokes method on `StoredProcedureDbCommand<NorthwindDb>`
+```
+DbProc<NorthwindDb>.Execute(IsolationLevel.Snapshot, "UpdateApplicationDate", 
+                            new {id = 100, date = DateTime.Now);
+```
