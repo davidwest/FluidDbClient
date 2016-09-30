@@ -12,9 +12,60 @@ Currently, only a Sql Server provider exists for FluidDbClient.
 If you want to see FluidDbClient in action, it's recommended that you open **FluidDbClient.sln** in Visual Studio.
 Set **Sandbox** as the startup project.  Attach the included **Acme.mdf** Sql Server database file to a locally running Sql Server instance.
 
-Go to the **DemoRunner** class. All demo invocations are listed, one per line.  Run any demo you'd like and go to the associated code to see what's going on.
+Go to the **DemoRunner** class. All demo invocations are listed, one per line.  Run any demo you'd like and view the associated code to see what's going on.
 
 ## Getting Started
+All databases in you application need to be registered at startup.  This is accomplished in 2 quick steps:
 
+1. Define a database class by inheriting from `Database`. (Do this in your data access layer)
+2. Register it with the static `DbRegistry` class. (Do this in your application root)
 
+###Example
+Suppose you have 2 databases.  In your data access layer, you could define them like this:
+
+```
+public class AcmeDb : Database
+{
+    public AcmeDb(string connectionString, Action<string> log = null) 
+        : base("Acme Database", connectionString, new SqlDbProvider(), log)
+    { }
+}
+
+public class NorthwindDb : Database
+{
+    public NorthwindDb(string connectionString, Action<string> log = null) 
+        : base("Northwind Database", connectionString, new SqlDbProvider(), log)
+    { }
+}
+```
+
+> The optional `log` parameter allows you to supply a delegate for implementing run-time instrumentation. Runtime information includes when resources (DbConnections, DbTransactions, DbCommands, DbReaders) are being created and disposed. It also includes when connections are being opened and when transactions are committed or rolled back.
+
+Then, in your application root during startup, you could do something like this:
+
+```
+var acmeDb = new AcmeDb(Config["AcmeConnectionString"], msg => Debug.WriteLine(msg));
+var northwindDb = new NorthwindDb(Config["NorthwindConnectionString]);
+
+DbRegistry.Register(acmeDb, northwindDb);
+```
+
+**Important** : by convention, the first database registered is considered the *default database*. When using queries and commands (see below) that target the *default database*, a type parameter is not necessary.
+
+And that's it.  Once `DbRegistry.Register` is invoked, it cannot be called again while the application is running.
+
+##Queries and Commands
+FluidDbClient divides operations into *queries* and *commands* (see interfaces `IManagedDbQuery` and `IManagedDbCommand`).
+There are 4 concrete classes that expose all functionality:
+
+1. `ScriptDbQuery<TDatabase>` : specify a SQL script to return data
+2. `ScriptDbCommand<TDatabase>` : specify a SQL script to execute a command
+3. `StoredProcedureDbQuery<TDatabase>` : specify a stored procedure to return data
+4. `StoredProcedureDbCommand<TDatabase>` : specify as stored procedure to execute a command
+
+The type parameter is only essential if you are not targeting the *default database* (see above).  If you are targeting the *default database*, the type parameter can be dropped.
+
+Command operations run atomically (inside their own transaction) unless a `DbSession` instance is specified in the command object's constructor.  In this case, the command operation takes on the transaction defined by the `DbSession` object. Queries can also be constructed with a `DbSession` instance, allowing them to participate in the atomic session.
+
+Please see the included **Sandbox** console project for examples of all these classes in action.
 
