@@ -1,6 +1,12 @@
 # FluidDbClient
 When you absolutely need to work with ADO.NET but want to ditch 95% of the boilerplate code. Perfect fit if you need to run explicit SQL and/or map raw data to complex objects that you won't trust to your ORM. Intuitively parameterize queries and commands, stream records, process multiple result sets with ease, batch operations into a single transaction, build scripts with dynamically-generated parameters, and if you wish, do things asynchronously.  It's fast and super lightweight.
 
+All projects are created in .NET Core. The libraries (**FluidDbClient** and **FluidDbClient.Sql**) target the following frameworks:
+
+- .NETFramework 4.5.2
+- .NETStandard 1.6
+- .NETStandard 1.4
+
 ## The Nuget Package
 
 Currently, only a Sql Server provider exists for FluidDbClient.
@@ -50,7 +56,7 @@ var northwindDb = new NorthwindDb(Config["NorthwindConnectionString]);
 DbRegistry.Register(acmeDb, northwindDb);
 ```
 
-**Important** : by convention, the first database registered is considered the *default database*. When using queries and commands (see below) that target the *default database*, a type parameter is not necessary.
+**Important** : by convention, the first database registered is considered the *default database*. When using queries and commands that target the *default database* (see below), a type parameter is not necessary.
 
 And that's it.  Once `DbRegistry.Register` is invoked, it cannot be called again while the application is running.
 
@@ -63,7 +69,7 @@ There are 4 concrete classes that expose all functionality:
 3. `StoredProcedureDbQuery<TDatabase>` : specify a stored procedure to return data
 4. `StoredProcedureDbCommand<TDatabase>` : specify as stored procedure to execute a command
 
-**Important** : The type parameter is only essential if you are not targeting the *default database* (see above).  If you are targeting the *default database*, the type parameter can be dropped.
+**Important** : The type parameter is only required if you are *not* targeting the *default database* (see above).  If you *are* targeting the *default database*, the type parameter can be dropped.
 
 Command operations run atomically (inside their own transaction) unless a `DbSession` instance is specified in the command object's constructor.  In this case, the command operation takes on the transaction defined by the `DbSession` object. Queries can also be constructed with a `DbSession` instance, allowing them to participate in the atomic session.
 
@@ -99,3 +105,16 @@ Creates and invokes method on `StoredProcedureDbCommand<NorthwindDb>`
 DbProc<NorthwindDb>.Execute(IsolationLevel.Snapshot, "UpdateApplicationDate", 
                             new {id = 100, date = DateTime.Now);
 ```
+
+###When *not* to use Shell Wrapper Methods
+Most functionality is exposed through the shell wrapper methods, but if you prefer to be explicit, by all means "new up" a query or command.
+
+A handy diagnostic method exists for all concrete query and command objects: `.ToDiagnosticString()`.  This allows you to see the current "specification" state of the query or command, including parameters.  Obviously, this functionality is hidden when using the shell wrapper methods.
+
+**Important**: `DbScriptQuery<TDatabase>` and `DbScriptCommand<TDatabase>` objects must be explicitly constructed (i.e. cannot use shell wrapper methods) if you plan on including complex scripts with dynamically-generated parameters built with a `DbScriptCompiler<TDatabase>`.
+
+Please see the included **Sandbox** console project for examples of shell methods and usage of the `DbScriptCompiler<TDatabase>` class.
+
+
+##More Help
+More information will be added to this document as the need arises. Feel free to contact me at dwest.netdev@gmail.com if you have a burning question or concern.
