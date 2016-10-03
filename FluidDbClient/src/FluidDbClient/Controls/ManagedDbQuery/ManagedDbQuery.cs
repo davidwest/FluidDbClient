@@ -76,64 +76,6 @@ namespace FluidDbClient
             }
         }
 
-        public List<IDataRecord>[] CollectResultSets(int resultCount)
-        {
-            return CollectResultSets(resultCount, dr => new DataRecord(dr) as IDataRecord);
-        }
-        
-        public List<dynamic>[] CollectResultSetsDynamic(int resultCount)
-        {
-            return CollectResultSets(resultCount, dr => dr.ToDynamic());
-        }
-
-        
-        private List<T>[] CollectResultSets<T>(int resultCount, Func<IDataRecord, T> copy)
-        {
-            var sets = new List<T>[resultCount];
-
-            var processes = new Action<T>[resultCount];
-
-            for (var i = 0; i != resultCount; i++)
-            {
-                var index = i;
-                sets[index] = new List<T>();
-                processes[i] = data => sets[index].Add(data);
-            }
-
-            CollectResultSets(copy, processes);
-
-            return sets;
-        }
-
-        
-        private void CollectResultSets<T>(Func<IDataRecord, T> map, params Action<T>[] processes)
-        {
-            if (processes.Length == 0) return;
-
-            var isSingleProcess = processes.Length == 1;
-
-            try
-            {
-                CreateReaderResources(processes.Length == 1 ? CommandBehavior.SingleResult : CommandBehavior.Default);
-
-                for (var i = 0; i != processes.Length; i++)
-                {
-                    while (_reader.Read())
-                    {
-                        processes[i](map(_reader));
-                    }
-
-                    if (!isSingleProcess)
-                    {
-                        _reader.NextResult();
-                    }
-                }
-            }
-            finally
-            {
-                DisposeResources();
-            }
-        }
         
         private IEnumerable<IDataRecord> GetResultSet(CommandBehavior readBehavior, Func<IDataRecord, IDataRecord> yieldRecord)
         {

@@ -75,7 +75,17 @@ namespace FluidDbClient.Shell
         {
             new ScriptDbQuery(session, script).ProcessResultSets(processes);
         }
-        
+
+
+        public static List<T>[] CollectResultSets<T>(int resultCount, string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return new ScriptDbQuery(script, parameters).CollectResultSets(resultCount, map);
+        }
+
+        public static List<T>[] CollectResultSets<T>(DbSessionBase session, int resultCount, string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return new ScriptDbQuery(script, parameters).CollectResultSets(resultCount, map);
+        }
 
 
         public static List<IDataRecord>[] CollectResultSets(int resultCount, string script, object parameters = null)
@@ -87,15 +97,16 @@ namespace FluidDbClient.Shell
         {
             return new ScriptDbQuery(script, parameters).CollectResultSets(resultCount);
         }
-        
-        public static List<dynamic>[] CollectResultSetsDynamic(int resultCount, string script, object parameters = null)
+
+
+        public static List<Dictionary<string, object>>[] CollectResultSetsAsDictionaries(int resultCount, string script, object parameters = null)
         {
-            return new ScriptDbQuery(script, parameters).CollectResultSetsDynamic(resultCount);
+            return new ScriptDbQuery(script, parameters).CollectResultSetsAsDictionaries(resultCount);
         }
 
-        public static List<dynamic>[] CollectResultSetsDynamic(DbSessionBase session, int resultCount, string script, object parameters = null)
+        public static List<Dictionary<string, object>>[] CollectResultSetsAsDictionaries(DbSessionBase session, int resultCount, string script, object parameters = null)
         {
-            return new ScriptDbQuery(script, parameters).CollectResultSetsDynamic(resultCount);
+            return new ScriptDbQuery(script, parameters).CollectResultSetsAsDictionaries(resultCount);
         }
 
         #endregion
@@ -137,26 +148,26 @@ namespace FluidDbClient.Shell
 
 
 
-        public static async Task ProcessResultSetAsync(string script, Action<IDataRecord> process)
-        {
-            await new ScriptDbQuery(script).ProcessResultSetAsync(process);
-        }
-
-        public static async Task ProcessResultSetAsync(DbSessionBase session, string script, Action<IDataRecord> process)
-        {
-            await new ScriptDbQuery(session, script).ProcessResultSetAsync(process);
-        }
-
-        public static async Task ProcessResultSetAsync(string script, object parameters, Action<IDataRecord> process)
+        public static async Task ProcessResultSetAsync(string script, Action<IDataRecord> process, object parameters = null)
         {
             await new ScriptDbQuery(script, parameters).ProcessResultSetAsync(process);
         }
 
-        public static async Task ProcessResultSetAsync(DbSessionBase session, string script, object parameters, Action<IDataRecord> process)
+        public static async Task ProcessResultSetAsync(DbSessionBase session, string script, Action<IDataRecord> process, object parameters = null)
         {
             await new ScriptDbQuery(session, script, parameters).ProcessResultSetAsync(process);
         }
 
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return await new ScriptDbQuery(script, parameters).CollectResultSetAsync(map);
+        }
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(DbSessionBase session, string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return await new ScriptDbQuery(session, script, parameters).CollectResultSetAsync(map);
+        }
 
 
         public static async Task<List<IDataRecord>> CollectResultSetAsync(string script, object parameters = null)
@@ -170,37 +181,14 @@ namespace FluidDbClient.Shell
         }
 
 
-
-        public static async Task<List<T>> CollectResultSetAsync<T>(string script, Func<IDataRecord, T> map)
+        public static async Task<List<Dictionary<string, object>>> CollectResultSetAsDictionariesAsync(string script, object parameters = null)
         {
-            return await new ScriptDbQuery(script).CollectResultSetAsync(map);
+            return await new ScriptDbQuery(script, parameters).CollectResultSetAsDictionariesAsync();
         }
 
-        public static async Task<List<T>> CollectResultSetAsync<T>(DbSessionBase session, string script, Func<IDataRecord, T> map)
+        public static async Task<List<Dictionary<string, object>>> CollectResultSetAsDictionariesAsync(DbSessionBase session, string script, object parameters = null)
         {
-            return await new ScriptDbQuery(session, script).CollectResultSetAsync(map);
-        }
-
-        public static async Task<List<T>> CollectResultSetAsync<T>(string script, object parameters, Func<IDataRecord, T> map)
-        {
-            return await new ScriptDbQuery(script, parameters).CollectResultSetAsync(map);
-        }
-
-        public static async Task<List<T>> CollectResultSetAsync<T>(DbSessionBase session, string script, object parameters, Func<IDataRecord, T> map)
-        {
-            return await new ScriptDbQuery(session, script, parameters).CollectResultSetAsync(map);
-        }
-
-
-
-        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(string script, object parameters = null)
-        {
-            return await new ScriptDbQuery(script, parameters).CollectResultSetDynamicAsync();
-        }
-
-        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(DbSessionBase session, string script, object parameters = null)
-        {
-            return await new ScriptDbQuery(session, script, parameters).CollectResultSetDynamicAsync();
+            return await new ScriptDbQuery(session, script, parameters).CollectResultSetAsDictionariesAsync();
         }
 
 
@@ -226,50 +214,39 @@ namespace FluidDbClient.Shell
         }
 
 
-
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(string script, int resultCount)
+        public static async Task<List<T>[]> CollectResultSetsAsync<T>(int resultCount, Func<IDataRecord, T> map, string script, object parameters = null)
         {
-            return await new ScriptDbQuery(script).CollectResultSetsAsync(resultCount);
+            return await new ScriptDbQuery(script, parameters).CollectResultSetsAsync(resultCount, map);
         }
 
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSessionBase session, string script, int resultCount)
+        public static async Task<List<T>[]> CollectResultSetsAsync<T>(DbSessionBase session, int resultCount, Func<IDataRecord, T> map, string script, object parameters = null)
         {
-            return await new ScriptDbQuery(session, script).CollectResultSetsAsync(resultCount);
+            return await new ScriptDbQuery(session, script, parameters).CollectResultSetsAsync(resultCount, map);
         }
 
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(string script, object parameters, int resultCount)
+
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(int resultCount, string script, object parameters = null)
         {
             return await new ScriptDbQuery(script, parameters).CollectResultSetsAsync(resultCount);
         }
-
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSessionBase session, string script, object parameters, int resultCount)
+        
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSessionBase session, int resultCount, string script, object parameters = null)
         {
             return await new ScriptDbQuery(session, script, parameters).CollectResultSetsAsync(resultCount);
         }
 
 
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, int resultCount)
+        public static async Task<List<Dictionary<string, object>>[]> CollectResultSetsAsDictionariesAsync(int resultCount, string script, object parameters = null)
         {
-            return await new ScriptDbQuery(script).CollectResultSetsDynamicAsync(resultCount);
+            return await new ScriptDbQuery(script, parameters).CollectResultSetsAsDictionariesAsync(resultCount);
+        }
+        
+        public static async Task<List<Dictionary<string, object>>[]> CollectResultSetsAsDictionariesAsync(DbSessionBase session, int resultCount, string script, object parameters = null)
+        {
+            return await new ScriptDbQuery(session, script, parameters).CollectResultSetsAsDictionariesAsync(resultCount);
         }
 
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSessionBase session, string script, int resultCount)
-        {
-            return await new ScriptDbQuery(session, script).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, object parameters, int resultCount)
-        {
-            return await new ScriptDbQuery(script, parameters).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSessionBase session, string script, object parameters, int resultCount)
-        {
-            return await new ScriptDbQuery(session, script, parameters).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        #endregion 
+        #endregion
 
 
         #region --- Synchronous Commands ---

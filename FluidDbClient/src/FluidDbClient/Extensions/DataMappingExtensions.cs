@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Linq;
 
 
@@ -21,20 +20,9 @@ namespace FluidDbClient
             return record[fieldName].DbCast(dbNullSubstitute);
         }
 
-        public static void Get<T>(this IDataRecord record, string fieldName, Action<object> cast, T dbNullSubstitute = default(T))
+        public static T Get<T>(this IDictionary<string, object> record, string fieldName, T dbNullSubstitute = default(T))
         {
-            var value = record[fieldName];
-            cast(value is DBNull ? dbNullSubstitute : value);
-        }
-
-        public static IEnumerable<IDataRecord> Buffer(this IEnumerable<IDataRecord> source)
-        {
-            return source.Select(rec => rec.Copy());
-        }
-
-        public static IEnumerable<dynamic> BufferDynamic(this IEnumerable<IDataRecord> source)
-        {
-            return source.Select(rec => rec.ToDynamic());
+            return record[fieldName].DbCast(dbNullSubstitute);
         }
 
         public static IDataRecord Copy(this IDataRecord rec)
@@ -42,24 +30,26 @@ namespace FluidDbClient
             return new DataRecord(rec);
         }
 
-        public static dynamic ToDynamic(this IDataRecord rec)
+        public static Dictionary<string, object> ToDictionary(this IDataRecord rec)
         {
-            dynamic expando = new ExpandoObject();
-            var map = (IDictionary<string, object>) expando;
+            var dictionary = new Dictionary<string, object>();
 
-            for (var i = 0; i != rec.FieldCount; i++)
+            for (var j = 0; j != rec.FieldCount; j++)
             {
-                var val = rec[i];
-
-                if (val is DBNull)
-                {
-                    val = null;
-                }
-
-                map[rec.GetName(i)] = val;
+                dictionary.Add(rec.GetName(j), rec.GetValue(j));
             }
 
-            return expando;
+            return dictionary;
+        }
+
+        public static IEnumerable<Dictionary<string, object>> ToDictionaries(this IEnumerable<IDataRecord> records)
+        {
+            return records.Select(rec => rec.ToDictionary());
+        }
+
+        public static IEnumerable<IDataRecord> Buffer(this IEnumerable<IDataRecord> source)
+        {
+            return source.Select(rec => rec.Copy());
         }
     }
 }

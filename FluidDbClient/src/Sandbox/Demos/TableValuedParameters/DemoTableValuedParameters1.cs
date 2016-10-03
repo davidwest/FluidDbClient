@@ -15,7 +15,7 @@ namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
 
             /*-----------------------------------------------------------------------------------
             
-                This leverages a custom class that derives from StructuredDataBuilder<TDatabase>.
+                This leverages a custom class that derives from StructuredDataBuilder.
                 The meta data has already been defined, so we just have to fill in the values.
 
             ------------------------------------------------------------------------------------*/

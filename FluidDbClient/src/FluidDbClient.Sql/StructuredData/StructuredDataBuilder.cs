@@ -27,6 +27,20 @@ namespace FluidDbClient.Sql
             return this;
         }
 
+        public StructuredDataBuilder Append(IDictionary<string, object> parameters)
+        {
+            var propertyMap = parameters.GetPropertyMap();
+
+            if (_metaData.Count == 0)
+            {
+                DefineMetaDataFrom(propertyMap);
+            }
+
+            Append(propertyMap);
+
+            return this;
+        }
+
         public StructuredDataBuilder Append(object parameters)
         {
             var propertyMap = parameters.GetPropertyMap();

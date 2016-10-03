@@ -75,7 +75,17 @@ namespace FluidDbClient.Shell
         {
             new ScriptDbQuery<TDatabase>(session, script).ProcessResultSets(processes);
         }
-        
+
+
+        public static List<T>[] CollectResultSets<T>(int resultCount, string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSets(resultCount, map);
+        }
+
+        public static List<T>[] CollectResultSets<T>(DbSession<TDatabase> session, int resultCount, string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSets(resultCount, map);
+        }
 
 
         public static List<IDataRecord>[] CollectResultSets(int resultCount, string script, object parameters = null)
@@ -87,15 +97,16 @@ namespace FluidDbClient.Shell
         {
             return new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSets(resultCount);
         }
-        
-        public static List<dynamic>[] CollectResultSetsDynamic(int resultCount, string script, object parameters = null)
+
+
+        public static List<Dictionary<string, object>>[] CollectResultSetsAsDictionaries(int resultCount, string script, object parameters = null)
         {
-            return new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsDynamic(resultCount);
+            return new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsAsDictionaries(resultCount);
         }
 
-        public static List<dynamic>[] CollectResultSetsDynamic(DbSession<TDatabase> session, int resultCount, string script, object parameters = null)
+        public static List<Dictionary<string, object>>[] CollectResultSetsAsDictionaries(DbSession<TDatabase> session, int resultCount, string script, object parameters = null)
         {
-            return new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsDynamic(resultCount);
+            return new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsAsDictionaries(resultCount);
         }
 
         #endregion
@@ -137,26 +148,26 @@ namespace FluidDbClient.Shell
 
 
 
-        public static async Task ProcessResultSetAsync(string script, Action<IDataRecord> process)
-        {
-            await new ScriptDbQuery<TDatabase>(script).ProcessResultSetAsync(process);
-        }
-
-        public static async Task ProcessResultSetAsync(DbSession<TDatabase> session, string script, Action<IDataRecord> process)
-        {
-            await new ScriptDbQuery<TDatabase>(session, script).ProcessResultSetAsync(process);
-        }
-
-        public static async Task ProcessResultSetAsync(string script, object parameters, Action<IDataRecord> process)
+        public static async Task ProcessResultSetAsync(string script, Action<IDataRecord> process, object parameters = null)
         {
             await new ScriptDbQuery<TDatabase>(script, parameters).ProcessResultSetAsync(process);
         }
 
-        public static async Task ProcessResultSetAsync(DbSession<TDatabase> session, string script, object parameters, Action<IDataRecord> process)
+        public static async Task ProcessResultSetAsync(DbSession<TDatabase> session, string script, Action<IDataRecord> process, object parameters = null)
         {
             await new ScriptDbQuery<TDatabase>(session, script, parameters).ProcessResultSetAsync(process);
         }
 
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetAsync(map);
+        }
+
+        public static async Task<List<T>> CollectResultSetAsync<T>(DbSession<TDatabase> session, string script, Func<IDataRecord, T> map, object parameters = null)
+        {
+            return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetAsync(map);
+        }
 
 
         public static async Task<List<IDataRecord>> CollectResultSetAsync(string script, object parameters = null)
@@ -170,37 +181,14 @@ namespace FluidDbClient.Shell
         }
 
 
-
-        public static async Task<List<T>> CollectResultSetAsync<T>(string script, Func<IDataRecord, T> map)
+        public static async Task<List<Dictionary<string, object>>> CollectResultSetAsDictionariesAsync(string script, object parameters = null)
         {
-            return await new ScriptDbQuery<TDatabase>(script).CollectResultSetAsync(map);
+            return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetAsDictionariesAsync();
         }
 
-        public static async Task<List<T>> CollectResultSetAsync<T>(DbSession<TDatabase> session, string script, Func<IDataRecord, T> map)
+        public static async Task<List<Dictionary<string, object>>> CollectResultSetAsDictionariesAsync(DbSession<TDatabase> session, string script, object parameters = null)
         {
-            return await new ScriptDbQuery<TDatabase>(session, script).CollectResultSetAsync(map);
-        }
-
-        public static async Task<List<T>> CollectResultSetAsync<T>(string script, object parameters, Func<IDataRecord, T> map)
-        {
-            return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetAsync(map);
-        }
-
-        public static async Task<List<T>> CollectResultSetAsync<T>(DbSession<TDatabase> session, string script, object parameters, Func<IDataRecord, T> map)
-        {
-            return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetAsync(map);
-        }
-
-
-
-        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(string script, object parameters = null)
-        {
-            return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetDynamicAsync();
-        }
-
-        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(DbSession<TDatabase> session, string script, object parameters = null)
-        {
-            return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetDynamicAsync();
+            return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetAsDictionariesAsync();
         }
 
 
@@ -226,50 +214,39 @@ namespace FluidDbClient.Shell
         }
 
 
-
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(string script, int resultCount)
+        public static async Task<List<T>[]> CollectResultSetsAsync<T>(int resultCount, Func<IDataRecord, T> map, string script, object parameters = null)
         {
-            return await new ScriptDbQuery<TDatabase>(script).CollectResultSetsAsync(resultCount);
+            return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsAsync(resultCount, map);
         }
 
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSession<TDatabase> session, string script, int resultCount)
+        public static async Task<List<T>[]> CollectResultSetsAsync<T>(DbSession<TDatabase> session, int resultCount, Func<IDataRecord, T> map, string script, object parameters = null)
         {
-            return await new ScriptDbQuery<TDatabase>(session, script).CollectResultSetsAsync(resultCount);
+            return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetsAsync(resultCount, map);
         }
 
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(string script, object parameters, int resultCount)
+
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(int resultCount, string script, object parameters = null)
         {
             return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsAsync(resultCount);
         }
-
-        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSession<TDatabase> session, string script, object parameters, int resultCount)
+        
+        public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSession<TDatabase> session, int resultCount, string script, object parameters = null)
         {
             return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetsAsync(resultCount);
         }
 
 
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, int resultCount)
+        public static async Task<List<Dictionary<string, object>>[]> CollectResultSetsAsDictionariesAsync(int resultCount, string script, object parameters = null)
         {
-            return await new ScriptDbQuery<TDatabase>(script).CollectResultSetsDynamicAsync(resultCount);
+            return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsAsDictionariesAsync(resultCount);
+        }
+        
+        public static async Task<List<Dictionary<string, object>>[]> CollectResultSetsAsDictionariesAsync(DbSession<TDatabase> session, int resultCount, string script, object parameters = null)
+        {
+            return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetsAsDictionariesAsync(resultCount);
         }
 
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSession<TDatabase> session, string script, int resultCount)
-        {
-            return await new ScriptDbQuery<TDatabase>(session, script).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, object parameters, int resultCount)
-        {
-            return await new ScriptDbQuery<TDatabase>(script, parameters).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSession<TDatabase> session, string script, object parameters, int resultCount)
-        {
-            return await new ScriptDbQuery<TDatabase>(session, script, parameters).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        #endregion 
+        #endregion
 
 
         #region --- Synchronous Commands ---

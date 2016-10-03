@@ -5,11 +5,11 @@ using FluidDbClient.Shell;
 
 namespace FluidDbClient.Sandbox.Demos.MultipleResultSets
 {
-    public static class DemoCollectResultSets
+    public static class DemoCollectResultSets2
     {
         public static void Start()
         {
-            var resultSets = Db.CollectResultSets(2, "SELECT * FROM Robot; SELECT * FROM Widget;");
+            var resultSets = Db.CollectResultSetsAsDictionaries(2, "SELECT * FROM Robot; SELECT * FROM Widget;");
 
             var builder = new StringBuilder();
 
