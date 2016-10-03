@@ -1,11 +1,10 @@
 # FluidDbClient
 When you absolutely need to work with ADO.NET but want to ditch 95% of the boilerplate code. Perfect fit if you need to run explicit SQL and/or map raw data to complex objects that you won't trust to your ORM. Intuitively parameterize queries and commands, stream records, process multiple result sets with ease, batch operations into a single transaction, build scripts with dynamically-generated parameters, and if you wish, do things asynchronously.  It's fast and super lightweight.
 
-All projects are created in .NET Core. The libraries (**FluidDbClient** and **FluidDbClient.Sql**) target the following frameworks:
+The libraries **FluidDbClient** and **FluidDbClient.Sql** target the following frameworks:
 
-- .NETFramework 4.5.2
-- .NETStandard 1.6
-- .NETStandard 1.4
+- .NET Framework 4.5.2
+- .NET Standard 1.2
 
 ## The Nuget Package
 
