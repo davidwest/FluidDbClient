@@ -76,13 +76,6 @@ namespace FluidDbClient
             return resultSets[0];
         }
 
-        public async Task<List<dynamic>> CollectResultSetDynamicAsync()
-        {
-            var resultSets = await CollectResultSetsDynamicAsync(1);
-
-            return resultSets[0];
-        }
-
 
         public async Task ProcessResultSetsAsync(params Action<IDataRecord>[] processes)
         {
@@ -93,12 +86,6 @@ namespace FluidDbClient
         {
             return await CollectResultSetsAsync(resultCount, dr => new DataRecord(dr) as IDataRecord);
         }
-
-        public async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(int resultCount)
-        {
-            return await CollectResultSetsAsync(resultCount, dr => dr.ToDynamic());
-        }
-
 
 
         private async Task<List<T>[]> CollectResultSetsAsync<T>(int resultCount, Func<IDataRecord, T> copy)

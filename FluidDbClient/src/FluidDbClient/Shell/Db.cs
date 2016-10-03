@@ -88,16 +88,6 @@ namespace FluidDbClient.Shell
             return new ScriptDbQuery(script, parameters).CollectResultSets(resultCount);
         }
         
-        public static List<dynamic>[] CollectResultSetsDynamic(int resultCount, string script, object parameters = null)
-        {
-            return new ScriptDbQuery(script, parameters).CollectResultSetsDynamic(resultCount);
-        }
-
-        public static List<dynamic>[] CollectResultSetsDynamic(DbSessionBase session, int resultCount, string script, object parameters = null)
-        {
-            return new ScriptDbQuery(script, parameters).CollectResultSetsDynamic(resultCount);
-        }
-
         #endregion
 
 
@@ -193,18 +183,6 @@ namespace FluidDbClient.Shell
 
 
 
-        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(string script, object parameters = null)
-        {
-            return await new ScriptDbQuery(script, parameters).CollectResultSetDynamicAsync();
-        }
-
-        public static async Task<List<dynamic>> CollectResultSetDynamicAsync(DbSessionBase session, string script, object parameters = null)
-        {
-            return await new ScriptDbQuery(session, script, parameters).CollectResultSetDynamicAsync();
-        }
-
-
-
         public static async Task ProcessResultSetsAsync(string script, params Action<IDataRecord>[] processes)
         {
             await new ScriptDbQuery(script).ProcessResultSetsAsync(processes);
@@ -245,28 +223,6 @@ namespace FluidDbClient.Shell
         public static async Task<List<IDataRecord>[]> CollectResultSetsAsync(DbSessionBase session, string script, object parameters, int resultCount)
         {
             return await new ScriptDbQuery(session, script, parameters).CollectResultSetsAsync(resultCount);
-        }
-
-
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, int resultCount)
-        {
-            return await new ScriptDbQuery(script).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSessionBase session, string script, int resultCount)
-        {
-            return await new ScriptDbQuery(session, script).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(string script, object parameters, int resultCount)
-        {
-            return await new ScriptDbQuery(script, parameters).CollectResultSetsDynamicAsync(resultCount);
-        }
-
-        public static async Task<List<dynamic>[]> CollectResultSetsDynamicAsync(DbSessionBase session, string script, object parameters, int resultCount)
-        {
-            return await new ScriptDbQuery(session, script, parameters).CollectResultSetsDynamicAsync(resultCount);
         }
 
         #endregion 

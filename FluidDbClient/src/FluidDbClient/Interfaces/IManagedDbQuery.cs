@@ -19,7 +19,6 @@ namespace FluidDbClient
         void ProcessResultSets(params Action<IEnumerable<IDataRecord>>[] processes);
         
         List<IDataRecord>[] CollectResultSets(int resultCount);
-        List<dynamic>[] CollectResultSetsDynamic(int resultCount);
 
 
         // --- Asynchronous ---
@@ -30,11 +29,9 @@ namespace FluidDbClient
         Task ProcessResultSetAsync(Action<IDataRecord> process);
         Task<List<IDataRecord>> CollectResultSetAsync();
         Task<List<T>> CollectResultSetAsync<T>(Func<IDataRecord, T> map);
-        Task<List<dynamic>> CollectResultSetDynamicAsync();
 
         Task ProcessResultSetsAsync(params Action<IDataRecord>[] processes);
         Task<List<IDataRecord>[]> CollectResultSetsAsync(int resultCount);
-        Task<List<dynamic>[]> CollectResultSetsDynamicAsync(int resultCount);
     }
 }
 

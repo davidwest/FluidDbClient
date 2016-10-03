@@ -5,25 +5,26 @@
     "version": "1.0.1",
 
     "dependencies": {
-        "Microsoft.CSharp": "4.0.1",
-        "NETStandard.Library": "1.6.0",
-        "System.Data.Common": "4.1.0",
-        "System.Dynamic.Runtime": "4.0.11"
+        "System.Data.Common": "4.1.0"
     },
 
     "frameworks": {
-        "netstandard1.4": {
-            "imports": "dnxcore50"
-        },
-        "netstandard1.6": {
-            "imports": "dnxcore50"
+        "netstandard1.2": {
+            "dependencies": {
+                "System.Runtime.Extensions": "4.1.0",
+                "System.Collections": "4.0.11",
+                "System.Linq": "4.1.0",
+                "System.Threading": "4.0.11",
+                "System.Reflection": "4.1.0",
+                "System.Reflection.Extensions": "4.0.1"
+            }
         },
         "net452": {}
     },
 
     "scripts": {
         "postcompile": [
-            "dotnet pack --no-build --configuration %compile:Configuration%"
+            "dotnet pack --no-build --configuration Release"
         ]
     }
 }

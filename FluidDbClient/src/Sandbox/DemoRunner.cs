@@ -42,7 +42,6 @@ namespace FluidDbClient.Sandbox
             //DemoProcessResultSets2.Start();
             //DemoProcessResultSets3.Start();
             //DemoCollectResultSets.Start();
-            //DemoCollectResultSetsDynamic.Start();
 
             // --- Commands & Sessions ---
             //DemoCommand.Start();

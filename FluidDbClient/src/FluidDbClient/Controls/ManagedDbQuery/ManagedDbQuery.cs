@@ -81,11 +81,6 @@ namespace FluidDbClient
             return CollectResultSets(resultCount, dr => new DataRecord(dr) as IDataRecord);
         }
         
-        public List<dynamic>[] CollectResultSetsDynamic(int resultCount)
-        {
-            return CollectResultSets(resultCount, dr => dr.ToDynamic());
-        }
-
         
         private List<T>[] CollectResultSets<T>(int resultCount, Func<IDataRecord, T> copy)
         {

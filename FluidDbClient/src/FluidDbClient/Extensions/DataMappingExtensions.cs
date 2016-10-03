@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Linq;
 
 
@@ -27,39 +26,14 @@ namespace FluidDbClient
             cast(value is DBNull ? dbNullSubstitute : value);
         }
 
-        public static IEnumerable<IDataRecord> Buffer(this IEnumerable<IDataRecord> source)
-        {
-            return source.Select(rec => rec.Copy());
-        }
-
-        public static IEnumerable<dynamic> BufferDynamic(this IEnumerable<IDataRecord> source)
-        {
-            return source.Select(rec => rec.ToDynamic());
-        }
-
         public static IDataRecord Copy(this IDataRecord rec)
         {
             return new DataRecord(rec);
         }
 
-        public static dynamic ToDynamic(this IDataRecord rec)
+        public static IEnumerable<IDataRecord> Buffer(this IEnumerable<IDataRecord> source)
         {
-            dynamic expando = new ExpandoObject();
-            var map = (IDictionary<string, object>) expando;
-
-            for (var i = 0; i != rec.FieldCount; i++)
-            {
-                var val = rec[i];
-
-                if (val is DBNull)
-                {
-                    val = null;
-                }
-
-                map[rec.GetName(i)] = val;
-            }
-
-            return expando;
+            return source.Select(rec => rec.Copy());
         }
     }
 }
