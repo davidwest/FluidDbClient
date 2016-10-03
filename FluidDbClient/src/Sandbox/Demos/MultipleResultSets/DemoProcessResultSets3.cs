@@ -14,7 +14,7 @@ namespace FluidDbClient.Sandbox.Demos.MultipleResultSets
             /*------------------------------------------------------------------------------------------
             
                 Processing multiple result sets can be used to map (copy) each IDataRecord of each
-                result set to a strongly-typed object and rendering collections for each type.
+                result set to a strongly-typed object and render collections for each type.
 
                 Important: 
                 Each process MUST consume the supplied enumerator (e.g. .ToArray()).
