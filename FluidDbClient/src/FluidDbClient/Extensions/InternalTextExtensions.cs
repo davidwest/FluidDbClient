@@ -1,8 +1,6 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-
 
 namespace FluidDbClient
 {
@@ -26,7 +24,6 @@ namespace FluidDbClient
                 yield return s.Substring(start);
             }
         }
-
 
         public static string ConcatRepeat(this string original, int repetitions)
         {

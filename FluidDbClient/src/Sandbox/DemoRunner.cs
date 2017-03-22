@@ -23,7 +23,7 @@ namespace FluidDbClient.Sandbox
             //DemoGetSingleRecord.Start();
 
             // --- Single Result Set ---
-            DemoGetResultSet.Start();
+            //DemoGetResultSet.Start();
             //DemoGetResultSetBuffered.Start();
 
             // --- Parameter Specification ---
@@ -46,7 +46,7 @@ namespace FluidDbClient.Sandbox
 
             // --- Commands & Sessions ---
             //DemoCommand.Start();
-            //DemoSession.Start();
+            DemoSession.Start();
 
             // --- Script Compilation ---
             //DemoScriptCompilationSimple.Start();

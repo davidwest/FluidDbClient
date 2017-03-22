@@ -1,5 +1,4 @@
-﻿
-namespace FluidDbClient.ScriptComposition
+﻿namespace FluidDbClient.ScriptComposition
 {
     public class ScriptSegment
     {

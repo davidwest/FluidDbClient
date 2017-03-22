@@ -1,6 +1,4 @@
-﻿
-
-using System.Linq;
+﻿using System.Linq;
 using FluidDbClient.ScriptComposition;
 
 namespace FluidDbClient

@@ -1,6 +1,4 @@
-﻿
-
-namespace FluidDbClient.ScriptComposition
+﻿namespace FluidDbClient.ScriptComposition
 {
     public enum ScriptSegmentKind
     {
