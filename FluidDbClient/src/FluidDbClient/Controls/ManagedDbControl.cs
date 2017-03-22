@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -98,7 +97,6 @@ namespace FluidDbClient
         protected DbTransaction Transaction { get; set; }
         protected DbCommand Command { get; private set; }
         
-
         protected void CreateConnection()
         {
             if (_session != null)

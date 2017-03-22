@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,6 @@ namespace FluidDbClient.ScriptComposition
     internal static class ScriptTreeBuilder
     {
         private static readonly char[] Delimiters = {'{', '}'};
-
 
         public static ScriptNode Build(string sourceText)
         {

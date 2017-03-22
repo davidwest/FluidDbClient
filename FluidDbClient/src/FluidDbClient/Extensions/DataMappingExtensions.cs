@@ -1,9 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-
 
 namespace FluidDbClient
 {
@@ -13,7 +11,6 @@ namespace FluidDbClient
         {
             return value is DBNull ? dbNullSubstitute : (T)value;
         }
-
 
         public static T Get<T>(this IDataRecord record, string fieldName, T dbNullSubstitute = default(T))
         {
@@ -53,4 +50,3 @@ namespace FluidDbClient
         }
     }
 }
-

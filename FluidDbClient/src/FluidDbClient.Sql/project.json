@@ -1,25 +1,36 @@
 {
-    "copyright": "© 2016 David West",
+    "copyright": "© 2017 David West",
     "title": "FluidDbClient.Sql",
     "description": "Sql Server provider for FluidDbClient.  This library also makes building data for Table-Valued Parameters a snap.",
-    "version": "1.0.2",
-
+    "version": "1.0.3",
 
     "dependencies": {
-        "FluidDbClient": "1.0.2",
-        "System.Data.SqlClient" :  "4.1.0" 
+        "FluidDbClient": "1.0.3"
     },
 
-    "frameworks": {
-        "netstandard1.2": {
-            "dependencies": {
-                "System.Collections": "4.0.11",
-                "System.Linq": "4.1.0",
-                "System.Threading": "4.0.11"
-            }
-        },
-        "net452": {}
+  "frameworks": {
+    "net45": {
+      "buildOptions": {
+        "define": [ "ASYNC" ]
+      },
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
+      }
     },
+    "net451": {
+      "buildOptions": {
+        "define": [ "ASYNC" ]
+      },
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
+      }
+    },
+    "netstandard1.3": {
+      "buildOptions": {
+        "define": [ "ASYNC", "COREFX" ]
+      }
+    }
+  },
 
     "scripts": {
         "postcompile": [

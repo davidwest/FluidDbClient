@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
