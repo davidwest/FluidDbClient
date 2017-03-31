@@ -47,7 +47,7 @@ namespace FluidDbClient.Sql
                 var sizeStr = GetSizeString(param.Size);
 
                 var bytes = value as byte[];
-                var dataStr = bytes != null ? bytes.Length.ToString() : TryDbNull(value) ?? "???";
+                var dataStr = bytes?.Length.ToString() ?? (TryDbNull(value) ?? "???");
                 
                 return $"{prefix} | data size:{dataStr, -10} | size limit: {sizeStr}";
             }
