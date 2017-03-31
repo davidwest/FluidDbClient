@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FluidDbClient
 {
-    public static class DataMappingExtensions
+    public static class PrimitiveMappingExtensions
     {
         public static T DbCast<T>(this object value, T dbNullSubstitute = default(T))
         {
