@@ -1,5 +1,4 @@
-﻿
-using FluidDbClient.Sandbox.Demos;
+﻿using FluidDbClient.Sandbox.Demos;
 using FluidDbClient.Sandbox.Demos.Basics;
 using FluidDbClient.Sandbox.Demos.SingleResultSet;
 using FluidDbClient.Sandbox.Demos.ParameterSpecification;
@@ -19,7 +18,7 @@ namespace FluidDbClient.Sandbox
             //InitializeData.Start();   // <-- only invoke if you want to populate db with initial data
 
             // --- Basics ---
-            //DemoGetScalar.Start();
+            DemoGetScalar.Start();
             //DemoGetSingleRecord.Start();
 
             // --- Single Result Set ---
@@ -46,7 +45,7 @@ namespace FluidDbClient.Sandbox
 
             // --- Commands & Sessions ---
             //DemoCommand.Start();
-            DemoSession.Start();
+            //DemoSession.Start();
 
             // --- Script Compilation ---
             //DemoScriptCompilationSimple.Start();

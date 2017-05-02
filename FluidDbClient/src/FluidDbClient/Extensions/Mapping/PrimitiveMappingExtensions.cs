@@ -9,7 +9,7 @@ namespace FluidDbClient
     {
         public static T DbCast<T>(this object value, T dbNullSubstitute = default(T))
         {
-            return value is DBNull ? dbNullSubstitute : (T)value;
+            return value == null || value is DBNull ? dbNullSubstitute : (T)value;
         }
 
         public static T Get<T>(this IDataRecord record, string fieldName, T dbNullSubstitute = default(T))

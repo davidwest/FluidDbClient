@@ -10,6 +10,7 @@ namespace FluidDbClient.Sandbox.Demos.Basics
         {
             DemoTypicalGetScalar();
             DemoDbNullSubstitute();
+            DemoDbNullSubstituteWhenNoResult();
         }
 
         private static void DemoTypicalGetScalar()
@@ -28,6 +29,17 @@ namespace FluidDbClient.Sandbox.Demos.Basics
             // specify that DBNulls should be returned as the first day of 2020!
 
             var dateDestroyed = query.GetScalar(new DateTime(2020, 1, 1));
+
+            Debug.WriteLine(dateDestroyed);
+        }
+
+        private static void DemoDbNullSubstituteWhenNoResult()
+        {
+            var query = new ScriptDbQuery("SELECT TOP(1) DateDestroyed FROM Robot WHERE Name LIKE '%' + @name + '%';", new { name = "no such name" });
+
+            // specify that DBNulls should be returned as the first day of 2020!
+
+            var dateDestroyed = query.GetScalar<DateTime>();
 
             Debug.WriteLine(dateDestroyed);
         }
