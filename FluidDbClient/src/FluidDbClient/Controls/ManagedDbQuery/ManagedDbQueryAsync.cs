@@ -9,28 +9,16 @@ namespace FluidDbClient
         public async Task<T> GetScalarAsync<T>(T dbNullsubstitute = default(T))
         {
             try
-            {
-                if (_usingExternalSession)
-                {
-                    await CreateCommonResourcesAsync();
-                }
-                else
-                {
-                    CreateCommonResources();
-                }
+            {           
+                await EstablishCommonResourcesAsync();
                 
-                if (!Connection.State.HasFlag(ConnectionState.Open))
-                {
-                    await Connection.OpenAsync();
-                }
-
                 var val = await Command.ExecuteScalarAsync();
 
                 return val.DbCast(dbNullsubstitute);
             }
             finally
             {
-                DisposeResources();
+                ReleaseResources();
             }
         }
 
@@ -50,7 +38,7 @@ namespace FluidDbClient
             }
             finally
             {
-                DisposeResources();
+                ReleaseResources();
             }
         }
 
@@ -86,16 +74,16 @@ namespace FluidDbClient
             }
             finally
             {
-                DisposeResources();
+                ReleaseResources();
             }
         }
         
         
-        private async Task CreateCommonResourcesAsync()
+        private async Task EstablishCommonResourcesAsync()
         {
             OnOperationStarted();
 
-            await CreateConnectionAsync();
+            await EstablishConnectionAsync();
 
             CreateCommand();
         }
@@ -103,14 +91,7 @@ namespace FluidDbClient
 
         private async Task CreateReaderResourcesAsync(CommandBehavior readBehavior)
         {
-            if (_usingExternalSession)
-            {
-                await CreateCommonResourcesAsync();
-            }
-            else
-            {
-                CreateCommonResources();
-            }
+            await EstablishCommonResourcesAsync();
             
             await CreateReaderAsync(readBehavior);
         }
@@ -118,12 +99,6 @@ namespace FluidDbClient
         
         private async Task CreateReaderAsync(CommandBehavior readBehavior)
         {
-            if (!Connection.State.HasFlag(ConnectionState.Open))
-            {
-                await Connection.OpenAsync();
-                Log("Opened DbConnection Async");
-            }
-
             _reader = await Command.ExecuteReaderAsync(readBehavior);
 
             Log("Created DbReader Async");

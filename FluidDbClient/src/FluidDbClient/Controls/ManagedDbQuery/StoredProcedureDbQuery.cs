@@ -2,6 +2,8 @@
 
 namespace FluidDbClient
 {
+    // TODO: more constructor options
+
     public abstract class StoredProcedureDbQueryBase : ManagedDbQuery
     {
         protected StoredProcedureDbQueryBase(Database database, DbSessionBase session, string storedProcedureName, object parameters) 

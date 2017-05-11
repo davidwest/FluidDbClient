@@ -9,42 +9,27 @@ namespace FluidDbClient
         {
             try
             {
-                await CreateResourcesAsync(isolationLevel);
+                OnOperationStarted();
+
+                await EstablishResourcesAsync(isolationLevel);
 
                 await Command.ExecuteNonQueryAsync();
 
-                Commit();
+                TryCommit();
             }
             finally
             {
-                DisposeResources();
+                ReleaseResources();
             }
         }
-
-        private async Task CreateResourcesAsync(IsolationLevel isolationLevel)
+        
+        private async Task EstablishResourcesAsync(IsolationLevel isolationLevel)
         {
-            OnOperationStarted();
+            await EstablishConnectionAsync();
 
-            await CreateConnectionAsync();
-
-            await CreateTransactionAsync(isolationLevel);
+            EstablishTransaction(isolationLevel);
 
             CreateCommand();
-        }
-
-        private async Task CreateTransactionAsync(IsolationLevel isolationLevel)
-        {
-            if (Transaction != null) return;
-
-            if (!Connection.State.HasFlag(ConnectionState.Open))
-            {
-                await Connection.OpenAsync();
-                Log("Opened DbConnection Async");
-            }
-
-            Transaction = Connection.BeginTransaction(isolationLevel);
-
-            Log("Created DbTransaction");
         }
     }
 }

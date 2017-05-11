@@ -7,6 +7,8 @@ namespace FluidDbClient.Shell
 {
     public static class DbProc<TDatabase> where TDatabase : Database
     {
+        // TODO: add all versions that take DbConnection or DbTransaction
+
         #region --- Synchronous Queries ---
 
         public static T GetScalar<T>(string procedureName, object parameters = null)
