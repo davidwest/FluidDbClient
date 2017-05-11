@@ -1,70 +1,79 @@
 ﻿using System.Data;
+using System.Data.Common;
 
 namespace FluidDbClient
 {
     public abstract partial class ManagedDbCommand : ManagedDbControl, IManagedDbCommand
     {
-        private readonly bool _usingExternalSession;
+        private bool _usingExternalResources;
         private bool _isCommitted;
+        
+        protected ManagedDbCommand(Database database, object parameters) 
+            : base(database, parameters)
+        { }
 
         protected ManagedDbCommand(Database database, DbSessionBase session, object parameters)
             : base(database, session, parameters)
         {
-            _usingExternalSession = session != null;
+            _usingExternalResources = true;
+        }
+
+        protected ManagedDbCommand(Database database, DbConnection connection, object parameters) 
+            : base(database, connection, parameters)
+        {
+            _usingExternalResources = true;
+        }
+
+        protected ManagedDbCommand(Database database, DbTransaction transaction, object parameters)
+            : base(database, transaction, parameters)
+        {
+            _usingExternalResources = true;
         }
 
         public void Execute(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {            
+        {
             try
             {
-                CreateResources(isolationLevel);
+                OnOperationStarted();
+
+                EstablishResources(isolationLevel);
 
                 Command.ExecuteNonQuery();
 
-                Commit();
+                TryCommit();
             }
             finally
             {
-                DisposeResources();
+                ReleaseResources();
             }
         }
-
-        private void CreateResources(IsolationLevel isolationLevel)
-        {
-            OnOperationStarted();
-
-            CreateConnection();
-            CreateTransaction(isolationLevel);
+        
+        private void EstablishResources(IsolationLevel isolationLevel)
+        {            
+            EstablishConnection();
+            EstablishTransaction(isolationLevel);
             CreateCommand();
         }
-
-        private void DisposeResources()
+        
+        private void ReleaseResources()
         {
             DisposeCommand();
-
-            DisposeTransaction();
-
-            ReleaseConnection(_usingExternalSession);
+            ReleaseTransaction();
+            ReleaseConnection(_usingExternalResources);
         }
 
-        private void CreateTransaction(IsolationLevel isolationLevel)
+        private void EstablishTransaction(IsolationLevel isolationLevel)
         {
-            if (Transaction != null) return;
-
-            if (!Connection.State.HasFlag(ConnectionState.Open))
-            {
-                Connection.Open();
-                Log("Opened DbConnection");
-            }
+            if (Transaction != null || _usingExternalResources) return;
                 
             Transaction = Connection.BeginTransaction(isolationLevel);
 
             Log("Created DbTransaction");
         }
 
-        private void Commit()
+        private void TryCommit()
         {
-            if (_usingExternalSession || Transaction == null) return;
+            if (_usingExternalResources || Transaction == null) return;
 
             Transaction.Commit();
             _isCommitted = true;
@@ -72,11 +81,11 @@ namespace FluidDbClient
             Log($"Committed DbTransaction {(char)0x221A}");
         }
 
-        private void DisposeTransaction()
+        private void ReleaseTransaction()
         {
             if (Transaction == null) return;
 
-            if (_usingExternalSession)
+            if (_usingExternalResources)
             {
                 Transaction = null;
                 return;

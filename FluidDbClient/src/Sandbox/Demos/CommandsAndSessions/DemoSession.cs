@@ -11,7 +11,8 @@ namespace FluidDbClient.Sandbox.Demos.CommandsAndSessions
     {
         /*-----------------------------------------------------------------------------------------------------
         
-            DbSessions allow us to group commands and queries into a single atomic transaction.
+            DbSessions allow us to group commands and queries into a single atomic transaction without using
+            DbConnections and DbTransactions directly.
 
             Typical Usage:
 

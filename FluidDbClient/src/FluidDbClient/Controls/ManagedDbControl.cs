@@ -16,12 +16,11 @@ namespace FluidDbClient
         private readonly string _typeName;
         private readonly Dictionary<string, DbParameter> _parameters = new Dictionary<string, DbParameter>(StringComparer.OrdinalIgnoreCase);
 
-        protected ManagedDbControl(Database database, DbSessionBase session, object parameters)
+        protected ManagedDbControl(Database database, object parameters)
         {
             Timeout = 30;
 
             _database = database;
-            _session = session;
             _typeName = GetType().Name;
 
             if (parameters == null) return;
@@ -31,6 +30,25 @@ namespace FluidDbClient
             mappedParams.ForEach(p => this[p.Key] = p.Value);
         }
 
+        protected ManagedDbControl(Database database, DbSessionBase session, object parameters) 
+            : this(database, parameters)
+        {
+            _session = session;
+        }
+
+        protected ManagedDbControl(Database database, DbConnection connection, object parameters)
+            : this(database, parameters)
+        {
+            Connection = connection;
+        }
+
+        protected ManagedDbControl(Database database, DbTransaction transaction, object parameters)
+            : this(database, parameters)
+        {
+            Transaction = transaction;
+            Connection = transaction.Connection;
+        }
+        
         public int Timeout { get; set; }
 
         public IReadOnlyCollection<DbParameter> Parameters => _parameters.Values.ToArray();
@@ -93,12 +111,18 @@ namespace FluidDbClient
         public Guid SessionId { get; private set; }
         protected Guid OperationId { get; private set; }
 
-        protected DbConnection Connection { get; private set; }
+        protected DbConnection Connection { get; set; }
         protected DbTransaction Transaction { get; set; }
         protected DbCommand Command { get; private set; }
         
-        protected void CreateConnection()
+        protected void EstablishConnection()
         {
+            if (Connection != null)
+            {
+                TryOpenConnection();
+                return;
+            }
+
             if (_session != null)
             {
                 Transaction = _session.GetTransaction();
@@ -107,12 +131,19 @@ namespace FluidDbClient
             }
 
             Connection = _database.Provider.CreateConnection(_database.ConnectionString);
-
             Log("Created DbConnection");
+
+            TryOpenConnection();
         }
 
-        protected async Task CreateConnectionAsync()
+        protected async Task EstablishConnectionAsync()
         {
+            if (Connection != null)
+            {
+                await TryOpenConnectionAsync();
+                return;
+            }
+
             if (_session != null)
             {
                 Transaction = await _session.GetTransactionAsync();
@@ -121,8 +152,9 @@ namespace FluidDbClient
             }
 
             Connection = _database.Provider.CreateConnection(_database.ConnectionString);
-
             Log("Created DbConnection");
+
+            await TryOpenConnectionAsync();
         }
 
         protected void CreateCommand()
@@ -134,7 +166,7 @@ namespace FluidDbClient
             command.CommandText = CommandText;
             command.CommandTimeout = Timeout;
             command.CommandType = CommandType;
-
+            
             foreach (var param in Parameters)
             {
                 command.Parameters.Add(param);
@@ -145,11 +177,11 @@ namespace FluidDbClient
             Log("Created DbCommand");
         }
         
-        protected void ReleaseConnection(bool usingExternalSession)
+        protected void ReleaseConnection(bool usingExternalResources)
         {
             if (Connection == null) return;
 
-            if (usingExternalSession)
+            if (usingExternalResources)
             {
                 Connection = null;
                 return;
@@ -181,6 +213,22 @@ namespace FluidDbClient
         {
             SessionId = _session?.SessionId ?? Guid.NewGuid();
             OperationId = Guid.NewGuid();
+        }
+
+        private void TryOpenConnection()
+        {
+            if (Connection.State.HasFlag(ConnectionState.Open)) return;
+
+            Connection.Open();
+            Log("Opened DbConnection");
+        }
+
+        private async Task TryOpenConnectionAsync()
+        {
+            if (Connection.State.HasFlag(ConnectionState.Open)) return;
+
+            await Connection.OpenAsync();
+            Log("Opened DbConnection Async");
         }
 
         private string GetUnprefixedParameterName(string parameterName)

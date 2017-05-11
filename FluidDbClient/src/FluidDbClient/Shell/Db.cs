@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace FluidDbClient.Shell
 {
     public static class Db
     {
+        public static DbConnection CreateConnection()
+        {
+            return DbRegistry.GetDatabase().Provider.CreateConnection();
+        }
+
+        // TODO: add all versions that take DbConnection or DbTransaction
+
         #region --- Synchronous Queries ---
 
         public static T GetScalar<T>(string script, object parameters = null)
@@ -28,6 +36,16 @@ namespace FluidDbClient.Shell
         {
             return new ScriptDbQuery(session, script, parameters).GetScalar(dbNullSubstitute);
         }
+        
+        public static T GetScalar<T>(DbConnection connection, string script, object parameters = null)
+        {
+            return new ScriptDbQuery(connection, script, parameters).GetScalar<T>();
+        }
+
+        public static T GetScalar<T>(DbTransaction transaction, string script, object parameters = null)
+        {
+            return new ScriptDbQuery(transaction, script, parameters).GetScalar<T>();
+        }
 
 
 
@@ -39,6 +57,16 @@ namespace FluidDbClient.Shell
         public static IDataRecord GetRecord(DbSessionBase session, string script, object parameters = null)
         {
             return new ScriptDbQuery(session, script, parameters).GetRecord();
+        }
+
+        public static IDataRecord GetRecord(DbConnection connection, string script, object parameters = null)
+        {
+            return new ScriptDbQuery(connection, script, parameters).GetRecord();
+        }
+
+        public static IDataRecord GetRecord(DbTransaction transaction, string script, object parameters = null)
+        {
+            return new ScriptDbQuery(transaction, script, parameters).GetRecord();
         }
 
 
@@ -53,6 +81,16 @@ namespace FluidDbClient.Shell
             return new ScriptDbQuery(session, script, parameters).GetResultSet();
         }
 
+        public static IEnumerable<IDataRecord> GetResultSet(DbConnection connection, string script, object parameters = null)
+        {
+            return new ScriptDbQuery(connection, script, parameters).GetResultSet();
+        }
+
+        public static IEnumerable<IDataRecord> GetResultSet(DbTransaction transaction, string script, object parameters = null)
+        {
+            return new ScriptDbQuery(transaction, script, parameters).GetResultSet();
+        }
+
 
 
         public static void ProcessResultSets(string script, object parameters, params Action<IEnumerable<IDataRecord>>[] processes)
@@ -65,6 +103,16 @@ namespace FluidDbClient.Shell
             new ScriptDbQuery(session, script, parameters).ProcessResultSets(processes);
         }
 
+        public static void ProcessResultSets(DbConnection connection, string script, object parameters, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new ScriptDbQuery(connection, script, parameters).ProcessResultSets(processes);
+        }
+
+        public static void ProcessResultSets(DbTransaction transaction, string script, object parameters, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new ScriptDbQuery(transaction, script, parameters).ProcessResultSets(processes);
+        }
+
         public static void ProcessResultSets(string script, params Action<IEnumerable<IDataRecord>>[] processes)
         {
             new ScriptDbQuery(script).ProcessResultSets(processes);
@@ -75,6 +123,18 @@ namespace FluidDbClient.Shell
             new ScriptDbQuery(session, script).ProcessResultSets(processes);
         }
 
+        public static void ProcessResultSets(DbConnection connection, string script, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new ScriptDbQuery(connection, script).ProcessResultSets(processes);
+        }
+
+        public static void ProcessResultSets(DbTransaction transaction, string script, params Action<IEnumerable<IDataRecord>>[] processes)
+        {
+            new ScriptDbQuery(transaction, script).ProcessResultSets(processes);
+        }
+
+
+        // ******** TODO: start adding new versions here: *************
 
         public static List<T>[] CollectResultSets<T>(int resultCount, string script, Func<IDataRecord, T> map, object parameters = null)
         {
@@ -110,6 +170,8 @@ namespace FluidDbClient.Shell
 
         #endregion
 
+
+        // TODO: add all versions that take DbConnection or DbTransaction
 
         #region --- Async Queries ---
 
@@ -255,19 +317,24 @@ namespace FluidDbClient.Shell
             new ScriptDbCommand(script, parameters).Execute();
         }
 
-        public static void Execute(DbSessionBase session, string script, object parameters = null)
-        {
-            new ScriptDbCommand(session, script, parameters).Execute();
-        }
-
         public static void Execute(IsolationLevel isolationLevel, string script, object parameters = null)
         {
             new ScriptDbCommand(script, parameters).Execute(isolationLevel);
         }
 
-        public static void Execute(DbSessionBase session, IsolationLevel isolationLevel, string script, object parameters = null)
+        public static void Execute(DbSessionBase session, string script, object parameters = null)
         {
-            new ScriptDbCommand(session, script, parameters).Execute(isolationLevel);
+            new ScriptDbCommand(session, script, parameters).Execute();
+        }
+
+        public static void Execute(DbConnection connection, string script, object parameters = null)
+        {
+            new ScriptDbCommand(connection, script, parameters).Execute();
+        }
+
+        public static void Execute(DbTransaction transaction, string script, object parameters = null)
+        {
+            new ScriptDbCommand(transaction, script, parameters).Execute();
         }
 
         #endregion
@@ -280,19 +347,24 @@ namespace FluidDbClient.Shell
             await new ScriptDbCommand(script, parameters).ExecuteAsync();
         }
 
-        public static async Task ExecuteAsync(DbSessionBase session, string script, object parameters = null)
-        {
-            await new ScriptDbCommand(session, script, parameters).ExecuteAsync();
-        }
-
         public static async Task ExecuteAsync(IsolationLevel isolationLevel, string script, object parameters = null)
         {
             await new ScriptDbCommand(script, parameters).ExecuteAsync(isolationLevel);
         }
 
-        public static async Task ExecuteAsync(DbSessionBase session, IsolationLevel isolationLevel, string script, object parameters = null)
+        public static async Task ExecuteAsync(DbSessionBase session, string script, object parameters = null)
         {
-            await new ScriptDbCommand(session, script, parameters).ExecuteAsync(isolationLevel);
+            await new ScriptDbCommand(session, script, parameters).ExecuteAsync();
+        }
+
+        public static async Task ExecuteAsync(DbConnection connection, string script, object parameters = null)
+        {
+            await new ScriptDbCommand(connection, script, parameters).ExecuteAsync();
+        }
+
+        public static async Task ExecuteAsync(DbTransaction transaction, string script, object parameters = null)
+        {
+            await new ScriptDbCommand(transaction, script, parameters).ExecuteAsync();
         }
 
         #endregion

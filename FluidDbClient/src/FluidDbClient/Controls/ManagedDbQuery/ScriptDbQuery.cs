@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 
 namespace FluidDbClient
 {
@@ -8,8 +9,26 @@ namespace FluidDbClient
         private readonly string _staticScript;
         private string _includedScript;
 
+        protected ScriptDbQueryBase(Database database, string staticScript, object parameters) 
+            : base(database, parameters)
+        {
+            _staticScript = staticScript ?? string.Empty;
+        }
+
         protected ScriptDbQueryBase(Database database, DbSessionBase session, string staticScript, object parameters) 
             : base(database, session, parameters)
+        {
+            _staticScript = staticScript ?? string.Empty;
+        }
+
+        protected ScriptDbQueryBase(Database database, DbConnection connection, string staticScript, object parameters)
+            : base(database, connection, parameters)
+        {
+            _staticScript = staticScript ?? string.Empty;
+        }
+
+        protected ScriptDbQueryBase(Database database, DbTransaction transaction, string staticScript, object parameters)
+            : base(database, transaction, parameters)
         {
             _staticScript = staticScript ?? string.Empty;
         }
@@ -47,30 +66,66 @@ namespace FluidDbClient
 
     public class ScriptDbQuery : ScriptDbQueryBase
     {
+        public ScriptDbQuery(string staticScript, object parameters = null) 
+            : base(DbRegistry.GetDatabase(), staticScript, parameters)
+        { }
+
         public ScriptDbQuery(DbSessionBase session, string staticScript, object parameters = null) 
             : base(DbRegistry.GetDatabase(), session, staticScript, parameters)
         { }
 
-        public ScriptDbQuery(string staticScript, object parameters = null) 
-            : this(null, staticScript, parameters)
+        public ScriptDbQuery(DbConnection connection, string staticScript, object parameters = null)
+            : base(DbRegistry.GetDatabase(), connection, staticScript, parameters)
         { }
 
-        public ScriptDbQuery() : this(null, null)
+        public ScriptDbQuery(DbTransaction transaction, string staticScript, object parameters = null)
+            : base(DbRegistry.GetDatabase(), transaction, staticScript, parameters)
+        { }
+
+        public ScriptDbQuery() 
+            : base(DbRegistry.GetDatabase(), null, null)
+        { }
+
+        public ScriptDbQuery(DbSessionBase session) : this(session, null)
+        { }
+
+        public ScriptDbQuery(DbConnection connection) : this(connection, null)
+        { }
+        
+        public ScriptDbQuery(DbTransaction transaction) : this(transaction, null)
         { }
     }
 
 
     public class ScriptDbQuery<TDatabase> : ScriptDbQueryBase where TDatabase : Database
     {
+        public ScriptDbQuery(string staticScript, object parameters = null)
+            : base(DbRegistry.GetDatabase<TDatabase>(), staticScript, parameters)
+        { }
+
         public ScriptDbQuery(DbSessionBase session, string staticScript, object parameters = null)
             : base(DbRegistry.GetDatabase<TDatabase>(), session, staticScript, parameters)
         { }
 
-        public ScriptDbQuery(string staticScript, object parameters = null)
-            : this(null, staticScript, parameters)
+        public ScriptDbQuery(DbConnection connection, string staticScript, object parameters = null)
+            : base(DbRegistry.GetDatabase<TDatabase>(), connection, staticScript, parameters)
         { }
 
-        public ScriptDbQuery() : this(null, null)
+        public ScriptDbQuery(DbTransaction transaction, string staticScript, object parameters = null)
+            : base(DbRegistry.GetDatabase<TDatabase>(), transaction, staticScript, parameters)
+        { }
+
+        public ScriptDbQuery()
+            : base(DbRegistry.GetDatabase<TDatabase>(), null, null)
+        { }
+
+        public ScriptDbQuery(DbSessionBase session) : this(session, null)
+        { }
+
+        public ScriptDbQuery(DbConnection connection) : this(connection, null)
+        { }
+
+        public ScriptDbQuery(DbTransaction transaction) : this(transaction, null)
         { }
     }
 }

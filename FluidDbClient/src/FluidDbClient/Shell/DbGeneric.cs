@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace FluidDbClient.Shell
 {
     public static class Db<TDatabase> where TDatabase : Database
     {
+        public static DbConnection CreateConnection()
+        {
+            return DbRegistry.GetDatabase<TDatabase>().Provider.CreateConnection();
+        }
+
+        // TODO: add all versions that take DbConnection or DbTransaction
+
         #region --- Synchronous Queries ---
 
         public static T GetScalar<T>(string script, object parameters = null)

@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -9,12 +8,13 @@ namespace FluidDbClient.Sandbox.Demos.CommandsAndSessions
 {
     public static class DemoCommand
     {
-        /*-------------------------------------------------------------------------------------
+        /*---------------------------------------------------------------------------------------------
          
-            Unless using a DbSession, invoking ManagedDbCommand.Execute() will automatically
-            wrap the execution inside a transaction and commit it when it is finished.
+            Unless using a DbSession, DbCommand, or DbTransaction, invoking ManagedDbCommand.Execute() 
+            will automatically wrap the execution inside a transaction and commit it when it is finished.
 
-        --------------------------------------------------------------------------------------*/
+        -----------------------------------------------------------------------------------------------*/
+
         public static void Start()
         {
             ShowRobotNames();

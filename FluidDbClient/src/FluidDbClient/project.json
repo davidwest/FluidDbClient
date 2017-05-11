@@ -2,7 +2,7 @@
   "copyright": "© 2017 David West",
   "description": "When you absolutely need to work with ADO.NET but want to ditch 95% of the boilerplate code. Perfect fit if you need to run explicit SQL and/or map raw data to complex objects that you won't trust to your ORM.",
   "title": "FluidDbClient",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "frameworks": {
     "net45": {
       "buildOptions": {

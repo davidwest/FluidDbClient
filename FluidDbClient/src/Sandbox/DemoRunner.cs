@@ -7,7 +7,7 @@ using FluidDbClient.Sandbox.Demos.MultipleResultSets;
 using FluidDbClient.Sandbox.Demos.CommandsAndSessions;
 using FluidDbClient.Sandbox.Demos.ScriptCompilation;
 using FluidDbClient.Sandbox.Demos.Async;
-
+using FluidDbClient.Sandbox.Demos.ModelMapping;
 
 namespace FluidDbClient.Sandbox
 {
@@ -15,10 +15,10 @@ namespace FluidDbClient.Sandbox
     {
         public static void Start()
         {
-            //InitializeData.Start();   // <-- only invoke if you want to populate db with initial data
+            InitializeData.Start();   // <-- only invoke if you want to populate db with initial data
 
             // --- Basics ---
-            DemoGetScalar.Start();
+            //DemoGetScalar.Start();
             //DemoGetSingleRecord.Start();
 
             // --- Single Result Set ---
@@ -35,6 +35,7 @@ namespace FluidDbClient.Sandbox
             // --- Table Valued Parameters (Sql Server) ---
             //DemoTableValuedParameters1.Start();
             //DemoTableValuedParameters2.Start();
+            //DemoTableValuedParameters3.Start();
 
             // --- Multiple Result Sets ---
             //DemoProcessResultSets1.Start();
@@ -46,13 +47,15 @@ namespace FluidDbClient.Sandbox
             // --- Commands & Sessions ---
             //DemoCommand.Start();
             //DemoSession.Start();
+            //DemoExternalTransaction.Start();
 
             // --- Script Compilation ---
             //DemoScriptCompilationSimple.Start();
             //DemoScriptCompilationObnoxious.Start();
             //DemoWorkingScriptCompilation.Start();
 
-
+            // --- Model Mapping ---
+            //DemoModelMapping.Start();
 
             // ***** ASYNC *****
 
