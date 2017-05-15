@@ -35,7 +35,7 @@ namespace FluidDbClient.Sandbox
             // --- Table Valued Parameters (Sql Server) ---
             //DemoTableValuedParameters1.Start();
             //DemoTableValuedParameters2.Start();
-            //DemoTableValuedParameters3.Start();
+            DemoTableTypeMap.Start();
 
             // --- Multiple Result Sets ---
             //DemoProcessResultSets1.Start();
