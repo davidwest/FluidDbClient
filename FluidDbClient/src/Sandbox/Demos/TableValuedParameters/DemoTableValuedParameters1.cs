@@ -2,6 +2,7 @@
 using System.Diagnostics;
 
 using FluidDbClient.Shell;
+using FluidDbClient.Sql;
 
 namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
 {
@@ -12,17 +13,17 @@ namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
             InitializeData.Start();
             Debug.WriteLine("\n!!! Initialized Data !!!\n");
 
-            /*-----------------------------------------------------------------------------------
+            /*-------------------------------------------------------------------------
             
-                This leverages a custom class that derives from StructuredDataBuilder.
-                The meta data has already been defined, so we just have to fill in the values.
+                This works directly with the default StructuredDataBuilder class.
+                Meta data is derived from the object's property names and values.
 
-            ------------------------------------------------------------------------------------*/
+            ---------------------------------------------------------------------------*/
 
             var data = 
-                new NewRobotsDataBuilder()
-                .AppendValues("Smokey", "The robot version of the bear", DateTime.Now, false)
-                .AppendValues("Mr. Roboto", "Domo aryigato, mr. roboto!", new DateTime(1981, 3, 21), false)
+                new StructuredDataBuilder("NewRobots")
+                .Append(new {Name = "Smokey", Description = "The robot version of the bear", DateBuilt = DateTime.Now, IsEvil = false})
+                .Append(new {Name = "Mr. Roboto", Description = "Domo aryigato, mr. roboto!", DateBuilt = new DateTime(1981, 3, 21), IsEvil = false})
                 .Build();
             
             Db.Execute("INSERT INTO Robot (Name, Description, DateBuilt, IsEvil) SELECT * FROM @data;", new { data });
