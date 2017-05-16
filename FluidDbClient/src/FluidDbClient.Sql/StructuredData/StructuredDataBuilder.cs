@@ -109,9 +109,16 @@ namespace FluidDbClient.Sql
 
         private void DefineMetaMapFrom(Dictionary<string, object> propertyMap)
         {
-            _metaMap =
-                propertyMap
-                .ToDictionary(kvp => kvp.Key, kvp => ExtractMetaDataFrom(kvp.Key, kvp.Value));
+            _metaMap = new Dictionary<string, SqlMetaData>();
+
+            foreach (var kvp in propertyMap)
+            {
+                var meta = ExtractMetaDataFrom(kvp.Key, kvp.Value);
+                if (meta != null)
+                {
+                    _metaMap.Add(kvp.Key, meta);
+                }
+            }
         }
 
         private void Append(Dictionary<string, object> propertyMap)
@@ -149,10 +156,7 @@ namespace FluidDbClient.Sql
         {
             var sqlType = PrimitiveClrToSqlTypeMap.GetSqlTypeFor(value);
 
-            if (!sqlType.HasValue)
-            {
-                throw new ArgumentException($"Cannot infer SqlDbType from value of type {value.GetType().Name}", nameof(value));
-            }
+            if (!sqlType.HasValue) return null;
 
             return sqlType.Value.CanSpecifyLength() 
                 ? new SqlMetaData(name, sqlType.Value, -1) 
