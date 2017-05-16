@@ -38,6 +38,10 @@ namespace FluidDbClient
             return obj;
         }
 
+        public static IEnumerable<T> Map<T>(this IEnumerable<IDataRecord> records) where T : class, new()
+        {
+            return records.Select(r => r.Map<T>());
+        }
 
         public static T1 Map<T1, T2>(this IDataRecord r,
                                      Func<IDataRecord, T1> map1,
@@ -51,6 +55,19 @@ namespace FluidDbClient
             return t1;
         }
 
+        public static T1 Map<T1, T2>(this IDataRecord record, Action<T1, T2> combine) 
+            where T1 : class, new()
+            where T2 : class, new()
+        {
+            return record.Map(r => r.Map<T1>(), r => r.Map<T2>(), combine);
+        }
+
+        public static IEnumerable<T1> Map<T1, T2>(this IEnumerable<IDataRecord> records, Action<T1, T2> combine)
+            where T1 : class, new()
+            where T2 : class, new()
+        {
+            return records.Select(r => r.Map(combine));
+        }
 
         public static T1 Map<T1, T2, T3>(this IDataRecord r,
                                          Func<IDataRecord, T1> map1,
@@ -65,6 +82,21 @@ namespace FluidDbClient
             return t1;
         }
 
+        public static T1 Map<T1, T2, T3>(this IDataRecord record, Action<T1, T2, T3> combine)
+            where T1 : class, new()
+            where T2 : class, new()
+            where T3 : class, new()
+        {
+            return record.Map(r => r.Map<T1>(), r => r.Map<T2>(), r => r.Map<T3>(), combine);
+        }
+
+        public static IEnumerable<T1> Map<T1, T2, T3>(this IEnumerable<IDataRecord> records, Action<T1, T2, T3> combine)
+            where T1 : class, new()
+            where T2 : class, new()
+            where T3 : class, new()
+        {
+            return records.Select(r => r.Map(combine));
+        }
 
         public static T1 Map<T1, T2, T3, T4>(this IDataRecord r,
                                              Func<IDataRecord, T1> map1,
@@ -78,6 +110,24 @@ namespace FluidDbClient
             combine(t1, map2(r), map3(r), map4(r));
 
             return t1;
+        }
+
+        public static T1 Map<T1, T2, T3, T4>(this IDataRecord record, Action<T1, T2, T3, T4> combine)
+            where T1 : class, new()
+            where T2 : class, new()
+            where T3 : class, new()
+            where T4 : class, new()
+        {
+            return record.Map(r => r.Map<T1>(), r => r.Map<T2>(), r => r.Map<T3>(), r => r.Map<T4>(), combine);
+        }
+
+        public static IEnumerable<T1> Map<T1, T2, T3, T4>(this IEnumerable<IDataRecord> records, Action<T1, T2, T3, T4> combine)
+            where T1 : class, new()
+            where T2 : class, new()
+            where T3 : class, new()
+            where T4 : class, new()
+        {
+            return records.Select(r => r.Map(combine));
         }
 
 

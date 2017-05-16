@@ -2,10 +2,10 @@
     "copyright": "© 2017 David West",
     "title": "FluidDbClient.Sql",
     "description": "Sql Server provider for FluidDbClient.  This library also makes building data for Table-Valued Parameters a snap.",
-    "version": "1.0.7",
+    "version": "1.0.8",
 
     "dependencies": {
-        "FluidDbClient": "1.0.7"
+        "FluidDbClient": "1.0.8"
     },
 
   "frameworks": {

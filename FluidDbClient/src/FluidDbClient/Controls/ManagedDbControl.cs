@@ -18,7 +18,7 @@ namespace FluidDbClient
 
         protected ManagedDbControl(Database database, object parameters)
         {
-            Timeout = 30;
+            Timeout = 60;
 
             _database = database;
             _typeName = GetType().Name;
