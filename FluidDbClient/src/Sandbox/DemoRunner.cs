@@ -1,4 +1,7 @@
-﻿using FluidDbClient.Sandbox.Demos;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using FluidDbClient.Sandbox.Demos;
 using FluidDbClient.Sandbox.Demos.Basics;
 using FluidDbClient.Sandbox.Demos.SingleResultSet;
 using FluidDbClient.Sandbox.Demos.ParameterSpecification;
@@ -15,7 +18,7 @@ namespace FluidDbClient.Sandbox
     {
         public static void Start()
         {
-            InitializeData.Start();   // <-- only invoke if you want to populate db with initial data
+            InitializeData.Start();
 
             // --- Basics ---
             //DemoGetScalar.Start();
@@ -24,7 +27,7 @@ namespace FluidDbClient.Sandbox
 
             // --- Single Result Set ---
             //DemoGetResultSet.Start();
-            //DemoGetResultSetBuffered.Start();
+            DemoGetResultSetBuffered.Start();
 
             // --- Parameter Specification ---
             //DemoNullParameters1.Start();
@@ -34,9 +37,10 @@ namespace FluidDbClient.Sandbox
             //DemoReturnParameters.Start();
 
             // --- Table Valued Parameters (Sql Server) ---
-            //DemoTableValuedParameters1.Start();
-            //DemoTableValuedParameters2.Start();
-            //DemoTableTypeMap.Start();
+            //DemoStructuredDataBuilder.Start();
+            //DemoToStructuredData.Start();
+            //DemoToStructuredDataWithTypeName.Start();
+            //DemoCombineStructuredDataAndMultiParam.Start();
 
             // --- Multiple Result Sets ---
             //DemoProcessResultSets1.Start();

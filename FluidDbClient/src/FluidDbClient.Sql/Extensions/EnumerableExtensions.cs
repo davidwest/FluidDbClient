@@ -42,5 +42,12 @@ namespace FluidDbClient.Sql
 
             return builder.Build();
         }
+
+        public static StructuredData ToStructuredData<T>(this IEnumerable<T> items) where T : class
+        {
+            var map = TableTypeRegistry.GetMap<T>();
+
+            return items.ToStructuredData(map);
+        }
     }
 }

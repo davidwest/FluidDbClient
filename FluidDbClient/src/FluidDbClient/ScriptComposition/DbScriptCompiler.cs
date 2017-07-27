@@ -12,8 +12,8 @@ namespace FluidDbClient
         {
             _database = database;
 
-            var parameterizer = new DefaultTextParameterizer((index, val) => _database.Provider.TextInterpreter.GetPrefixedParameterName($"p{index}"), 
-                                                             val => _database.Provider.TextInterpreter.FormatScriptLiteral(val));
+            var parameterizer = new DefaultTextParameterizer((index, val) => _database.Provider.Interpreter.GetPrefixedParameterName($"p{index}"), 
+                                                             val => _database.Provider.Interpreter.FormatScriptLiteral(val));
 
             _compiler = new ParameterizedTextCompiler<ParameterControl>(parameterizer);
         }

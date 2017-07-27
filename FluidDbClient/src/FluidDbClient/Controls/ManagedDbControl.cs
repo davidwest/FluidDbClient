@@ -25,7 +25,7 @@ namespace FluidDbClient
 
             if (parameters == null) return;
 
-            var mappedParams = parameters.GetPropertyMap();
+            var mappedParams = parameters.GetPropertyMap(Provider);
 
             mappedParams.ForEach(p => this[p.Key] = p.Value);
         }
@@ -100,7 +100,7 @@ namespace FluidDbClient
 
             var builder = new StringBuilder("--- Parameters ---\n");
 
-            _parameters.Values.ForEach(p => builder.AppendLine(_database.Provider.TextInterpreter.GetDiagnosticString(p)));
+            _parameters.Values.ForEach(p => builder.AppendLine(_database.Provider.Interpreter.GetDiagnosticString(p)));
 
             return builder.ToString();
         }
@@ -221,16 +221,16 @@ namespace FluidDbClient
         {
             var multiParamReplacementMap =
                 Parameters
-                    .Select(p => Provider.TextInterpreter.GetUnprefixedParameterName(p.ParameterName))
+                    .Select(p => Provider.Interpreter.GetUnprefixedParameterName(p.ParameterName))
                     .GetMultiParamReplacementMap();
 
             // TODO: could optimize
             foreach (var grp in multiParamReplacementMap)
             {
-                var paramNameToFind = Provider.TextInterpreter.GetPrefixedParameterName(grp.Key);
+                var paramNameToFind = Provider.Interpreter.GetPrefixedParameterName(grp.Key);
 
                 var replacement =
-                    grp.Select(indexedName => Provider.TextInterpreter.GetPrefixedParameterName(indexedName)).ToCsv();
+                    grp.Select(indexedName => Provider.Interpreter.GetPrefixedParameterName(indexedName)).ToCsv();
 
                 text = text.Replace(paramNameToFind, replacement);
             }
@@ -256,7 +256,7 @@ namespace FluidDbClient
 
         private string GetUnprefixedParameterName(string parameterName)
         {
-            return _database.Provider.TextInterpreter.GetUnprefixedParameterName(parameterName);
+            return _database.Provider.Interpreter.GetUnprefixedParameterName(parameterName);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace FluidDbClient.Sandbox.Demos.ScriptCompilation
 
             foreach (var p in doc.Parameters)
             {
-                Debug.WriteLine(DbRegistry.GetDatabase().Provider.TextInterpreter.GetDiagnosticString(p));
+                Debug.WriteLine(DbRegistry.GetDatabase().Provider.Interpreter.GetDiagnosticString(p));
             }
         }
     }
