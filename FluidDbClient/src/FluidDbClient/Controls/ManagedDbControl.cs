@@ -19,7 +19,7 @@ namespace FluidDbClient
         protected ManagedDbControl(Database database, object parameters)
         {
             Timeout = 60;
-
+            
             _database = database;
             _typeName = GetType().Name;
 
@@ -69,7 +69,7 @@ namespace FluidDbClient
             }
             set
             {
-                var param = _database.Provider.CreateParameter(parameterName, value);
+                var param = Provider.CreateParameter(parameterName, value);
                 _parameters[parameterName] = param;
             }
         }
@@ -110,11 +110,13 @@ namespace FluidDbClient
 
         public Guid SessionId { get; private set; }
         protected Guid OperationId { get; private set; }
-
+        
         protected DbConnection Connection { get; set; }
         protected DbTransaction Transaction { get; set; }
         protected DbCommand Command { get; private set; }
-        
+
+        protected IDbProvider Provider => _database.Provider;
+
         protected void EstablishConnection()
         {
             if (Connection != null)
@@ -213,6 +215,27 @@ namespace FluidDbClient
         {
             SessionId = _session?.SessionId ?? Guid.NewGuid();
             OperationId = Guid.NewGuid();
+        }
+
+        protected string ReplaceMultiParametersIn(string text)
+        {
+            var multiParamReplacementMap =
+                Parameters
+                    .Select(p => Provider.TextInterpreter.GetUnprefixedParameterName(p.ParameterName))
+                    .GetMultiParamReplacementMap();
+
+            // TODO: could optimize
+            foreach (var grp in multiParamReplacementMap)
+            {
+                var paramNameToFind = Provider.TextInterpreter.GetPrefixedParameterName(grp.Key);
+
+                var replacement =
+                    grp.Select(indexedName => Provider.TextInterpreter.GetPrefixedParameterName(indexedName)).ToCsv();
+
+                text = text.Replace(paramNameToFind, replacement);
+            }
+
+            return text;
         }
 
         private void TryOpenConnection()

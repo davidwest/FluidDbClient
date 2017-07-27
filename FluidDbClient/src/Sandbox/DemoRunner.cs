@@ -20,6 +20,7 @@ namespace FluidDbClient.Sandbox
             // --- Basics ---
             //DemoGetScalar.Start();
             //DemoGetSingleRecord.Start();
+            //DemoEnumerableParameters.Start();
 
             // --- Single Result Set ---
             //DemoGetResultSet.Start();
@@ -35,7 +36,7 @@ namespace FluidDbClient.Sandbox
             // --- Table Valued Parameters (Sql Server) ---
             //DemoTableValuedParameters1.Start();
             //DemoTableValuedParameters2.Start();
-            DemoTableTypeMap.Start();
+            //DemoTableTypeMap.Start();
 
             // --- Multiple Result Sets ---
             //DemoProcessResultSets1.Start();

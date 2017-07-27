@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -27,12 +28,77 @@ namespace FluidDbClient
 
             return isAnonymous ? GetPropertyMap(obj, type) : null;
         }
-
-        private static Dictionary<string, object> GetPropertyMap(this object obj, Type type)
+        
+        public static ILookup<string, string> GetMultiParamReplacementMap(this IEnumerable<string> paramNames)
         {
-            return type.GetRuntimeProperties()
-                   .ToDictionary(prop => prop.Name, prop => prop.GetValue(obj));
+            var result =
+                paramNames
+                .Select(pn => new
+                {
+                    SourceName = pn,
+                    BaseName = TryDecodeMultiParamBaseName(pn)
+                })
+                .Where(pair => pair.BaseName != null)
+                .ToLookup(pair => pair.BaseName, pair => pair.SourceName);
+
+            return result;
         }
 
+        //private static Dictionary<string, object> GetPropertyMap(this object obj, Type type)
+        //{
+        //    return type.GetRuntimeProperties()
+        //           .ToDictionary(prop => prop.Name, prop => prop.GetValue(obj));
+        //}
+        
+        private static Dictionary<string, object> GetPropertyMap(this object obj, Type type)
+        {
+            var map = new Dictionary<string, object>();
+
+            foreach (var prop in type.GetRuntimeProperties())
+            {
+                var name = prop.Name;
+                var val = prop.GetValue(obj);
+
+                if (val is IEnumerable && !(val is string) && !(val is byte[]))
+                {
+                    var items = val as IEnumerable;
+
+                    var i = 0;
+                    foreach (var item in items)
+                    {
+                        var itemName = EncodeEnumerableItemParamName(name, i);
+                        i++;
+
+                        map[itemName] = item;
+                    }
+                    continue;
+                }
+                
+                map[name] = val;
+            }
+
+            return map;
+        }
+
+        private static string EncodeEnumerableItemParamName(string name, int index)
+        {
+            return $"__{name}__{index}";
+        }
+
+        private static string TryDecodeMultiParamBaseName(string sourceName)
+        {
+            var parts = sourceName.Split(MultiParamDelimeters, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length != 2) return null;
+
+            var name = parts[0];
+
+            int index;
+            return !int.TryParse(parts[1], out index) 
+                ? null 
+                : name;
+        }
+
+        private static readonly string[] MultiParamDelimeters = {"__"};
     }
 }

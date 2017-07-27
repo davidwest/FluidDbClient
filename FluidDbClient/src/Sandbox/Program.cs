@@ -15,13 +15,11 @@ namespace FluidDbClient.Sandbox
 
             Console.WriteLine("*** MAIN STARTING ***");
 
-            
-                var sw = new Stopwatch();
-                sw.Start();
-                DemoRunner.Start();
-                sw.Stop();
-                Console.WriteLine($"*** MAIN FINISHED : {sw.Elapsed} ***");
-
+            var sw = new Stopwatch();
+            sw.Start();
+            DemoRunner.Start();
+            sw.Stop();
+            Console.WriteLine($"*** MAIN FINISHED : {sw.Elapsed} ***");
 
             Console.ReadKey();
         }
