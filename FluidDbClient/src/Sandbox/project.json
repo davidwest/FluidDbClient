@@ -13,8 +13,8 @@
             "type": "platform",
             "version": "1.0.1"
         },
-        "FluidDbClient": "1.0.8",
-        "FluidDbClient.Sql": "1.0.8",
+        "FluidDbClient": "1.0.9",
+        "FluidDbClient.Sql": "1.0.9",
         "System.Dynamic.Runtime": "4.0.11"
     },
 

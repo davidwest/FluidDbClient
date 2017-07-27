@@ -33,6 +33,8 @@ namespace FluidDbClient
             _staticScript = staticScript ?? string.Empty;
         }
 
+        public string Script => $"{ReplaceMultiParametersIn(_staticScript)}\n{_includedScript}";
+
         public void IncludeScriptDoc(DbScriptDocument doc)
         {
             if (_includedScript != null)
@@ -54,10 +56,7 @@ namespace FluidDbClient
         {
             return $"\n{Script}\n" + base.ToDiagnosticString();
         }
-
-        public string Script => $"{_staticScript}\n{_includedScript}";
-
-
+        
         protected override string CommandText => Script;
 
         protected override CommandType CommandType => CommandType.Text;
