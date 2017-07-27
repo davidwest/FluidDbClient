@@ -32,7 +32,7 @@ namespace FluidDbClient
 
         public abstract DbParameter CreateParameter(string name, object value);
 
-        public abstract IDbProviderTextInterpreter TextInterpreter { get; }
+        public abstract IDbProviderValueInterpreter Interpreter { get; }
         
         protected abstract DbConnection GetConnectionUsing(string connectionString);
     }

@@ -2,7 +2,7 @@
 
 namespace FluidDbClient
 {
-    public interface IDbProviderTextInterpreter
+    public interface IDbProviderValueInterpreter
     {
         string GetDiagnosticString(DbParameter parameter);
 
@@ -11,5 +11,7 @@ namespace FluidDbClient
         string GetPrefixedParameterName(string parameterName);
 
         string GetUnprefixedParameterName(string parameterName);
+
+        bool CanEvaluateAsMultiParameters(object value);
     }
 }

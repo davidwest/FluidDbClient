@@ -6,18 +6,13 @@ using FluidDbClient.Sql;
 
 namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
 {
-    public static class DemoTableValuedParameters1
+    public static class DemoStructuredDataBuilder
     {
         public static void Start()
         {
-            InitializeData.Start();
-            Debug.WriteLine("\n!!! Initialized Data !!!\n");
-
             /*-------------------------------------------------------------------------
-            
                 This works directly with the default StructuredDataBuilder class.
                 Meta data is derived from the object's property names and values.
-
             ---------------------------------------------------------------------------*/
 
             var data = 

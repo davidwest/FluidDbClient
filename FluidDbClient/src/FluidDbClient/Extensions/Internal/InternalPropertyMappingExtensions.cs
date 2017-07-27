@@ -8,16 +8,16 @@ namespace FluidDbClient
 {
     internal static class InternalPropertyMappingExtensions
     {
-        public static Dictionary<string, object> GetPropertyMap(this object obj)
+        public static Dictionary<string, object> GetPropertyMap(this object obj, IDbProvider provider)
         {
             if (obj == null) return null;
 
             var type = obj.GetType();
 
-            return GetPropertyMap(obj, type);
+            return GetPropertyMap(obj, type, provider);
         }
-
-        public static Dictionary<string, object> GetPropertyMapIfAnonymous(this object obj)
+        
+        public static Dictionary<string, object> GetSimplePropertyMapIfAnonymous(this object obj)
         {
             if (obj == null) return null;
 
@@ -25,8 +25,8 @@ namespace FluidDbClient
 
             // --- NOTE: this test is sufficient for the usage context ---
             var isAnonymous = type.Namespace == null;
-
-            return isAnonymous ? GetPropertyMap(obj, type) : null;
+            
+            return isAnonymous ? GetSimplePropertyMap(obj, type) : null;
         }
         
         public static ILookup<string, string> GetMultiParamReplacementMap(this IEnumerable<string> paramNames)
@@ -44,13 +44,13 @@ namespace FluidDbClient
             return result;
         }
 
-        //private static Dictionary<string, object> GetPropertyMap(this object obj, Type type)
-        //{
-        //    return type.GetRuntimeProperties()
-        //           .ToDictionary(prop => prop.Name, prop => prop.GetValue(obj));
-        //}
-        
-        private static Dictionary<string, object> GetPropertyMap(this object obj, Type type)
+        private static Dictionary<string, object> GetSimplePropertyMap(this object obj, Type type)
+        {
+            return type.GetRuntimeProperties()
+                   .ToDictionary(prop => prop.Name, prop => prop.GetValue(obj));
+        }
+
+        private static Dictionary<string, object> GetPropertyMap(this object obj, Type type, IDbProvider provider)
         {
             var map = new Dictionary<string, object>();
 
@@ -59,22 +59,23 @@ namespace FluidDbClient
                 var name = prop.Name;
                 var val = prop.GetValue(obj);
 
-                if (val is IEnumerable && !(val is string) && !(val is byte[]))
+                var items = val as IEnumerable;
+
+                if (items == null || !provider.Interpreter.CanEvaluateAsMultiParameters(items))
                 {
-                    var items = val as IEnumerable;
-
-                    var i = 0;
-                    foreach (var item in items)
-                    {
-                        var itemName = EncodeEnumerableItemParamName(name, i);
-                        i++;
-
-                        map[itemName] = item;
-                    }
+                    map[name] = val;
                     continue;
                 }
-                
-                map[name] = val;
+
+                var i = 0;
+
+                foreach (var item in items)
+                {
+                    var itemName = EncodeEnumerableItemParamName(name, i);
+                    i++;
+
+                    map[itemName] = item;
+                }                
             }
 
             return map;

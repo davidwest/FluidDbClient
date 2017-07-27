@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-
-// ReSharper disable once RedundantUsingDirective
 using System.Reflection;
-// <-- do not remove; required for .NET Standard 1.3 in VS2015
 
 namespace FluidDbClient.Sql
 {
@@ -24,7 +21,7 @@ namespace FluidDbClient.Sql
     {
         protected TableTypeMap()
         {
-            base.TypeName = typeof(T).Name;
+            TypeName = typeof(T).Name;
 
             PropertyMap =
                 typeof(T).GetProperties()

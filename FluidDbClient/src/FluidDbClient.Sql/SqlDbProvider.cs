@@ -7,7 +7,7 @@ namespace FluidDbClient.Sql
     {
         public SqlDbProvider() : base("System.Data.SqlClient")
         {
-            TextInterpreter = new SqlTextInterpreter();
+            Interpreter = new SqlValueInterpreter();
         }
 
         public override DbConnection CreateConnection(string connectionString)
@@ -41,7 +41,7 @@ namespace FluidDbClient.Sql
             return SqlParameterFactory.CreateParameter(name, value);
         }
 
-        public override IDbProviderTextInterpreter TextInterpreter { get; }
+        public override IDbProviderValueInterpreter Interpreter { get; }
 
         protected override DbConnection GetConnectionUsing(string connectionString)
         {

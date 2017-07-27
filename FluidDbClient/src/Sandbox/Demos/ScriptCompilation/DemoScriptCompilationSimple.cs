@@ -39,7 +39,7 @@ namespace FluidDbClient.Sandbox.Demos.ScriptCompilation
 
             foreach (var p in doc.Parameters)
             {
-                Debug.WriteLine(DbRegistry.GetDatabase<AcmeDb>().Provider.TextInterpreter.GetDiagnosticString(p));
+                Debug.WriteLine(DbRegistry.GetDatabase<AcmeDb>().Provider.Interpreter.GetDiagnosticString(p));
             }
         }
     }

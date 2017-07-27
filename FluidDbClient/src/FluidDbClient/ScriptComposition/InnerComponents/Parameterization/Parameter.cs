@@ -11,7 +11,7 @@ namespace FluidDbClient.ScriptComposition
             Name = name;
             Controls = controls;
 
-            var propertyMap = value.GetPropertyMapIfAnonymous();
+            var propertyMap = value.GetSimplePropertyMapIfAnonymous();
 
             if (propertyMap == null)
             {

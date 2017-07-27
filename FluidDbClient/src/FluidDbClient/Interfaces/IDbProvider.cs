@@ -15,6 +15,6 @@ namespace FluidDbClient
         
         DbParameter CreateParameter(string name, object value);
 
-        IDbProviderTextInterpreter TextInterpreter { get; }
+        IDbProviderValueInterpreter Interpreter { get; }
     }
 }

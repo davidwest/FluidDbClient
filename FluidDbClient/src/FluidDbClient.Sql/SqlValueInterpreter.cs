@@ -1,9 +1,11 @@
-﻿using System.Data.Common;
+﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
+using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
 {
-    public class SqlTextInterpreter : IDbProviderTextInterpreter
+    public class SqlValueInterpreter : IDbProviderValueInterpreter
     {
         public string GetDiagnosticString(DbParameter parameter)
         {
@@ -25,6 +27,11 @@ namespace FluidDbClient.Sql
         public string GetUnprefixedParameterName(string parameterName)
         {
             return parameterName.TrimStart('@');
+        }
+
+        public bool CanEvaluateAsMultiParameters(object value)
+        {
+            return !(value is string) && !(value is byte[]) && !(value is IEnumerable<SqlDataRecord>);
         }
     }
 }
