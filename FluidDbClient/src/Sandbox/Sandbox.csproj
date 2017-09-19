@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>FluidDbClient demos and examples</Description>
+    <Copyright>© 2017 David West</Copyright>
+    <AssemblyTitle>FluidDbClient.Sandbox</AssemblyTitle>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <AssemblyName>Sandbox</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Sandbox</PackageId>
+    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FluidDbClient.Sql\FluidDbClient.Sql.csproj" />
+    <ProjectReference Include="..\FluidDbClient\FluidDbClient.csproj" />
+  </ItemGroup>
+
+</Project>
