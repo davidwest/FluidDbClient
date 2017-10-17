@@ -4,7 +4,7 @@
     <Description>FluidDbClient demos and examples</Description>
     <Copyright>© 2017 David West</Copyright>
     <AssemblyTitle>FluidDbClient.Sandbox</AssemblyTitle>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>Sandbox</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>Sandbox</PackageId>
