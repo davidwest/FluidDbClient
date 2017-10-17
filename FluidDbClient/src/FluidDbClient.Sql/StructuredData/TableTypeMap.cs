@@ -51,9 +51,7 @@ namespace FluidDbClient.Sql
         {
             var propertyName = expression.GetPropertyName();
 
-            ColumnDefinition columnDef;
-
-            if (!PropertyMap.TryGetValue(propertyName, out columnDef))
+            if (!PropertyMap.TryGetValue(propertyName, out var columnDef))
             {
                 throw new ArgumentException($"Expression must represent property of type {typeof(T).Name}", nameof(expression));
             }

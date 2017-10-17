@@ -14,17 +14,13 @@ namespace FluidDbClient.Sql
             {
                 return new SqlParameter(effectiveName, DBNull.Value);
             }
-            
-            var structuredData = value as StructuredData;
 
-            if (structuredData != null)
+            if (value is StructuredData structuredData)
             {
                 return GetParameterFrom(effectiveName, structuredData);
             }
 
-            var paramDef = value as SqlParamDef;
-
-            if (paramDef != null)
+            if (value is SqlParamDef paramDef)
             {
                 return GetParameterFrom(effectiveName, paramDef);
             }

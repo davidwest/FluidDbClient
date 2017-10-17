@@ -24,8 +24,7 @@ namespace FluidDbClient.ScriptComposition
 
         public static ParameterControl TryParse(string candidateVal)
         {
-            int valueIndex;
-            return int.TryParse(candidateVal.Trim(), out valueIndex)
+            return int.TryParse(candidateVal.Trim(), out var valueIndex)
                 ? new ParameterControl(valueIndex)
                 : null;
         }

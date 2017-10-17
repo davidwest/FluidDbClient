@@ -94,8 +94,7 @@ namespace FluidDbClient
 
             var name = parts[0];
 
-            int index;
-            return !int.TryParse(parts[1], out index) 
+            return !int.TryParse(parts[1], out _) 
                 ? null 
                 : name;
         }
