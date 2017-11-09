@@ -18,19 +18,19 @@ namespace FluidDbClient
         protected ManagedDbQuery(Database database, DbSessionBase session, object parameters)
             : base(database, session, parameters)
         {
-            _usingExternalResources = true;
+            _usingExternalResources = session != null;
         }
 
         protected ManagedDbQuery(Database database, DbConnection connection, object parameters)
             : base(database, connection, parameters)
         {
-            _usingExternalResources = true;
+            _usingExternalResources = connection != null;
         }
 
         protected ManagedDbQuery(Database database, DbTransaction transaction, object parameters)
             : base(database, transaction, parameters)
         {
-            _usingExternalResources = true;
+            _usingExternalResources = transaction != null;
         }
 
         public T GetScalar<T>(T dbNullSubstitute = default(T))
