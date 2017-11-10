@@ -27,7 +27,7 @@ namespace FluidDbClient.Sandbox
 
             // --- Single Result Set ---
             //DemoGetResultSet.Start();
-            DemoGetResultSetBuffered.Start();
+            //DemoGetResultSetBuffered.Start();
 
             // --- Parameter Specification ---
             //DemoNullParameters1.Start();
@@ -39,7 +39,7 @@ namespace FluidDbClient.Sandbox
             // --- Table Valued Parameters (Sql Server) ---
             //DemoStructuredDataBuilder.Start();
             //DemoToStructuredData.Start();
-            //DemoToStructuredDataWithTypeName.Start();
+            DemoToStructuredDataWithTypeName.Start();
             //DemoCombineStructuredDataAndMultiParam.Start();
 
             // --- Multiple Result Sets ---

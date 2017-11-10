@@ -131,8 +131,7 @@ namespace FluidDbClient.Sql
                 var name = kvp.Key;
                 var value = kvp.Value;
 
-                SqlMetaData metaData;
-                if (!_metaMap.TryGetValue(name, out metaData))
+                if (!_metaMap.TryGetValue(name, out var metaData))
                 {
                     continue;
                 }

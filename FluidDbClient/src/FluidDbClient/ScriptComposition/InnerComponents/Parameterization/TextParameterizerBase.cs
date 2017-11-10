@@ -206,8 +206,7 @@ namespace FluidDbClient.ScriptComposition
 
         private static ValuePlaceholder GetValuePlaceholder(ScriptSegment segment)
         {
-            int valueIndex;
-            if (!int.TryParse(segment.Value.Trim(), out valueIndex))
+            if (!int.TryParse(segment.Value.Trim(), out var valueIndex))
             {
                 throw new FormatException($"Could not parse value index from text : {segment.Value.WrapDoubleQuotes()}");
             }

@@ -19,16 +19,12 @@ namespace FluidDbClient.Sql
 
         public static string GetPropertyName<T>(this Expression<Func<T, object>> expression)
         {
-            var memberExpression = expression.Body as MemberExpression;
-
-            if (memberExpression != null)
+            if (expression.Body is MemberExpression memberExpression)
             {
-                return ((MemberExpression)expression.Body).Member.Name;
+                return memberExpression.Member.Name;
             }
 
-            var unaryExpression = expression.Body as UnaryExpression;
-
-            if (unaryExpression == null)
+            if (!(expression.Body is UnaryExpression unaryExpression))
             {
                 throw new ArgumentException($"Expression must represent property of type {typeof(T).Name}", nameof(expression));
             }

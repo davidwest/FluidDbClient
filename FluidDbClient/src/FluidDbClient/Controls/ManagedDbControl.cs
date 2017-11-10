@@ -57,8 +57,7 @@ namespace FluidDbClient
         {
             get
             {
-                DbParameter parameter;
-                _parameters.TryGetValue(parameterName, out parameter);
+                _parameters.TryGetValue(parameterName, out var parameter);
                 
                 if (parameter == null)
                 {
