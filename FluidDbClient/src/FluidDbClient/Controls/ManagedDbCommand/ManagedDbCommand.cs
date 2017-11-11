@@ -15,19 +15,19 @@ namespace FluidDbClient
         protected ManagedDbCommand(Database database, DbSessionBase session, object parameters)
             : base(database, session, parameters)
         {
-            _usingExternalResources = true;
+            _usingExternalResources = session != null;
         }
 
-        protected ManagedDbCommand(Database database, DbConnection connection, object parameters) 
+        protected ManagedDbCommand(Database database, DbConnection connection, object parameters)
             : base(database, connection, parameters)
         {
-            _usingExternalResources = true;
+            _usingExternalResources = connection != null;
         }
 
         protected ManagedDbCommand(Database database, DbTransaction transaction, object parameters)
             : base(database, transaction, parameters)
         {
-            _usingExternalResources = true;
+            _usingExternalResources = transaction != null;
         }
 
         public void Execute(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
