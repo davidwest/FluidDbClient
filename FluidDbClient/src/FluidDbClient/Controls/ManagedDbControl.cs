@@ -16,6 +16,7 @@ namespace FluidDbClient
         private readonly string _typeName;
         private readonly Dictionary<string, DbParameter> _parameters = new Dictionary<string, DbParameter>(StringComparer.OrdinalIgnoreCase);
 
+        // --- Connection and transaction managed internally ---
         protected ManagedDbControl(Database database, object parameters)
         {
             Timeout = 60;
@@ -30,18 +31,21 @@ namespace FluidDbClient
             mappedParams.ForEach(p => this[p.Key] = p.Value);
         }
 
+        // --- Connection and transaction managed externally via DbSessionBase ---
         protected ManagedDbControl(Database database, DbSessionBase session, object parameters) 
             : this(database, parameters)
         {
             _session = session;
         }
 
+        // --- Connection managed externally ---
         protected ManagedDbControl(Database database, DbConnection connection, object parameters)
             : this(database, parameters)
         {
             Connection = connection;
         }
 
+        // --- Connection and transaction managed externally ---
         protected ManagedDbControl(Database database, DbTransaction transaction, object parameters)
             : this(database, parameters)
         {

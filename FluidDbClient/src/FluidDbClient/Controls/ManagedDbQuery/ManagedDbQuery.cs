@@ -11,22 +11,26 @@ namespace FluidDbClient
         private readonly bool _usingExternalResources;
         private DbDataReader _reader;
 
+        // --- Connection and transaction managed internally ---
         protected ManagedDbQuery(Database database, object parameters) 
             : base(database, parameters)
         { }
 
+        // --- Connection and transaction managed externally via DbSessionBase ---
         protected ManagedDbQuery(Database database, DbSessionBase session, object parameters)
             : base(database, session, parameters)
         {
             _usingExternalResources = session != null;
         }
 
+        // --- Connection managed externally ---
         protected ManagedDbQuery(Database database, DbConnection connection, object parameters)
             : base(database, connection, parameters)
         {
             _usingExternalResources = connection != null;
         }
 
+        // --- Connection and transaction managed externally ---
         protected ManagedDbQuery(Database database, DbTransaction transaction, object parameters)
             : base(database, transaction, parameters)
         {
