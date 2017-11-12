@@ -27,7 +27,7 @@ namespace FluidDbClient
             _usingExternalResources = connection != null;
         }
 
-        // --- Connection and transaction managed externally via DbSessionBase ---
+        // --- Connection and transaction managed externally ---
         protected ManagedDbCommand(Database database, DbTransaction transaction, object parameters)
             : base(database, transaction, parameters)
         {
