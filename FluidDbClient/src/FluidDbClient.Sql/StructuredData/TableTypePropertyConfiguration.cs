@@ -18,6 +18,17 @@ namespace FluidDbClient.Sql
             onChange(propertyName, columnDef);
         }
         
+        public TableTypePropertyConfiguration Ignore()
+        {
+            var meta = _columnDef.MetaData;
+
+            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
+
+            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior, true);
+
+            return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
+        }
+
         public TableTypePropertyConfiguration HasName(string name)
         {
             // TODO: name validation

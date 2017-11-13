@@ -9,46 +9,50 @@ namespace FluidDbClient.Sql
     {
         private readonly string _tableTypeName;
         private readonly List<SqlDataRecord> _records = new List<SqlDataRecord>();
-        private readonly SqlMetaData[] _orderedMetaData;
 
-        private Dictionary<string, SqlMetaData> _metaMap;
+        private readonly SqlMetaData[] _preOrderedMetaData;
+        private Dictionary<string, ColumnDefinition> _columnMap;
         
-        public StructuredDataBuilder(string tableTypeName, params SqlMetaData[] orderedMetaData)
+        public StructuredDataBuilder(string tableTypeName, params SqlMetaData[] preOrderedMetaData)
         {
             _tableTypeName = tableTypeName;
 
-            _orderedMetaData = orderedMetaData;
-            _metaMap = orderedMetaData.ToDictionary(m => m.Name, m => m);
+            _preOrderedMetaData = preOrderedMetaData;
+
+            _columnMap = 
+                preOrderedMetaData
+                .Select(md => new ColumnDefinition(md, ColumnBehavior.Nullable))
+                .ToDictionary(m => m.MetaData.Name, m => m);
         }
 
         public StructuredDataBuilder(TableTypeDefinition def)
         {
             _tableTypeName = def.TypeName;
 
-            _orderedMetaData = 
+            _preOrderedMetaData = 
                 def.Columns
                 .Select(c => c.MetaData)
                 .OrderBy(md => md.SortOrdinal)
                 .ToArray();
 
-            _metaMap = 
+            _columnMap = 
                 def.Columns
-                .ToDictionary(c => c.MetaData.Name, c => c.MetaData, StringComparer.OrdinalIgnoreCase);
+                .ToDictionary(c => c.MetaData.Name, c => c, StringComparer.OrdinalIgnoreCase);
         }
 
         public StructuredDataBuilder(TableTypeMap map)
         {
             _tableTypeName = map.TypeName;
 
-            _orderedMetaData = 
+            _preOrderedMetaData =
                 map.GetDefinition().Columns
                 .Select(c => c.MetaData)
                 .OrderBy(md => md.SortOrdinal)
                 .ToArray();
 
-            _metaMap = 
+            _columnMap = 
                 map.PropertyMap
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.MetaData, StringComparer.OrdinalIgnoreCase);
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value, StringComparer.OrdinalIgnoreCase);
         }
                 
         public StructuredDataBuilder Append(IDictionary<string, object> parameters)
@@ -56,9 +60,9 @@ namespace FluidDbClient.Sql
             var propertyMap = parameters as Dictionary<string, object> ?? 
                               parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            if (_metaMap.Count == 0)
+            if (_columnMap.Count == 0)
             {
-                DefineMetaMapFrom(propertyMap);
+                CreateColumnMapFrom(propertyMap);
             }
             
             Append(propertyMap);
@@ -70,9 +74,9 @@ namespace FluidDbClient.Sql
         {
             var propertyMap = parameters.GetPropertyMap();
             
-            if (_metaMap.Count == 0)
+            if (_columnMap.Count == 0)
             {
-                DefineMetaMapFrom(propertyMap);
+                CreateColumnMapFrom(propertyMap);
             }
 
             Append(propertyMap);
@@ -82,17 +86,17 @@ namespace FluidDbClient.Sql
 
         public StructuredDataBuilder AppendValues(params object[] values)
         {
-            if (_orderedMetaData == null)
+            if (_preOrderedMetaData == null)
             {
-                throw new InvalidOperationException("Cannot append values directly to data builder when ordered SQL meta data is undefined");
+                throw new InvalidOperationException("Cannot append values directly to data builder when pre-ordered SQL meta data is undefined");
             }
 
-            if (values.Length != _orderedMetaData.Length)
+            if (values.Length != _preOrderedMetaData.Length)
             {
                 throw new ArgumentException("Specified values do not match the established SQL meta data", nameof(values));
             }
 
-            var record = new SqlDataRecord(_orderedMetaData);
+            var record = new SqlDataRecord(_preOrderedMetaData);
 
             record.SetValues(values);
 
@@ -103,49 +107,54 @@ namespace FluidDbClient.Sql
 
         public StructuredData Build()
         {
+            // TODO: verify
+
             return new StructuredData(_tableTypeName, _records);
         }
         
-
-        private void DefineMetaMapFrom(Dictionary<string, object> propertyMap)
+        private void CreateColumnMapFrom(Dictionary<string, object> propertyMap)
         {
-            _metaMap = new Dictionary<string, SqlMetaData>();
+            _columnMap = new Dictionary<string, ColumnDefinition>();
 
             foreach (var kvp in propertyMap)
             {
                 var meta = ExtractMetaDataFrom(kvp.Key, kvp.Value);
                 if (meta != null)
                 {
-                    _metaMap.Add(kvp.Key, meta);
+                    var columnDef = new ColumnDefinition(meta, ColumnBehavior.Nullable);
+                    _columnMap.Add(kvp.Key, columnDef);
                 }
             }
         }
 
         private void Append(Dictionary<string, object> propertyMap)
         {
-            var metaList = new List<SqlMetaData>();
+            var columnList = new List<ColumnDefinition>();
             var valueList = new List<object>();
 
             foreach (var kvp in propertyMap)
             {
                 var name = kvp.Key;
                 var value = kvp.Value;
+                
+                if (!_columnMap.TryGetValue(name, out var columnDef))
+                {
+                    continue;
+                }
 
-                if (!_metaMap.TryGetValue(name, out var metaData))
+                if (columnDef.IsIgnored)
                 {
                     continue;
                 }
                 
-                metaList.Add(metaData);
+                columnList.Add(columnDef);
                 valueList.Add(value);
             }
 
-            if (metaList.Count != valueList.Count)
-            {
-                throw new InvalidOperationException("Specified properties do not match the established SQL meta data");
-            }
+            var metaArray = columnList.Select(c => c.MetaData).ToArray();
 
-            var record = new SqlDataRecord(metaList.ToArray());
+            var record = new SqlDataRecord(metaArray);
+
             record.SetValues(valueList.ToArray());
 
             _records.Add(record);
