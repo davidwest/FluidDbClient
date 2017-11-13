@@ -39,8 +39,8 @@ namespace FluidDbClient.Sandbox
             // --- Table Valued Parameters (Sql Server) ---
             //DemoStructuredDataBuilder.Start();
             //DemoToStructuredData.Start();
-            //DemoToStructuredDataWithTypeName.Start();
-            DemoToStructuredDataWithPreconfiguredMapping.Start();
+            DemoToStructuredData2.Start();
+            //DemoToStructuredDataWithExplicitTypeName.Start();
             //DemoCombineStructuredDataAndMultiParam.Start();
 
             // --- Multiple Result Sets ---

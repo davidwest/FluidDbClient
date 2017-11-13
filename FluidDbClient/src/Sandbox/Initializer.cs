@@ -8,8 +8,9 @@ namespace FluidDbClient.Sandbox
     {
         public static void Initialize()
         {
-            const string connString = @"Server = (LocalDb)\MSSQLLocalDB; Initial Catalog = Acme; Trusted_Connection = true;";
-            
+            //const string connString = @"Server = (LocalDb)\MSSQLLocalDB; Initial Catalog = Acme; Trusted_Connection = true;";
+            const string connString = @"Data Source = localhost; Initial Catalog = Acme; Integrated Security=True;";
+
             DbRegistry.Initialize(new AcmeDb(connString, msg => Debug.WriteLine(msg)));
             
             TableTypeRegistry.Register(new RobotsTableTypeMap(), 

@@ -16,7 +16,8 @@ namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
                 new Widget(0, Guid.NewGuid(), "80-Tooth Gear", "Keep it grinding!")
             };
 
-            // Note that this is only possible because we're explicitly naming the fields (leaving WidgetId out)
+            // NOTE: The SELECT must be explicit because WidgetId is part of the table type definition.
+            //       In this case, all WidgetId values are default int (0).
 
             Db.Execute("INSERT INTO Widget (GlobalId, Name, Description) SELECT GlobalId, Name, Description FROM @data;",
                         new

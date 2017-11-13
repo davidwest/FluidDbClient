@@ -29,12 +29,6 @@ namespace FluidDbClient.Sql
         {
             _tableTypeName = def.TypeName;
 
-            _preOrderedMetaData = 
-                def.Columns
-                .Select(c => c.MetaData)
-                .OrderBy(md => md.SortOrdinal)
-                .ToArray();
-
             _columnMap = 
                 def.Columns
                 .ToDictionary(c => c.MetaData.Name, c => c, StringComparer.OrdinalIgnoreCase);
@@ -43,12 +37,6 @@ namespace FluidDbClient.Sql
         public StructuredDataBuilder(TableTypeMap map)
         {
             _tableTypeName = map.TypeName;
-
-            _preOrderedMetaData =
-                map.GetDefinition().Columns
-                .Select(c => c.MetaData)
-                .OrderBy(md => md.SortOrdinal)
-                .ToArray();
 
             _columnMap = 
                 map.PropertyMap

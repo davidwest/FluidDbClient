@@ -7,7 +7,7 @@ using FluidDbClient.Sandbox.Models;
 
 namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
 {
-    public static class DemoToStructuredDataWithPreconfiguredMapping
+    public static class DemoToStructuredData2
     {
         public static void Start()
         {
