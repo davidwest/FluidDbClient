@@ -14,7 +14,7 @@ namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
         public bool IsEvil { get; set; }
     }
 
-    public static class DemoToStructuredDataWithTypeName
+    public static class DemoToStructuredDataWithExplicitTypeName
     {
         public static void Start()
         {
@@ -29,7 +29,7 @@ namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
             Db.Execute("INSERT INTO Robot (Name, Description, DateBuilt, IsEvil) SELECT * FROM @data;", 
                        new
                        {
-                           data = newRobots.ToStructuredData("Robots")
+                           data = newRobots.ToStructuredData("NewRobots")
                        });
             
             Debug.WriteLine("\n!!! Inserted New Robots !!!\n");

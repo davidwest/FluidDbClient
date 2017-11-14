@@ -1,5 +1,4 @@
-﻿
-using System.Data;
+﻿using System.Data;
 using Microsoft.SqlServer.Server;
 using FluidDbClient.Sql;
 

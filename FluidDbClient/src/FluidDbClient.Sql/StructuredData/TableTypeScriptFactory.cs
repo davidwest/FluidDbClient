@@ -13,14 +13,19 @@ namespace FluidDbClient.Sql
 
         public static string CreateScriptFor(TableTypeDefinition def)
         {
-            var tableBody = CreateTableBody(def.Columns);
+            var effectiveColumns = 
+                def.Columns
+                .Where(c => !c.IsIgnored)
+                .ToArray();
+
+            var tableBody = CreateTableBody(effectiveColumns);
 
             var script = string.Format(ScriptTemplate, def.TypeName, tableBody);
 
             return script;
         }
         
-        private static string CreateTableBody(ColumnDefinition[] columns)
+        private static string CreateTableBody(IReadOnlyCollection<ColumnDefinition> columns)
         {
             var lines = columns.Select(c => CreateColumn(c)).ToList();
 

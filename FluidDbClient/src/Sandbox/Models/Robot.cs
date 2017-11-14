@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 namespace FluidDbClient.Sandbox.Models
 {

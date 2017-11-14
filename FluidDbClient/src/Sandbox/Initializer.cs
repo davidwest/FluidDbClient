@@ -8,8 +8,9 @@ namespace FluidDbClient.Sandbox
     {
         public static void Initialize()
         {
-            const string  connString = "Server = localhost; Initial Catalog = Acme; Trusted_Connection = true;";
-            
+            //const string connString = @"Server = (LocalDb)\MSSQLLocalDB; Initial Catalog = Acme; Trusted_Connection = true;";
+            const string connString = @"Data Source = localhost; Initial Catalog = Acme; Integrated Security=True;";
+
             DbRegistry.Initialize(new AcmeDb(connString, msg => Debug.WriteLine(msg)));
             
             TableTypeRegistry.Register(new RobotsTableTypeMap(), 
@@ -23,28 +24,22 @@ namespace FluidDbClient.Sandbox
         {
             HasName("Widgets");
 
-            Property(x => x.GlobalId)
-                .IsInUniqueKey();
-
-            Property(x => x.Name)
-                .HasLength(100);
-
-            Property(x => x.Description)
-                .HasLength(500);
+            Property(x => x.GlobalId).IsInUniqueKey();
+            Property(x => x.Name).HasLength(100);
+            Property(x => x.Description).HasLength(500);
         }
     }
     
-    public class RobotsTableTypeMap : TableTypeMap<Robot>
+    public class RobotsTableTypeMap : TableTypeMap<RobotGeneralPurposeDto>
     {
         public RobotsTableTypeMap()
         {
             HasName("Robots");
             
-            Property(x => x.Name)
-                .HasLength(100);
-
-            Property(x => x.Description)
-                .HasLength(500);
+            Property(x => x.Name).HasLength(100);
+            Property(x => x.Description).HasLength(500);
+            Property(x => x.ExtraPropertyOne).Ignore();
+            Property(x => x.ExtraPropertyTwo).Ignore();
         }
     }
 }
