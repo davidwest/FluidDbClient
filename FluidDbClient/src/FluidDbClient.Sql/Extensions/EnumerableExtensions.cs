@@ -30,17 +30,10 @@ namespace FluidDbClient.Sql
 
             return builder.Build();
         }
-
-        public static StructuredData ToStructuredData<T>(this IEnumerable<T> items, TableTypeMap<T> map) where T : class
+        
+        public static StructuredData ToStructuredData<T>(this IEnumerable<T> items, TableTypeMap map) where T : class
         {
-            var builder = new StructuredDataBuilder(map);
-
-            foreach (var item in items)
-            {
-                builder.Append(item);
-            }
-
-            return builder.Build();
+            return items.ToStructuredData(map.GetDefinition());
         }
 
         public static StructuredData ToStructuredData<T>(this IEnumerable<T> items) where T : class

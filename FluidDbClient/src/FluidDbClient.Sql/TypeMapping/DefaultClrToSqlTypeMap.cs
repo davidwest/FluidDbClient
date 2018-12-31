@@ -4,7 +4,7 @@ using System.Data;
 
 namespace FluidDbClient.Sql
 {
-    public static class PrimitiveClrToSqlTypeMap
+    public static class DefaultClrToSqlTypeMap
     {
         private static readonly Dictionary<Type, SqlDbType> Map = new Dictionary<Type, SqlDbType>
         {
@@ -34,7 +34,7 @@ namespace FluidDbClient.Sql
             {typeof(DateTimeOffset?), SqlDbType.DateTimeOffset },
             {typeof(string), SqlDbType.NVarChar },
             {typeof(char[]), SqlDbType.NVarChar },
-            {typeof(byte[]), SqlDbType.Binary }
+            {typeof(byte[]), SqlDbType.VarBinary}
         };
 
         public static SqlDbType? GetSqlTypeFor(object value)

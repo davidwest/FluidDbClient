@@ -3,17 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
 {
     public abstract class TableTypeMap
     {
-        internal Dictionary<string, ColumnDefinition> PropertyMap { get; set; }
+        protected Dictionary<string, ColumnDefinition> PropertyMap { get; set; }
         internal string TypeName { get; set; }
         
         public TableTypeDefinition GetDefinition()
         {
-            return new TableTypeDefinition(TypeName, PropertyMap.Values.ToArray());
+            var normalizedColumnDefs = GetNormalizedColumnDefinitions();
+
+            return new TableTypeDefinition(TypeName, normalizedColumnDefs);
+        }
+
+        private ColumnDefinition[] GetNormalizedColumnDefinitions()
+        {
+            return 
+                PropertyMap.Values
+                    .Where(cd => !cd.IsIgnored)
+                    .Select((cd, i) => new ColumnDefinition(GetNormalizedSqlMetaData(cd.MetaData, i), cd.Behavior))
+                    .ToArray();
+        }
+
+        private static SqlMetaData GetNormalizedSqlMetaData(SqlMetaData metaData, int order)
+        {
+            return metaData.SqlDbType.CanSpecifyPrecision() 
+                ? SqlMetaDataFactory.CreateSqlMetaData(metaData.Name, metaData.SqlDbType, metaData.Precision, metaData.Scale, metaData.IsUniqueKey, order)
+                : SqlMetaDataFactory.CreateSqlMetaData(metaData.Name, metaData.SqlDbType, metaData.MaxLength, metaData.IsUniqueKey, order);
         }
     }
 
@@ -23,16 +42,18 @@ namespace FluidDbClient.Sql
         {
             TypeName = typeof(T).Name;
 
+            // Default PropertyMap:
+
             PropertyMap =
                 typeof(T).GetProperties()
                 .Select(p => new
                 {
                     p.Name,
                     p.PropertyType,
-                    SqlType = PrimitiveClrToSqlTypeMap.GetSqlTypeFor(p.PropertyType)
+                    SqlType = DefaultClrToSqlTypeMap.GetSqlTypeFor(p.PropertyType)
                 })
                 .Where(p => p.SqlType.HasValue)
-                .Select((p, i) => new
+                .Select((p,i) => new
                 {
                     Type = p.PropertyType,
                     MetaData = SqlMetaDataFactory.CreateSqlMetaData(p.Name, p.SqlType.Value, i)
@@ -43,7 +64,6 @@ namespace FluidDbClient.Sql
         
         protected void HasName(string name)
         {
-            // TODO: validation
             TypeName = name;
         }
 

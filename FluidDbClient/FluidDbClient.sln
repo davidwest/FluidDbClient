@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluidDbClient.Sql", "src\Fl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sandbox", "src\Sandbox\Sandbox.csproj", "{5B294028-A55C-4828-9F17-74AB63D6A0EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandboxEf", "SandboxEf\SandboxEf.csproj", "{DEF510CB-E7B3-4EED-B9FA-D47E669658CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{5B294028-A55C-4828-9F17-74AB63D6A0EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B294028-A55C-4828-9F17-74AB63D6A0EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B294028-A55C-4828-9F17-74AB63D6A0EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEF510CB-E7B3-4EED-B9FA-D47E669658CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEF510CB-E7B3-4EED-B9FA-D47E669658CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEF510CB-E7B3-4EED-B9FA-D47E669658CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEF510CB-E7B3-4EED-B9FA-D47E669658CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{4FC4AE22-3362-4112-A309-0BD2FE2B9A51} = {D2C3E169-5C9E-4495-A1E7-515EC291D387}
 		{5B956103-15AF-4387-A55D-C64B37372A66} = {D2C3E169-5C9E-4495-A1E7-515EC291D387}
 		{5B294028-A55C-4828-9F17-74AB63D6A0EC} = {D2C3E169-5C9E-4495-A1E7-515EC291D387}
+		{DEF510CB-E7B3-4EED-B9FA-D47E669658CD} = {D2C3E169-5C9E-4495-A1E7-515EC291D387}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2F591769-2B58-4284-A8EA-914DB88991F3}

@@ -7,7 +7,7 @@ namespace FluidDbClient.Sql
 {
     public static class TableTypeRegistry
     {
-        private static List<TableTypeMap> _maps = new List<TableTypeMap>();
+        private static readonly List<TableTypeMap> _maps = new List<TableTypeMap>();
 
         public static void Register(params TableTypeMap[] maps)
         {
@@ -31,9 +31,14 @@ namespace FluidDbClient.Sql
             _maps.AddRange(maps);
         }
 
+        /// <summary>
+        /// Gets TableTypeMap of type T; valid only when there is a single map registered for T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static TableTypeMap<T> GetMap<T>() where T: class
         {
-            return _maps.OfType<TableTypeMap<T>>().FirstOrDefault();
+            return _maps.OfType<TableTypeMap<T>>().SingleOrDefault();
         }
         
         private static string GetScriptFor(IEnumerable<TableTypeMap> maps)

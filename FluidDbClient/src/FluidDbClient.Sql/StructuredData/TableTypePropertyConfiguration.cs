@@ -31,11 +31,11 @@ namespace FluidDbClient.Sql
 
         public TableTypePropertyConfiguration HasName(string name)
         {
-            // TODO: name validation
-
             var meta = _columnDef.MetaData;
 
-            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
+            var newMeta = meta.SqlDbType.CanSpecifyPrecision()
+                ? SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.Precision, meta.Scale, meta.IsUniqueKey, meta.SortOrdinal)
+                : SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
 
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
 
@@ -46,14 +46,16 @@ namespace FluidDbClient.Sql
         {
             var meta = _columnDef.MetaData;
 
-            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
-
+            var newMeta = type.CanSpecifyPrecision()
+                ? SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.Precision, meta.Scale, meta.IsUniqueKey, meta.SortOrdinal)
+                : SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
+            
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
 
-        public TableTypePropertyConfiguration HasLength(int? size = null)
+        public TableTypePropertyConfiguration HasMaxLength(int? size = null)
         {
             var meta = _columnDef.MetaData;
 
@@ -65,12 +67,25 @@ namespace FluidDbClient.Sql
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
+
+        public TableTypePropertyConfiguration HasPrecision(byte precision, byte scale)
+        {
+            var meta = _columnDef.MetaData;
+            
+            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, precision, scale, meta.IsUniqueKey, meta.SortOrdinal);
+
+            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
+
+            return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
+        }
         
         public TableTypePropertyConfiguration IsInUniqueKey()
         {
             var meta = _columnDef.MetaData;
 
-            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.MaxLength, true, meta.SortOrdinal);
+            var newMeta = meta.SqlDbType.CanSpecifyPrecision() 
+                ? SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.Precision, meta.Scale, true, meta.SortOrdinal)
+                : SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.MaxLength, true, meta.SortOrdinal);
 
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
 

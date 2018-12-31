@@ -75,6 +75,11 @@ namespace FluidDbClient.Sql
                 sqlTypeStr += meta.MaxLength == -1 ? "(MAX)" : $"({meta.MaxLength})";
             }
 
+            if (sqlType.CanSpecifyPrecision())
+            {
+                sqlTypeStr += $"({meta.Precision},{meta.Scale})";
+            }
+
             return sqlTypeStr;
         }
 

@@ -9,12 +9,15 @@ namespace FluidDbClient.Sql
             return sqlType == SqlDbType.Char ||
                    sqlType == SqlDbType.NChar ||
                    sqlType == SqlDbType.NVarChar ||
-                   sqlType == SqlDbType.Image ||
                    sqlType == SqlDbType.Text ||
                    sqlType == SqlDbType.NText ||
                    sqlType == SqlDbType.Binary ||
-                   sqlType == SqlDbType.VarBinary ||
-                   sqlType == SqlDbType.Structured;
+                   sqlType == SqlDbType.VarBinary;
+        }
+
+        public static bool CanSpecifyPrecision(this SqlDbType sqlType)
+        {
+            return sqlType == SqlDbType.Decimal;
         }
     }
 }

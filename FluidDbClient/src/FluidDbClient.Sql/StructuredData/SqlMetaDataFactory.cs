@@ -17,6 +17,13 @@ namespace FluidDbClient.Sql
                 ? new SqlMetaData(name, sqlType, maxLength, false, isInUniqueKey, SortOrder.Ascending, order)
                 : new SqlMetaData(name, sqlType, false, isInUniqueKey, SortOrder.Ascending, order);
         }
+
+        public static SqlMetaData CreateSqlMetaData(string name, SqlDbType sqlType, byte precision, byte scale, bool isInUniqueKey, int order)
+        {
+            return sqlType.CanSpecifyPrecision()
+                ? new SqlMetaData(name, sqlType, precision, scale, false, isInUniqueKey, SortOrder.Ascending, order)
+                : new SqlMetaData(name, sqlType, false, isInUniqueKey, SortOrder.Ascending, order);
+        }
     }
 }
 
