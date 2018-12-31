@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
 {
@@ -14,25 +13,7 @@ namespace FluidDbClient.Sql
         
         public TableTypeDefinition GetDefinition()
         {
-            var normalizedColumnDefs = GetNormalizedColumnDefinitions();
-
-            return new TableTypeDefinition(TypeName, normalizedColumnDefs);
-        }
-
-        private ColumnDefinition[] GetNormalizedColumnDefinitions()
-        {
-            return 
-                PropertyMap.Values
-                    .Where(cd => !cd.IsIgnored)
-                    .Select((cd, i) => new ColumnDefinition(GetNormalizedSqlMetaData(cd.MetaData, i), cd.Behavior))
-                    .ToArray();
-        }
-
-        private static SqlMetaData GetNormalizedSqlMetaData(SqlMetaData metaData, int order)
-        {
-            return metaData.SqlDbType.CanSpecifyPrecision() 
-                ? SqlMetaDataFactory.CreateSqlMetaData(metaData.Name, metaData.SqlDbType, metaData.Precision, metaData.Scale, metaData.IsUniqueKey, order)
-                : SqlMetaDataFactory.CreateSqlMetaData(metaData.Name, metaData.SqlDbType, metaData.MaxLength, metaData.IsUniqueKey, order);
+            return new TableTypeDefinition(TypeName, PropertyMap.Values.ToArray());
         }
     }
 
@@ -53,10 +34,10 @@ namespace FluidDbClient.Sql
                     SqlType = DefaultClrToSqlTypeMap.GetSqlTypeFor(p.PropertyType)
                 })
                 .Where(p => p.SqlType.HasValue)
-                .Select((p,i) => new
+                .Select(p => new
                 {
                     Type = p.PropertyType,
-                    MetaData = SqlMetaDataFactory.CreateSqlMetaData(p.Name, p.SqlType.Value, i)
+                    MetaData = SqlMetaDataFactory.CreateSqlMetaData(p.Name, p.SqlType.Value)
                 })
                 .Select(p => new ColumnDefinition(p.MetaData, p.Type.IsNullableType() ? ColumnBehavior.Nullable : ColumnBehavior.NotNullable))
                 .ToDictionary(cd => cd.MetaData.Name, cd => cd);

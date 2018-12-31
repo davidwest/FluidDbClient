@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluidDbClient;
 using FluidDbClient.Shell;
 using FluidDbClient.Sql;
 using SandboxEf.Entities;
@@ -15,7 +16,7 @@ namespace SandboxEf
             Initializer.Initialize();
 
             Console.WriteLine("Starting...");
-
+            
             var widgets = new[]
             {
                 new Widget
@@ -41,19 +42,37 @@ namespace SandboxEf
                 }
             };
 
-            var data = widgets.OrderBy(w => w.ExternalId).ToStructuredData(new NewWidgetTableTypeMap());
+            var data = widgets.ToStructuredData(new NewWidgetTableTypeMap());
 
-            Db.Execute(Script, new {data});
+            Db.Execute(AddScript, new {data});
+
+            widgets = Db.GetResultSet("SELECT * FROM Widget;").Map<Widget>().ToArray();
+
+            var firstWidget = widgets[0];
+
+            firstWidget.Cost += 5;
+
+            data = widgets.ToStructuredData(new UpdatedWidgetTableTypeMap());
+
+            Db.Execute(UpdateScript, new {data});
 
             Console.WriteLine("Finished");
             Console.ReadKey();
         }
 
-        private const string Script =
+        private const string AddScript =
 @"
 INSERT INTO Widget (ExternalId,IsArchived,[Name],Cost,CreatedTimestamp,ReleaseDate,Weight,Rating,Serialcode) 
 SELECT ExternalId,0,[Name],Cost,CreatedTimestamp,ReleaseDate,Weight,Rating,SerialCode 
 FROM @data;
+";
+
+        private const string UpdateScript = 
+@"
+UPDATE target
+    SET target.[Name] = source.[Name], target.Cost = source.Cost
+FROM Widget AS target
+INNER JOIN @data AS source ON target.Id = source.Id;
 ";
     }
 }

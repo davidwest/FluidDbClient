@@ -42,7 +42,7 @@ namespace FluidDbClient.Sql
 
             var uniqueConstraintColumnNames = 
                 columns
-                .Where(c => c.MetaData.IsUniqueKey)
+                .Where(c => c.Behavior == ColumnBehavior.UniqueKeyComponent)
                 .Select(c => c.MetaData.Name)
                 .ToArray();
 

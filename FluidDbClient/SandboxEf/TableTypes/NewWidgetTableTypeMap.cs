@@ -14,7 +14,7 @@ namespace SandboxEf.TableTypes
                 .Ignore();
 
             Property(x => x.ExternalId)
-                .IsInUniqueKey();
+                .HasBehavior(ColumnBehavior.UniqueKeyComponent);
 
             Property(x => x.IsArchived)
                 .Ignore();

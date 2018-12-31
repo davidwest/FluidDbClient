@@ -11,10 +11,10 @@ namespace SandboxEf.TableTypes
             HasName("UpdatedWidget");
 
             Property(x => x.Id)
-                .IsInUniqueKey();
+                .HasBehavior(ColumnBehavior.PrimaryKeyComponent);
 
             Property(x => x.ExternalId)
-                .HasBehavior(ColumnBehavior.PrimaryKeyComponent);
+                .HasBehavior(ColumnBehavior.UniqueKeyComponent);
 
             Property(x => x.Name)
                 .HasMaxLength(200);

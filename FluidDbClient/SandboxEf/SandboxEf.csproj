@@ -55,6 +55,7 @@
     <Compile Include="Entities\Extensions.cs" />
     <Compile Include="Entities\Widget.cs" />
     <Compile Include="Entities\WidgetEntityConfig.cs" />
+    <Compile Include="Entities\WidgetType.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

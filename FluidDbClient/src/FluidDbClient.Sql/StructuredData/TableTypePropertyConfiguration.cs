@@ -22,7 +22,7 @@ namespace FluidDbClient.Sql
         {
             var meta = _columnDef.MetaData;
 
-            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
+            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.MaxLength);
 
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior, true);
 
@@ -34,8 +34,8 @@ namespace FluidDbClient.Sql
             var meta = _columnDef.MetaData;
 
             var newMeta = meta.SqlDbType.CanSpecifyPrecision()
-                ? SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.Precision, meta.Scale, meta.IsUniqueKey, meta.SortOrdinal)
-                : SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
+                ? SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.Precision, meta.Scale)
+                : SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.MaxLength);
 
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
 
@@ -47,8 +47,8 @@ namespace FluidDbClient.Sql
             var meta = _columnDef.MetaData;
 
             var newMeta = type.CanSpecifyPrecision()
-                ? SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.Precision, meta.Scale, meta.IsUniqueKey, meta.SortOrdinal)
-                : SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.MaxLength, meta.IsUniqueKey, meta.SortOrdinal);
+                ? SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.Precision, meta.Scale)
+                : SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.MaxLength);
             
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
 
@@ -61,7 +61,7 @@ namespace FluidDbClient.Sql
 
             var encodedSize = size ?? -1;
             
-            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, encodedSize, meta.IsUniqueKey, meta.SortOrdinal);
+            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, encodedSize);
 
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
 
@@ -72,26 +72,13 @@ namespace FluidDbClient.Sql
         {
             var meta = _columnDef.MetaData;
             
-            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, precision, scale, meta.IsUniqueKey, meta.SortOrdinal);
+            var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, precision, scale);
 
             var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
-        
-        public TableTypePropertyConfiguration IsInUniqueKey()
-        {
-            var meta = _columnDef.MetaData;
-
-            var newMeta = meta.SqlDbType.CanSpecifyPrecision() 
-                ? SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.Precision, meta.Scale, true, meta.SortOrdinal)
-                : SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.MaxLength, true, meta.SortOrdinal);
-
-            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
-
-            return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
-        }
-        
+                
         public TableTypePropertyConfiguration HasBehavior(ColumnBehavior behavior)
         {
             var newColumnDef = new ColumnDefinition(_columnDef.MetaData, behavior);

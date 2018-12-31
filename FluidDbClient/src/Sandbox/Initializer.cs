@@ -24,7 +24,7 @@ namespace FluidDbClient.Sandbox
         {
             HasName("Widgets");
 
-            Property(x => x.GlobalId).IsInUniqueKey();
+            Property(x => x.GlobalId);
             Property(x => x.Name).HasMaxLength(100);
             Property(x => x.Description).HasMaxLength(500);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+//using System.Reflection;
 
 namespace FluidDbClient.Sql
 {
@@ -46,6 +47,11 @@ namespace FluidDbClient.Sql
 
         public static SqlDbType? GetSqlTypeFor(Type clrType)
         {
+            //if (clrType.IsEnum)
+            //{
+            //    clrType = clrType.GetEnumUnderlyingType();
+            //}
+
             return Map.ContainsKey(clrType) ? (SqlDbType?)Map[clrType] : null;
         }
     }
