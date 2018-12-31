@@ -10,7 +10,7 @@ namespace SandboxEf.Entities
 
         public bool IsArchived { get; set; }
 
-        //public WidgetType Type { get; set; }
+        public WidgetType Type { get; set; }
 
         public string Name { get; set; }
         

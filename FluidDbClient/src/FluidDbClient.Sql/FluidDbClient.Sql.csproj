@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Sql Server provider for FluidDbClient.  This library also makes building data for Table-Valued Parameters a snap.</Description>
     <Copyright>© 2017 David West</Copyright>
     <AssemblyTitle>FluidDbClient.Sql</AssemblyTitle>
     <VersionPrefix>1.1.2</VersionPrefix>
-    <TargetFrameworks>net451;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <AssemblyName>FluidDbClient.Sql</AssemblyName>
     <PackageId>FluidDbClient.Sql</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -23,11 +23,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);COREFX</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
   </ItemGroup>

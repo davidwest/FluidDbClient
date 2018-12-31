@@ -22,6 +22,7 @@ namespace SandboxEf
                 new Widget
                 {
                     ExternalId = Guid.NewGuid(),
+                    Type = WidgetType.Household,
                     Name = "Slicer",
                     Cost = (decimal)213.67,
                     CreatedTimestamp = DateTimeOffset.UtcNow,
@@ -33,6 +34,7 @@ namespace SandboxEf
                 new Widget
                 {
                     ExternalId = Guid.NewGuid(),
+                    Type = WidgetType.Industrial,
                     Name = "Dicer",
                     Cost = (decimal)55.80,
                     CreatedTimestamp = DateTimeOffset.UtcNow,
@@ -62,8 +64,8 @@ namespace SandboxEf
 
         private const string AddScript =
 @"
-INSERT INTO Widget (ExternalId,IsArchived,[Name],Cost,CreatedTimestamp,ReleaseDate,Weight,Rating,Serialcode) 
-SELECT ExternalId,0,[Name],Cost,CreatedTimestamp,ReleaseDate,Weight,Rating,SerialCode 
+INSERT INTO Widget (ExternalId,[Type],IsArchived,[Name],Cost,CreatedTimestamp,ReleaseDate,Weight,Rating,Serialcode) 
+SELECT ExternalId,[Type],0,[Name],Cost,CreatedTimestamp,ReleaseDate,Weight,Rating,SerialCode 
 FROM @data;
 ";
 

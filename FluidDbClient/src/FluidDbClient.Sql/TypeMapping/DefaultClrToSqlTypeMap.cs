@@ -47,10 +47,10 @@ namespace FluidDbClient.Sql
 
         public static SqlDbType? GetSqlTypeFor(Type clrType)
         {
-            //if (clrType.IsEnum)
-            //{
-            //    clrType = clrType.GetEnumUnderlyingType();
-            //}
+            if (clrType.IsEnum)
+            {
+                clrType = clrType.GetEnumUnderlyingType();
+            }
 
             return Map.ContainsKey(clrType) ? (SqlDbType?)Map[clrType] : null;
         }
