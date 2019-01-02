@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-//using System.Reflection;
 
 namespace FluidDbClient.Sql
 {
@@ -13,8 +12,8 @@ namespace FluidDbClient.Sql
             {typeof(bool?), SqlDbType.Bit },
             {typeof(byte), SqlDbType.TinyInt },
             {typeof(byte?), SqlDbType.TinyInt },
-            {typeof(char), SqlDbType.VarChar },
-            {typeof(char?), SqlDbType.VarChar },
+            {typeof(char), SqlDbType.NChar },
+            {typeof(char?), SqlDbType.NChar },
             {typeof(short), SqlDbType.SmallInt },
             {typeof(short?), SqlDbType.SmallInt },
             {typeof(int), SqlDbType.Int },
@@ -33,9 +32,11 @@ namespace FluidDbClient.Sql
             {typeof(DateTime?), SqlDbType.DateTime },
             {typeof(DateTimeOffset), SqlDbType.DateTimeOffset },
             {typeof(DateTimeOffset?), SqlDbType.DateTimeOffset },
+            {typeof(TimeSpan), SqlDbType.Time },
+            {typeof(TimeSpan?), SqlDbType.Time },
             {typeof(string), SqlDbType.NVarChar },
             {typeof(char[]), SqlDbType.NVarChar },
-            {typeof(byte[]), SqlDbType.VarBinary}
+            {typeof(byte[]), SqlDbType.VarBinary }
         };
 
         public static SqlDbType? GetSqlTypeFor(object value)

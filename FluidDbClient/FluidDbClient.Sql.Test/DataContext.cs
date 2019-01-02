@@ -1,7 +1,12 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SandboxEf.Entities
+namespace FluidDbClient.Sql.Test
 {
     public class DataContext : DbContext
     {
@@ -9,8 +14,8 @@ namespace SandboxEf.Entities
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-            modelBuilder.AddAllEntityConfigurations();
-            
+            modelBuilder.AddAllTypeConfigurations();
+
             base.OnModelCreating(modelBuilder);
         }
     }

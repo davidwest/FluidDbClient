@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity.ModelConfiguration;
 
-namespace SandboxEf.Entities
+namespace FluidDbClient.Sql.Test.Entities
 {
     public class WidgetEntityConfig : EntityTypeConfiguration<Widget>
     {

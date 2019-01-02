@@ -1,29 +1,28 @@
 ﻿using System.Data;
-using FluidDbClient.Sql;
-using SandboxEf.Entities;
+using FluidDbClient.Sql.Test.Entities;
 
-namespace SandboxEf.TableTypes
+namespace FluidDbClient.Sql.Test.TableTypes
 {
-    public class NewWidgetTableTypeMap : TableTypeMap<Widget>
+    public class UpdatedWidgetTableTypeMap : TableTypeMap<Widget>
     {
-        public NewWidgetTableTypeMap()
+        public UpdatedWidgetTableTypeMap()
         {
-            HasName("NewWidget");
+            HasName("UpdatedWidget");
 
             Property(x => x.Id)
-                .Ignore();
+                .HasBehavior(ColumnBehavior.PrimaryKeyComponent);
 
             Property(x => x.ExternalId)
                 .HasBehavior(ColumnBehavior.UniqueKeyComponent);
-
-            Property(x => x.IsArchived)
-                .Ignore();
 
             Property(x => x.Name)
                 .HasMaxLength(200);
 
             Property(x => x.Cost)
                 .HasPrecision(18, 2);
+
+            Property(x => x.CreatedTimestamp)
+                .Ignore();
 
             Property(x => x.ReleaseDate)
                 .HasSqlType(SqlDbType.Date);

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SandboxEf.Entities
+namespace FluidDbClient.Sql.Test.Entities
 {
     public class Widget
     {
@@ -10,7 +10,7 @@ namespace SandboxEf.Entities
 
         public bool IsArchived { get; set; }
 
-        public WidgetType Type { get; set; }
+        public WidgetEnvironment Environment { get; set; } = WidgetEnvironment.Household;
 
         public string Name { get; set; }
         
@@ -20,7 +20,7 @@ namespace SandboxEf.Entities
 
         public DateTime ReleaseDate { get; set; }
         
-        public byte[] SerialCode { get; set; }
+        public byte[] SerialCode { get; set; } = new byte[0];
 
         public double Weight { get; set; }
 

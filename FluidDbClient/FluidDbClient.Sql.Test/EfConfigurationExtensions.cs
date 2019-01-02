@@ -7,18 +7,17 @@ using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq;
 using System.Reflection;
 
-namespace SandboxEf.Entities
+namespace FluidDbClient.Sql.Test
 {
-    public static class Extensions
+    public static class EfConfigurationExtensions
     {
-        public static void AddAllEntityConfigurations(this DbModelBuilder modelBuilder)
+        public static void AddAllTypeConfigurations(this DbModelBuilder modelBuilder)
         {
             var typesToRegister =
                 Assembly.GetAssembly(typeof(DataContext)).GetTypes()
-                    .Where(type => type.Namespace != null
-                                   && type.Namespace.Equals(typeof(DataContext).Namespace))
                     .Where(type => type.BaseType != null && type.BaseType.IsGenericType
-                                                         && type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>));
+                                                         && (type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>) ||
+                                                             type.BaseType.GetGenericTypeDefinition() == typeof(ComplexTypeConfiguration<>)));
 
             foreach (var type in typesToRegister)
             {

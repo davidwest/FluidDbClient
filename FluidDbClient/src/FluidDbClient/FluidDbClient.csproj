@@ -10,7 +10,7 @@
     <PackageId>FluidDbClient</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
- 
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -30,8 +30,8 @@
     <PackageReference Include="System.Runtime.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Threading" Version="4.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="NETStandard.Library" Version="2.0.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
   </ItemGroup>

@@ -2,25 +2,32 @@
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
-using FluidDbClient;
-using FluidDbClient.Sql;
-using SandboxEf.Entities;
-using SandboxEf.TableTypes;
+using FluidDbClient.Sql.Test.Entities;
+using FluidDbClient.Sql.Test.TableTypes;
 
-namespace SandboxEf
+namespace FluidDbClient.Sql.Test
 {
     public static class Initializer
     {
         public static void Initialize()
         {
-            Console.WriteLine("Please ensure all instances of SSMS are closed!");
-
             var connString = ConfigurationManager.ConnectionStrings["DataContext"].ConnectionString;
-            DropDatabase(connString);
+
+            try
+            {
+                DropDatabase(connString);
+            }
+            catch (Exception)
+            {
+                Trace.WriteLine("Please kill all connections or ensure that all instances of SSMS are closed!");
+
+                throw;
+            }
+            
             BuildDatabase();
 
             DbRegistry.Initialize(new SqlDatabase("DataContext", connString, msg => Debug.WriteLine(msg)));
-            
+
             TableTypeRegistry.Register(new NewWidgetTableTypeMap(), new UpdatedWidgetTableTypeMap());
         }
 
@@ -34,7 +41,7 @@ namespace SandboxEf
             using (var dbContext = new DataContext())
             {
                 // forces database to build
-                if (dbContext.Set<Widget>().Any()) {}
+                if (dbContext.Set<Widget>().Any()) { }
             }
         }
     }
