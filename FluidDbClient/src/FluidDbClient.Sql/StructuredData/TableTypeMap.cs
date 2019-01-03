@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace FluidDbClient.Sql
 {
     public abstract class TableTypeMap
     {
-        internal Dictionary<string, ColumnDefinition> PropertyMap { get; set; }
+        protected Dictionary<string, ColumnDefinition> PropertyMap { get; set; }
         internal string TypeName { get; set; }
         
         public TableTypeDefinition GetDefinition()
@@ -23,19 +22,21 @@ namespace FluidDbClient.Sql
         {
             TypeName = typeof(T).Name;
 
+            // Start with default property map:
+
             PropertyMap =
                 typeof(T).GetProperties()
                 .Select(p => new
                 {
                     p.Name,
                     p.PropertyType,
-                    SqlType = PrimitiveClrToSqlTypeMap.GetSqlTypeFor(p.PropertyType)
+                    SqlType = DefaultClrToSqlTypeMap.GetSqlTypeFor(p.PropertyType)
                 })
                 .Where(p => p.SqlType.HasValue)
-                .Select((p, i) => new
+                .Select(p => new
                 {
                     Type = p.PropertyType,
-                    MetaData = SqlMetaDataFactory.CreateSqlMetaData(p.Name, p.SqlType.Value, i)
+                    MetaData = SqlMetaDataFactory.CreateSqlMetaData(p.Name, p.SqlType.Value)
                 })
                 .Select(p => new ColumnDefinition(p.MetaData, p.Type.IsNullableType() ? ColumnBehavior.Nullable : ColumnBehavior.NotNullable))
                 .ToDictionary(cd => cd.MetaData.Name, cd => cd);
@@ -43,7 +44,6 @@ namespace FluidDbClient.Sql
         
         protected void HasName(string name)
         {
-            // TODO: validation
             TypeName = name;
         }
 

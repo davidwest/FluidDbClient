@@ -1,13 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Sql Server provider for FluidDbClient.  This library also makes building data for Table-Valued Parameters a snap.</Description>
-    <Copyright>© 2017 David West</Copyright>
-    <AssemblyTitle>FluidDbClient.Sql</AssemblyTitle>
-    <VersionPrefix>1.1.2</VersionPrefix>
-    <TargetFrameworks>net451;netstandard1.3;netstandard2.0</TargetFrameworks>
-    <AssemblyName>FluidDbClient.Sql</AssemblyName>
     <PackageId>FluidDbClient.Sql</PackageId>
+    <AssemblyName>FluidDbClient.Sql</AssemblyName>
+    <AssemblyTitle>FluidDbClient.Sql</AssemblyTitle>
+    <AssemblyVersion>1.1.3</AssemblyVersion>
+    <FileVersion>1.1.3</FileVersion>
+    <Version>1.1.3</Version>
+    <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
+    <Description>SQL Server provider for FluidDbClient.  This library also makes working with Table Valued Parameters a snap.</Description>
+    <Authors>David West, Brandon Johnson</Authors>
+    <Copyright>© 2019 David West</Copyright>
+    <PackageProjectUrl>https://github.com/davidwest/FluidDbClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/davidwest/FluidDbClient</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>sql micro orm ado ado.net object relational mapper data table connection transaction parameter</PackageTags>
+    <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageReleaseNotes>Added decimal precision to table type mapping</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -23,16 +33,11 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);COREFX</DefineConstants>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NETStandard.Library" Version="2.0.1" />
     <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
   </ItemGroup>

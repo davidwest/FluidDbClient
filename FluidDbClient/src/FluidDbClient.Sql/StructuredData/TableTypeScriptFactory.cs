@@ -42,7 +42,7 @@ namespace FluidDbClient.Sql
 
             var uniqueConstraintColumnNames = 
                 columns
-                .Where(c => c.MetaData.IsUniqueKey)
+                .Where(c => c.Behavior == ColumnBehavior.UniqueKeyComponent)
                 .Select(c => c.MetaData.Name)
                 .ToArray();
 
@@ -73,6 +73,11 @@ namespace FluidDbClient.Sql
             if (sqlType.CanSpecifyLength())
             {
                 sqlTypeStr += meta.MaxLength == -1 ? "(MAX)" : $"({meta.MaxLength})";
+            }
+
+            if (sqlType.CanSpecifyPrecision())
+            {
+                sqlTypeStr += $"({meta.Precision},{meta.Scale})";
             }
 
             return sqlTypeStr;

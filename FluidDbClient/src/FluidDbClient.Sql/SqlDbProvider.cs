@@ -32,7 +32,7 @@ namespace FluidDbClient.Sql
                 Connection = (SqlConnection) transaction.Connection,
                 Transaction = (SqlTransaction) transaction
             };
-
+            
             return command;
         }
         

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace FluidDbClient.Sql
+namespace FluidDbClient
 {
-    internal static class PropertyExtensions
+    public static class PropertyExtensions
     {
         public static Dictionary<string, object> GetPropertyMap(this object obj)
         {
@@ -18,6 +18,21 @@ namespace FluidDbClient.Sql
         }
 
         public static string GetPropertyName<T>(this Expression<Func<T, object>> expression)
+        {
+            if (expression.Body is MemberExpression memberExpression)
+            {
+                return memberExpression.Member.Name;
+            }
+
+            if (!(expression.Body is UnaryExpression unaryExpression))
+            {
+                throw new ArgumentException($"Expression must represent property of type {typeof(T).Name}", nameof(expression));
+            }
+
+            return ((MemberExpression)unaryExpression.Operand).Member.Name;
+        }
+
+        public static string GetPropertyName<T, TProp>(this Expression<Func<T, TProp>> expression)
         {
             if (expression.Body is MemberExpression memberExpression)
             {

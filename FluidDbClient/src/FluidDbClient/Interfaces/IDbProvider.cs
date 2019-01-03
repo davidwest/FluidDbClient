@@ -3,7 +3,7 @@
 namespace FluidDbClient
 {
     public interface IDbProvider
-    {
+    {        
         string ProviderId { get; }
         
         DbConnection CreateConnection<TDatabase>() where TDatabase : Database;

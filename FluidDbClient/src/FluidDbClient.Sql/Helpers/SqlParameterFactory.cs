@@ -25,7 +25,7 @@ namespace FluidDbClient.Sql
                 return GetParameterFrom(effectiveName, paramDef);
             }
 
-            var type = PrimitiveClrToSqlTypeMap.GetSqlTypeFor(value);
+            var type = DefaultClrToSqlTypeMap.GetSqlTypeFor(value);
 
             if (type.HasValue)
             {
