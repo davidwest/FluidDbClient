@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <PackageId>FluidDbClient.Sql</PackageId>
+    <Title>FluidDbClient.Sql</Title>
     <AssemblyName>FluidDbClient.Sql</AssemblyName>
     <AssemblyTitle>FluidDbClient.Sql</AssemblyTitle>
     <AssemblyVersion>1.1.3</AssemblyVersion>
@@ -16,6 +17,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>sql micro orm ado ado.net object relational mapper data table connection transaction parameter</PackageTags>
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageReleaseNotes>Added decimal precision to table type mapping</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
