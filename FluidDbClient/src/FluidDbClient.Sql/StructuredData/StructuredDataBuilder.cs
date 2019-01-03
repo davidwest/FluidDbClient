@@ -34,14 +34,8 @@ namespace FluidDbClient.Sql
                 .ToDictionary(c => c.MetaData.Name, c => c, StringComparer.OrdinalIgnoreCase);
         }
 
-        public StructuredDataBuilder(TableTypeMap map)
-        {
-            _tableTypeName = map.TypeName;
-
-            _columnMap = 
-                map.PropertyMap
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value, StringComparer.OrdinalIgnoreCase);
-        }
+        public StructuredDataBuilder(TableTypeMap map) : this(map.GetDefinition())
+        { }
                 
         public StructuredDataBuilder Append(IDictionary<string, object> parameters)
         {
@@ -95,8 +89,6 @@ namespace FluidDbClient.Sql
 
         public StructuredData Build()
         {
-            // TODO: verify
-
             return new StructuredData(_tableTypeName, _records);
         }
         
@@ -107,11 +99,12 @@ namespace FluidDbClient.Sql
             foreach (var kvp in propertyMap)
             {
                 var meta = ExtractMetaDataFrom(kvp.Key, kvp.Value);
-                if (meta != null)
-                {
-                    var columnDef = new ColumnDefinition(meta, ColumnBehavior.Nullable);
-                    _columnMap.Add(kvp.Key, columnDef);
-                }
+
+                if (meta == null) continue;
+
+                var columnDef = new ColumnDefinition(meta, ColumnBehavior.Nullable);
+
+                _columnMap.Add(kvp.Key, columnDef);
             }
         }
 
@@ -150,7 +143,7 @@ namespace FluidDbClient.Sql
         
         private static SqlMetaData ExtractMetaDataFrom(string name, object value)
         {
-            var sqlType = PrimitiveClrToSqlTypeMap.GetSqlTypeFor(value);
+            var sqlType = DefaultClrToSqlTypeMap.GetSqlTypeFor(value);
 
             if (!sqlType.HasValue) return null;
 

@@ -24,9 +24,9 @@ namespace FluidDbClient.Sandbox
         {
             HasName("Widgets");
 
-            Property(x => x.GlobalId).IsInUniqueKey();
-            Property(x => x.Name).HasLength(100);
-            Property(x => x.Description).HasLength(500);
+            Property(x => x.GlobalId);
+            Property(x => x.Name).HasMaxLength(100);
+            Property(x => x.Description).HasMaxLength(500);
         }
     }
     
@@ -36,8 +36,8 @@ namespace FluidDbClient.Sandbox
         {
             HasName("Robots");
             
-            Property(x => x.Name).HasLength(100);
-            Property(x => x.Description).HasLength(500);
+            Property(x => x.Name).HasMaxLength(100);
+            Property(x => x.Description).HasMaxLength(500);
             Property(x => x.ExtraPropertyOne).Ignore();
             Property(x => x.ExtraPropertyTwo).Ignore();
         }

@@ -1,21 +1,27 @@
 ﻿using System.Data;
-using System.Data.SqlClient;
 using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
 {
     internal static class SqlMetaDataFactory
     {
-        public static SqlMetaData CreateSqlMetaData(string name, SqlDbType sqlType, int order)
+        public static SqlMetaData CreateSqlMetaData(string name, SqlDbType sqlType)
         {
-            return CreateSqlMetaData(name, sqlType, -1, false, order);
+            return CreateSqlMetaData(name, sqlType, -1);
         }
         
-        public static SqlMetaData CreateSqlMetaData(string name, SqlDbType sqlType, long maxLength, bool isInUniqueKey, int order)
+        public static SqlMetaData CreateSqlMetaData(string name, SqlDbType sqlType, long maxLength)
         {
             return sqlType.CanSpecifyLength()
-                ? new SqlMetaData(name, sqlType, maxLength, false, isInUniqueKey, SortOrder.Ascending, order)
-                : new SqlMetaData(name, sqlType, false, isInUniqueKey, SortOrder.Ascending, order);
+                ? new SqlMetaData(name, sqlType, maxLength)
+                : new SqlMetaData(name, sqlType);
+        }
+
+        public static SqlMetaData CreateSqlMetaData(string name, SqlDbType sqlType, byte precision, byte scale)
+        {
+            return sqlType.CanSpecifyPrecision()
+                ? new SqlMetaData(name, sqlType, precision, scale)
+                : new SqlMetaData(name, sqlType);
         }
     }
 }

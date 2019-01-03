@@ -5,7 +5,7 @@ namespace FluidDbClient
 {
     public abstract partial class ManagedDbCommand : ManagedDbControl, IManagedDbCommand
     {
-        private bool _usingExternalResources;
+        private readonly bool _usingExternalResources;
         private bool _isCommitted;
 
         // --- Connection and transaction managed internally ---
