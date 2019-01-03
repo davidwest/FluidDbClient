@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace FluidDbClient.Sql
 {
@@ -23,7 +22,7 @@ namespace FluidDbClient.Sql
         {
             TypeName = typeof(T).Name;
 
-            // Default PropertyMap:
+            // Start with default property map:
 
             PropertyMap =
                 typeof(T).GetProperties()

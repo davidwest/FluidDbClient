@@ -1,13 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>When you absolutely need to work with ADO.NET but want to ditch 95% of the boilerplate code. Perfect fit if you need to run explicit SQL and/or map raw data to complex objects that you won't trust to your ORM.</Description>
-    <Copyright>© 2017 David West</Copyright>
-    <AssemblyTitle>FluidDbClient</AssemblyTitle>
-    <VersionPrefix>1.1.2</VersionPrefix>
-    <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
-    <AssemblyName>FluidDbClient</AssemblyName>
     <PackageId>FluidDbClient</PackageId>
+    <AssemblyName>FluidDbClient</AssemblyName>
+    <AssemblyTitle>FluidDbClient</AssemblyTitle>
+    <AssemblyVersion>1.1.3</AssemblyVersion>
+    <FileVersion>1.1.3</FileVersion>
+    <Version>1.1.3</Version>
+    <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
+    <Description>A Micro ORM that lets you think in parameterized SQL, map deep POCOs with granular control, and shed ADO.NET bloat. This is the core assembly; for use with SQL Server, please get FluidDbClient.Sql.</Description>
+    <Authors>David West, Brandon Johnson</Authors>
+    <Copyright>© 2019 David West</Copyright>
+    <PackageProjectUrl>https://github.com/davidwest/FluidDbClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/davidwest/FluidDbClient</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>sql micro orm ado ado.net object relational mapper data table connection transaction parameter</PackageTags>
+    <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageReleaseNotes>Added new mapping extensions</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
