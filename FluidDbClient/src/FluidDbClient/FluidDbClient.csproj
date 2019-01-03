@@ -8,7 +8,7 @@
     <FileVersion>1.1.3</FileVersion>
     <Version>1.1.3</Version>
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
-    <Description>A Micro ORM that lets you think in parameterized SQL, map deep POCOs with granular control, and shed ADO.NET bloat. This is the core assembly; for use with SQL Server, please get FluidDbClient.Sql.</Description>
+    <Description>When you absolutely need ADO.NET but detest the boilerplate.  Do parameterized SQL with ease, asynchronously or not.  Map deep POCOs with granular control beyond that of your ORM. This is the core assembly; to use with SQL Server, get FluidDbClient.Sql.</Description>
     <Authors>David West, Brandon Johnson</Authors>
     <Copyright>© 2019 David West</Copyright>
     <PackageProjectUrl>https://github.com/davidwest/FluidDbClient</PackageProjectUrl>
