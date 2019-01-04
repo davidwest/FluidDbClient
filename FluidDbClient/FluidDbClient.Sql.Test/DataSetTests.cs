@@ -1,92 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using FluidDbClient.Shell;
 using FluidDbClient.Sql.Test.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluidDbClient.Sql.Test
 {
-    // TODO: break this up
-
     [TestClass]
-    public class MappingTest
+    public class DataSetTests
     {
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             Initializer.Initialize();
-        }
-        
-        [TestMethod]
-        public void MappedObjects_HaveIdenticalData_WithThoseRetrievedByDbContext()
-        {
+
             var composites = GetSourceComposites();
 
             SaveComposites(composites);
-
-            var expected = GetSavedCompositesEf();
-
-            var actual = GetSavedComposites();
-
-            CollectionAssert.AreEqual(expected, actual, new CompositeComparer());
-
-            foreach (var c in actual)
-            {
-                Trace.WriteLine(c.ToDiagnosticString());
-            }
         }
 
-        private static Composite[] GetSavedComposites()
+        [TestMethod]
+        public void RetrievedDataTable_IncludesExpectedRows()
         {
-            var result =
-                Db.GetResultSet(QueryScript)
-                    .Buffer()
-                    .MapNested(
-                        r => r.MapProperty<Composite, int>(c => c.Id),
-                        r => r.MapProperty<Component, int>(c => c.Id),
-                        r => r.MapProperty<Widget, int>(w => w.Id),
-                        (r, components) =>
-                        {
-                            var composite = r.Map<Composite>();
-                            composite.Components = components.ToList();
-                            return composite;
-                        },
-                        (r, widgets) =>
-                        {
-                            var component =
-                                r.Map(
-                                    rec => rec.Map<Schedule>(nameof(Component.MaintenanceSchedule)),
-                                    rec => rec.Map<Schedule>(nameof(Component.ReviewSchedule)),
-                                    (rec, ms, rs) =>
-                                    {
-                                        var cmp = rec.Map<Component>();
-                                        cmp.MaintenanceSchedule = ms;
-                                        cmp.ReviewSchedule = rs;
-                                        return cmp;
-                                    });
+            var dataTable = new ScriptDbQuery("SELECT * FROM Component").GetDataTable(nameof(Component));
 
-                            component.Widgets = widgets.ToList();
-                            return component;
-                        },
-                        r => r.Map<Widget>());
-
-            return result.OrderBy(c => c.Id).ToArray();
+            RetrievedDataTable_IncludesExpectedRows(dataTable);
         }
 
-        private static Composite[] GetSavedCompositesEf()
+        [TestMethod]
+        public void RetrievedDataTable_IncludesExpectedRows_Async()
         {
-            using (var dbContext = new DataContext())
-            {
-                return 
-                    dbContext.Set<Composite>()
-                        .Include(cs => cs.Components.Select(ct => ct.Widgets))
-                        .OrderBy(c => c.Id)
-                        .AsNoTracking()
-                        .ToArray();
-            }
+            var dataTable = new ScriptDbQuery("SELECT * FROM Component").GetDataTableAsync(nameof(Component)).Result;
+
+            RetrievedDataTable_IncludesExpectedRows(dataTable);
+        }
+
+        [TestMethod]
+        public void RetrievedDataSet_IncludesExpectedTablesAndRows()
+        {
+            var dataSet = 
+                new ScriptDbQuery(QueryScript)
+                .GetDataSet(nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget");
+
+            RetrievedDataSet_IncludesExpectedTablesAndRows(dataSet);
+        }
+        
+        [TestMethod]
+        public void RetrievedDataSet_IncludesExpectedTablesAndRows_Async()
+        {
+            var dataSet =
+                new ScriptDbQuery(QueryScript)
+                    .GetDataSetAsync(nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget").Result;
+
+            RetrievedDataSet_IncludesExpectedTablesAndRows(dataSet);
+        }
+
+        private static void RetrievedDataTable_IncludesExpectedRows(DataTable dataTable)
+        {
+            Trace.WriteLine(dataTable.ToXml());
+
+            Assert.AreEqual(4, dataTable.Rows.Count);
+        }
+
+        private static void RetrievedDataSet_IncludesExpectedTablesAndRows(DataSet dataSet)
+        {
+            Trace.WriteLine(dataSet.ToXml());
+
+            Assert.AreEqual(2, dataSet.Tables[nameof(Composite)].Rows.Count);
+            Assert.AreEqual(4, dataSet.Tables[nameof(Component)].Rows.Count);
+            Assert.AreEqual(3, dataSet.Tables[nameof(Widget)].Rows.Count);
+            Assert.AreEqual(7, dataSet.Tables["ComponentWidget"].Rows.Count);
         }
 
         private static void SaveComposites(IEnumerable<Composite> composites)
@@ -230,16 +214,10 @@ namespace FluidDbClient.Sql.Test
 
         private const string QueryScript =
 @"
-SELECT cs.Id AS Composite_Id, cs.[Name] AS Composite_Name,
-        cp.Id AS Component_Id, cp.[Name] AS Component_Name, cp.Style,
-        cp.MaintenanceSchedule_Frequency, cp.MaintenanceSchedule_StartDate,
-        cp.ReviewSchedule_Frequency, cp.ReviewSchedule_StartDate,
-        w.Id AS Widget_Id, w.ExternalId, w.[Environment], w.IsArchived, w.[Name] AS Widget_Name, 
-        w.Cost, w.CreatedTimestamp, w.ReleaseDate, w.Rating, w.Weight, w.SerialCode
-FROM Composite AS cs
-LEFT JOIN Component AS cp ON cp.CompositeId = cs.Id
-LEFT JOIN ComponentWidget AS cw ON cp.Id = cw.Component_Id
-LEFT JOIN Widget AS w ON cw.Widget_Id = w.Id;
+SELECT * FROM Composite;
+SELECT * FROM Component;
+SELECT * FROM Widget;
+SELECT * FROM ComponentWidget;
 ";
     }
 }
