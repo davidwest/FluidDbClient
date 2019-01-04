@@ -1,77 +1,103 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using FluidDbClient.Shell;
 using FluidDbClient.Sql.Test.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluidDbClient.Sql.Test
 {
-    // TODO: break this up
+    // TODO: add more granular tests
 
     [TestClass]
-    public class MappingTest
+    public class MappingTests
     {
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             Initializer.Initialize();
+
+            var composites = GetSourceComposites();
+
+            SaveComposites(composites);
         }
         
         [TestMethod]
         public void MappedObjects_HaveIdenticalData_WithThoseRetrievedByDbContext()
         {
-            var composites = GetSourceComposites();
-
-            SaveComposites(composites);
-
             var expected = GetSavedCompositesEf();
 
             var actual = GetSavedComposites();
-
-            CollectionAssert.AreEqual(expected, actual, new CompositeComparer());
 
             foreach (var c in actual)
             {
                 Trace.WriteLine(c.ToDiagnosticString());
             }
+
+            CollectionAssert.AreEqual(expected, actual, new CompositeComparer());
+        }
+        
+        [TestMethod]
+        public void MappedObjects_HaveIdenticalData_WithThoseRetrievedByDbContext_Async()
+        {
+            var expected = GetSavedCompositesEf();
+
+            var actual = GetSavedCompositesAsync().Result;
+
+            foreach (var c in actual)
+            {
+                Trace.WriteLine(c.ToDiagnosticString());
+            }
+
+            CollectionAssert.AreEqual(expected, actual, new CompositeComparer());
         }
 
         private static Composite[] GetSavedComposites()
         {
-            var result =
-                Db.GetResultSet(QueryScript)
-                    .Buffer()
-                    .MapNested(
-                        r => r.MapProperty<Composite, int>(c => c.Id),
-                        r => r.MapProperty<Component, int>(c => c.Id),
-                        r => r.MapProperty<Widget, int>(w => w.Id),
-                        (r, components) =>
-                        {
-                            var composite = r.Map<Composite>();
-                            composite.Components = components.ToList();
-                            return composite;
-                        },
-                        (r, widgets) =>
-                        {
-                            var component =
-                                r.Map(
-                                    rec => rec.Map<Schedule>(nameof(Component.MaintenanceSchedule)),
-                                    rec => rec.Map<Schedule>(nameof(Component.ReviewSchedule)),
-                                    (rec, ms, rs) =>
-                                    {
-                                        var cmp = rec.Map<Component>();
-                                        cmp.MaintenanceSchedule = ms;
-                                        cmp.ReviewSchedule = rs;
-                                        return cmp;
-                                    });
+            return MapToComposites(Db.GetResultSet(QueryScript).Buffer());
+        }
+        
+        private static async Task<Composite[]> GetSavedCompositesAsync()
+        {
+            return MapToComposites(await Db.CollectResultSetAsync(QueryScript));
+        }
 
-                            component.Widgets = widgets.ToList();
-                            return component;
-                        },
-                        r => r.Map<Widget>());
+        private static Composite[] MapToComposites(IEnumerable<IDataRecord> records)
+        {
+            var result =
+                records
+                .MapNested(
+                    r => r.MapProperty<Composite, int>(c => c.Id),
+                    r => r.MapProperty<Component, int>(c => c.Id),
+                    r => r.MapProperty<Widget, int>(w => w.Id),
+                    (r, components) =>
+                    {
+                        var composite = r.Map<Composite>();
+                        composite.Components = components.ToList();
+                        return composite;
+                    },
+                    (r, widgets) =>
+                    {
+                        var component =
+                            r.Map(
+                                rec => rec.Map<Schedule>(nameof(Component.MaintenanceSchedule)),
+                                rec => rec.Map<Schedule>(nameof(Component.ReviewSchedule)),
+                                (rec, ms, rs) =>
+                                {
+                                    var cmp = rec.Map<Component>();
+                                    cmp.MaintenanceSchedule = ms;
+                                    cmp.ReviewSchedule = rs;
+                                    return cmp;
+                                });
+
+                        component.Widgets = widgets.ToList();
+                        return component;
+                    },
+                    r => r.Map<Widget>());
 
             return result.OrderBy(c => c.Id).ToArray();
         }

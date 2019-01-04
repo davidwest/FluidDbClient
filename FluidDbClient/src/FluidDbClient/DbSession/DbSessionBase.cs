@@ -15,10 +15,8 @@ namespace FluidDbClient
         private DbTransaction _transaction;
         private DbConnection _connection;
 
-        // TODO: re-evaluate
         private bool _isRolledBack;
 
-        // TODO: instead, should keep track of *how many* commits
         private bool _isCommitted;
 
         protected DbSessionBase(Database database, IsolationLevel isolationLevel, Action<string> log)

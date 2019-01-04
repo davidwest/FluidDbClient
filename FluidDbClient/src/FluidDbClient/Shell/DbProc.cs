@@ -57,6 +57,29 @@ namespace FluidDbClient.Shell
 
 
 
+        public static DataTable GetDataTable(string procedureName, string tableName, object parameters = null)
+        {
+            return new StoredProcedureDbQuery(procedureName, parameters).GetDataTable(tableName);
+        }
+
+        public static DataTable GetDataTable(DbSessionBase session, string procedureName, string tableName, object parameters = null)
+        {
+            return new StoredProcedureDbQuery(session, procedureName, parameters).GetDataTable(tableName);
+        }
+
+
+        public static DataSet GetDataSet(string procedureName, string[] tableNames, object parameters = null)
+        {
+            return new StoredProcedureDbQuery(procedureName, parameters).GetDataSet(tableNames);
+        }
+
+        public static DataSet GetDataSet(DbSessionBase session, string procedureName, string[] tableNames, object parameters = null)
+        {
+            return new StoredProcedureDbQuery(session, procedureName, parameters).GetDataSet(tableNames);
+        }
+        
+
+
         public static void ProcessResultSets(string procedureName, object parameters, params Action<IEnumerable<IDataRecord>>[] processes)
         {
             new StoredProcedureDbQuery(procedureName, parameters).ProcessResultSets(processes);
@@ -145,6 +168,29 @@ namespace FluidDbClient.Shell
         public static async Task<IDataRecord> GetRecordAsync(DbSessionBase session, string procedureName, object parameters = null)
         {
             return await new StoredProcedureDbQuery(session, procedureName, parameters).GetRecordAsync();
+        }
+
+
+
+        public static async Task<DataTable> GetDataTableAsync(string procedureName, string tableName, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery(procedureName, parameters).GetDataTableAsync(tableName);
+        }
+
+        public static async Task<DataTable> GetDataTableAsync(DbSessionBase session, string procedureName, string tableName, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery(session, procedureName, parameters).GetDataTableAsync(tableName);
+        }
+
+
+        public static async Task<DataSet> GetDataSetAsync(string procedureName, string[] tableNames, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery(procedureName, parameters).GetDataSetAsync(tableNames);
+        }
+
+        public static async Task<DataSet> GetDataSetAsync(DbSessionBase session, string procedureName, string[] tableNames, object parameters = null)
+        {
+            return await new StoredProcedureDbQuery(session, procedureName, parameters).GetDataSetAsync(tableNames);
         }
 
 

@@ -59,9 +59,7 @@ namespace FluidDbClient
                 var name = prop.Name;
                 var val = prop.GetValue(obj);
 
-                var items = val as IEnumerable;
-
-                if (items == null || !provider.Interpreter.CanEvaluateAsMultiParameters(items))
+                if (!(val is IEnumerable items) || !provider.Interpreter.CanEvaluateAsMultiParameters(items))
                 {
                     map[name] = val;
                     continue;
