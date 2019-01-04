@@ -26,10 +26,7 @@ namespace FluidDbClient
         }
 
         public abstract DbConnection CreateConnection(string connectionString);
-
-        public abstract DbCommand CreateCommandFrom(DbConnection connection);
-        public abstract DbCommand CreateCommandFrom(DbTransaction transaction);
-
+        
         public abstract DbParameter CreateParameter(string name, object value);
 
         public abstract IDbProviderValueInterpreter Interpreter { get; }

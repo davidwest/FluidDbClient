@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using FluidDbClient.Shell;
 using FluidDbClient.Sql.Test.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -23,7 +24,7 @@ namespace FluidDbClient.Sql.Test
         [TestMethod]
         public void RetrievedDataTable_IncludesExpectedRows()
         {
-            var dataTable = new ScriptDbQuery("SELECT * FROM Component").GetDataTable(nameof(Component));
+            var dataTable = Db.GetDataTable("SELECT * FROM Component", nameof(Component));
 
             RetrievedDataTable_IncludesExpectedRows(dataTable);
         }
@@ -31,17 +32,15 @@ namespace FluidDbClient.Sql.Test
         [TestMethod]
         public void RetrievedDataTable_IncludesExpectedRows_Async()
         {
-            var dataTable = new ScriptDbQuery("SELECT * FROM Component").GetDataTableAsync(nameof(Component)).Result;
-
-            RetrievedDataTable_IncludesExpectedRows(dataTable);
+            var dataTable = Db.GetDataTableAsync("SELECT * FROM Component", nameof(Component));
+            
+            RetrievedDataTable_IncludesExpectedRows(dataTable.Result);
         }
 
         [TestMethod]
         public void RetrievedDataSet_IncludesExpectedTablesAndRows()
         {
-            var dataSet = 
-                new ScriptDbQuery(QueryScript)
-                .GetDataSet(nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget");
+            var dataSet = Db.GetDataSet(QueryScript, new[] { nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget" });
 
             RetrievedDataSet_IncludesExpectedTablesAndRows(dataSet);
         }
@@ -49,11 +48,9 @@ namespace FluidDbClient.Sql.Test
         [TestMethod]
         public void RetrievedDataSet_IncludesExpectedTablesAndRows_Async()
         {
-            var dataSet =
-                new ScriptDbQuery(QueryScript)
-                    .GetDataSetAsync(nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget").Result;
+            var dataSet = Db.GetDataSetAsync(QueryScript, new[] { nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget" });
 
-            RetrievedDataSet_IncludesExpectedTablesAndRows(dataSet);
+            RetrievedDataSet_IncludesExpectedTablesAndRows(dataSet.Result);
         }
 
         private static void RetrievedDataTable_IncludesExpectedRows(DataTable dataTable)
