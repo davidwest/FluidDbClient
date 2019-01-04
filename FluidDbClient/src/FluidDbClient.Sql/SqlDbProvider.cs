@@ -14,27 +14,6 @@ namespace FluidDbClient.Sql
         {
             return new SqlConnection(connectionString);
         }
-
-        public override DbCommand CreateCommandFrom(DbConnection connection)
-        {
-            var command = new SqlCommand
-            {
-                Connection = (SqlConnection) connection
-            };
-
-            return command;
-        }
-
-        public override DbCommand CreateCommandFrom(DbTransaction transaction)
-        {
-            var command = new SqlCommand
-            {
-                Connection = (SqlConnection) transaction.Connection,
-                Transaction = (SqlTransaction) transaction
-            };
-            
-            return command;
-        }
         
         public override DbParameter CreateParameter(string name, object value)
         {

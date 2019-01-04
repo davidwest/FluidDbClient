@@ -92,6 +92,47 @@ namespace FluidDbClient.Shell
         }
 
 
+        public static DataTable GetDataTable(string script, string tableName, object parameters = null)
+        {
+            return new ScriptDbQuery(script, parameters).GetDataTable(tableName);
+        }
+
+        public static DataTable GetDataTable(DbSessionBase session, string script, string tableName, object parameters = null)
+        {
+            return new ScriptDbQuery(session, script, parameters).GetDataTable(tableName);
+        }
+
+        public static DataTable GetDataTable(DbConnection connection, string script, string tableName, object parameters = null)
+        {
+            return new ScriptDbQuery(connection, script, parameters).GetDataTable(tableName);
+        }
+        
+        public static DataTable GetDataTable(DbTransaction transaction, string script, string tableName, object parameters = null)
+        {
+            return new ScriptDbQuery(transaction, script, parameters).GetDataTable(tableName);
+        }
+
+
+        public static DataSet GetDataSet(string script, string[] tableNames, object parameters = null)
+        {
+            return new ScriptDbQuery(script, parameters).GetDataSet(tableNames);
+        }
+
+        public static DataSet GetDataSet(DbSessionBase session, string script, string[] tableNames, object parameters = null)
+        {
+            return new ScriptDbQuery(session, script, parameters).GetDataSet(tableNames);
+        }
+
+        public static DataSet GetDataSet(DbConnection connection, string script, string[] tableNames, object parameters = null)
+        {
+            return new ScriptDbQuery(connection, script, parameters).GetDataSet(tableNames);
+        }
+
+        public static DataSet GetDataSet(DbTransaction transaction, string script, string[] tableNames, object parameters = null)
+        {
+            return new ScriptDbQuery(transaction, script, parameters).GetDataSet(tableNames);
+        }
+
 
         public static void ProcessResultSets(string script, object parameters, params Action<IEnumerable<IDataRecord>>[] processes)
         {
@@ -207,6 +248,27 @@ namespace FluidDbClient.Shell
             return await new ScriptDbQuery(session, script, parameters).GetRecordAsync();
         }
 
+
+        public static async Task<DataTable> GetDataTableAsync(string script, string tableName, object parameters = null)
+        {
+            return await new ScriptDbQuery(script, parameters).GetDataTableAsync(tableName);
+        }
+
+        public static async Task<DataTable> GetDataTableAsync(DbSessionBase session, string script, string tableName, object parameters = null)
+        {
+            return await new ScriptDbQuery(session, script, parameters).GetDataTableAsync(tableName);
+        }
+
+
+        public static async Task<DataSet> GetDataSetAsync(string script, string[] tableNames, object parameters = null)
+        {
+            return await new ScriptDbQuery(script, parameters).GetDataSetAsync(tableNames);
+        }
+        
+        public static async Task<DataSet> GetDataSetAsync(DbSessionBase session, string script, string[] tableNames, object parameters = null)
+        {
+            return await new ScriptDbQuery(session, script, parameters).GetDataSetAsync(tableNames);
+        }
 
 
         public static async Task ProcessResultSetAsync(string script, Action<IDataRecord> process, object parameters = null)

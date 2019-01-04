@@ -89,7 +89,44 @@ namespace FluidDbClient
             }
         }
 
-        
+        public DataTable GetDataTable(string tableName = null)
+        {
+            try
+            {
+                EstablishReaderResources(CommandBehavior.SingleResult);
+
+                var dt = new DataTable(tableName);
+
+                dt.Load(_reader);
+
+                return dt;
+            }
+            finally
+            {
+                ReleaseResources();
+            }
+        }
+
+        public DataSet GetDataSet(params string[] tableNames)
+        {
+            var dataSet = new DataSet();
+
+            if (tableNames.Length == 0) return dataSet;
+            
+            try
+            {
+                EstablishReaderResources(CommandBehavior.Default);
+
+                dataSet.Load(_reader, LoadOption.Upsert, tableNames);
+
+                return dataSet;
+            }
+            finally
+            {
+                ReleaseResources();
+            }
+        }
+
         private IEnumerable<IDataRecord> GetResultSet(CommandBehavior readBehavior, Func<IDataRecord, IDataRecord> yieldRecord)
         {
             try

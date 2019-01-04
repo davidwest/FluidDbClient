@@ -42,6 +42,46 @@ namespace FluidDbClient
             }
         }
 
+        public async Task<DataTable> GetDataTableAsync(string tableName = null)
+        {
+            try
+            {
+                await CreateReaderResourcesAsync(CommandBehavior.SingleResult);
+
+                var dataTable = new DataTable(tableName);
+                
+                dataTable.Load(_reader);
+                
+                return dataTable;
+            }
+            finally
+            {
+                ReleaseResources();
+            }
+        }
+
+        public async Task<DataSet> GetDataSetAsync(params string[] tableNames)
+        {
+            if (tableNames.Length == 0)
+            {
+                return await Task.FromResult(new DataSet());
+            }
+
+            try
+            {
+                await CreateReaderResourcesAsync(CommandBehavior.Default);
+
+                var dataSet = new DataSet();
+
+                dataSet.Load(_reader, LoadOption.Upsert, tableNames);
+                
+                return dataSet;
+            }
+            finally
+            {
+                ReleaseResources();
+            }
+        }
 
         public async Task ProcessResultSetAsync(Action<IDataRecord> process)
         {
@@ -77,8 +117,7 @@ namespace FluidDbClient
                 ReleaseResources();
             }
         }
-        
-        
+
         private async Task EstablishCommonResourcesAsync()
         {
             OnOperationStarted();
