@@ -5,13 +5,13 @@ namespace FluidDbClient.Sql
 {
     public class StructuredData
     {
-        public StructuredData(string tableTypeName, IReadOnlyCollection<SqlDataRecord> rows)
+        public StructuredData(string tableTypeName, IEnumerable<SqlDataRecord> records)
         {
             TableTypeName = tableTypeName;
-            Rows = rows;
+            Records = records;
         }
-
+        
         public string TableTypeName { get; }
-        public IReadOnlyCollection<SqlDataRecord> Rows { get; }
+        public IEnumerable<SqlDataRecord> Records { get; }
     }
 }

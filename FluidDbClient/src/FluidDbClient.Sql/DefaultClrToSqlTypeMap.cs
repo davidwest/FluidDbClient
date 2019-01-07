@@ -9,31 +9,18 @@ namespace FluidDbClient.Sql
         private static readonly Dictionary<Type, SqlDbType> Map = new Dictionary<Type, SqlDbType>
         {
             {typeof(bool), SqlDbType.Bit },
-            {typeof(bool?), SqlDbType.Bit },
             {typeof(byte), SqlDbType.TinyInt },
-            {typeof(byte?), SqlDbType.TinyInt },
             {typeof(char), SqlDbType.NChar },
-            {typeof(char?), SqlDbType.NChar },
             {typeof(short), SqlDbType.SmallInt },
-            {typeof(short?), SqlDbType.SmallInt },
             {typeof(int), SqlDbType.Int },
-            {typeof(int?), SqlDbType.Int },
             {typeof(long), SqlDbType.BigInt },
-            {typeof(long?), SqlDbType.BigInt },
             {typeof(decimal), SqlDbType.Decimal },
-            {typeof(decimal?), SqlDbType.Decimal },
             {typeof(double), SqlDbType.Float },
-            {typeof(double?), SqlDbType.Float },
             {typeof(float), SqlDbType.Real },
-            {typeof(float?), SqlDbType.Real },
             {typeof(Guid), SqlDbType.UniqueIdentifier },
-            {typeof(Guid?), SqlDbType.UniqueIdentifier },
             {typeof(DateTime), SqlDbType.DateTime },
-            {typeof(DateTime?), SqlDbType.DateTime },
             {typeof(DateTimeOffset), SqlDbType.DateTimeOffset },
-            {typeof(DateTimeOffset?), SqlDbType.DateTimeOffset },
             {typeof(TimeSpan), SqlDbType.Time },
-            {typeof(TimeSpan?), SqlDbType.Time },
             {typeof(string), SqlDbType.NVarChar },
             {typeof(char[]), SqlDbType.NVarChar },
             {typeof(byte[]), SqlDbType.VarBinary }
@@ -41,19 +28,14 @@ namespace FluidDbClient.Sql
 
         public static SqlDbType? GetSqlTypeFor(object value)
         {
-            var clrType = value.GetType();
-
-            return GetSqlTypeFor(clrType);
+            return GetSqlTypeFor(value.GetType());
         }
 
         public static SqlDbType? GetSqlTypeFor(Type clrType)
         {
-            if (clrType.IsEnum)
-            {
-                clrType = clrType.GetEnumUnderlyingType();
-            }
+            clrType = clrType.GetUnderlyingScalarFieldType();
 
-            return Map.ContainsKey(clrType) ? (SqlDbType?)Map[clrType] : null;
+            return Map.TryGetValue(clrType, out var value) ? (SqlDbType?)value : null;
         }
     }
 }

@@ -57,11 +57,13 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BulkInsertTests.cs" />
     <Compile Include="DataContext.cs" />
-    <Compile Include="DiagnosticExtensions.cs" />
+    <Compile Include="DataTableMappingTests.cs" />
     <Compile Include="EfConfigurationExtensions.cs" />
     <Compile Include="Entities\Component.cs" />
     <Compile Include="Entities\ComponentStyle.cs" />

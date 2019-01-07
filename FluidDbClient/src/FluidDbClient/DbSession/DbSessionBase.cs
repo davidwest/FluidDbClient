@@ -49,7 +49,8 @@ namespace FluidDbClient
 
         public void RollBack()
         {
-            // TODO: Should be idempotent. This should instead issue a diagnostic warning
+            if (_isRolledBack) return;
+
             if (_isCommitted)
             {
                 throw new InvalidOperationException("A commit has already occured: cannot roll back");

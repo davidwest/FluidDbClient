@@ -31,9 +31,6 @@ namespace FluidDbClient.Sandbox.Demos.TableValuedParameters
                 }
             };
             
-            // NOTE: The SELECT must be explicit because RobotId is part of the table type definition.
-            //       In this case, all RobotId values are default int (0).
-
             Db.Execute("INSERT INTO Robot (Name, Description, DateBuilt, IsEvil) SELECT Name, Description, DateBuilt, IsEvil FROM @data;", 
                        new
                        {

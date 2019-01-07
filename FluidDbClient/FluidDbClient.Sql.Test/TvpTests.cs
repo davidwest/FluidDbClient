@@ -10,8 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluidDbClient.Sql.Test
 {
-    // TODO: add more granular tests
-
     [TestClass]
     public class TvpTests
     {
@@ -24,7 +22,21 @@ namespace FluidDbClient.Sql.Test
         [TestInitialize]
         public void Initialize()
         {
-            Db.Execute("DELETE FROM Widget;");
+            DeleteAllWidgets();
+        }
+
+        [TestMethod]
+        public void EmptyTableValueParameters_ShouldPersistNothing()
+        {
+            var sourceWidgets = new Widget[0];
+
+            var data = sourceWidgets.ToStructuredData(new NewWidgetTableTypeMap());
+
+            Db.Execute(InsertScript, new { data });
+
+            var savedWidgets = GetSavedWidgets();
+
+            CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
         }
 
         [TestMethod]
@@ -40,7 +52,7 @@ namespace FluidDbClient.Sql.Test
                 Trace.WriteLine(w.ToDiagnosticString());
             }
 
-            CollectionAssert.AreEqual(expected, updated, new WidgetComparer());
+            CollectionAssert.AreEqual(expected, updated, new WidgetIdentityAndValueComparer());
         }
         
         [TestMethod]
@@ -56,7 +68,7 @@ namespace FluidDbClient.Sql.Test
                 Trace.WriteLine(w.ToDiagnosticString());
             }
 
-            CollectionAssert.AreEqual(expected, updated, new WidgetComparer());
+            CollectionAssert.AreEqual(expected, updated, new WidgetIdentityAndValueComparer());
         }
 
         private static Tuple<Widget[], Widget[]> DoAddAndUpdateOperations()
@@ -137,6 +149,11 @@ namespace FluidDbClient.Sql.Test
         private static async Task<Widget[]> GetSavedWidgetsAsync()
         {
             return (await Db.CollectResultSetAsync("SELECT * FROM Widget ORDER BY Id;")).Map<Widget>().ToArray();
+        }
+
+        private static void DeleteAllWidgets()
+        {
+            Db.Execute("DELETE FROM Widget;");
         }
 
         private static IEnumerable<Widget> GetSourceWidgets()

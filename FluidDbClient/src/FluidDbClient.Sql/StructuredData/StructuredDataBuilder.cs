@@ -11,7 +11,7 @@ namespace FluidDbClient.Sql
         private readonly List<SqlDataRecord> _records = new List<SqlDataRecord>();
 
         private readonly SqlMetaData[] _preOrderedMetaData;
-        private Dictionary<string, ColumnDefinition> _columnMap;
+        private IReadOnlyDictionary<string, ColumnDefinition> _columnMap;
         
         public StructuredDataBuilder(string tableTypeName, params SqlMetaData[] preOrderedMetaData)
         {
@@ -37,33 +37,23 @@ namespace FluidDbClient.Sql
         public StructuredDataBuilder(TableTypeMap map) : this(map.GetDefinition())
         { }
                 
-        public StructuredDataBuilder Append(IDictionary<string, object> parameters)
+        public StructuredDataBuilder Append(IReadOnlyDictionary<string, object> propertyMap)
         {
-            var propertyMap = parameters as Dictionary<string, object> ?? 
-                              parameters.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
             if (_columnMap.Count == 0)
             {
-                CreateColumnMapFrom(propertyMap);
+                _columnMap = propertyMap.InferColumnMap();
             }
-            
-            Append(propertyMap);
+
+            var record = propertyMap.GetSqlDataRecord(_columnMap);
+
+            _records.Add(record);
 
             return this;
         }
-
-        public StructuredDataBuilder Append(object parameters)
+        
+        public StructuredDataBuilder Append(object item)
         {
-            var propertyMap = parameters.GetPropertyMap();
-            
-            if (_columnMap.Count == 0)
-            {
-                CreateColumnMapFrom(propertyMap);
-            }
-
-            Append(propertyMap);
-
-            return this;
+            return Append(item.GetPropertyMap());
         }
 
         public StructuredDataBuilder AppendValues(params object[] values)
@@ -90,66 +80,6 @@ namespace FluidDbClient.Sql
         public StructuredData Build()
         {
             return new StructuredData(_tableTypeName, _records);
-        }
-        
-        private void CreateColumnMapFrom(Dictionary<string, object> propertyMap)
-        {
-            _columnMap = new Dictionary<string, ColumnDefinition>();
-
-            foreach (var kvp in propertyMap)
-            {
-                var meta = ExtractMetaDataFrom(kvp.Key, kvp.Value);
-
-                if (meta == null) continue;
-
-                var columnDef = new ColumnDefinition(meta, ColumnBehavior.Nullable);
-
-                _columnMap.Add(kvp.Key, columnDef);
-            }
-        }
-
-        private void Append(Dictionary<string, object> propertyMap)
-        {
-            var columnList = new List<ColumnDefinition>();
-            var valueList = new List<object>();
-
-            foreach (var kvp in propertyMap)
-            {
-                var name = kvp.Key;
-                var value = kvp.Value;
-                
-                if (!_columnMap.TryGetValue(name, out var columnDef))
-                {
-                    continue;
-                }
-
-                if (columnDef.IsIgnored)
-                {
-                    continue;
-                }
-                
-                columnList.Add(columnDef);
-                valueList.Add(value);
-            }
-
-            var metaArray = columnList.Select(c => c.MetaData).ToArray();
-
-            var record = new SqlDataRecord(metaArray);
-
-            record.SetValues(valueList.ToArray());
-
-            _records.Add(record);
-        }
-        
-        private static SqlMetaData ExtractMetaDataFrom(string name, object value)
-        {
-            var sqlType = DefaultClrToSqlTypeMap.GetSqlTypeFor(value);
-
-            if (!sqlType.HasValue) return null;
-
-            return sqlType.Value.CanSpecifyLength() 
-                ? new SqlMetaData(name, sqlType.Value, -1) 
-                : new SqlMetaData(name, sqlType.Value);
         }
     }
 }

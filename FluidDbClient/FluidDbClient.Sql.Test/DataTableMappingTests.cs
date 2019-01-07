@@ -1,89 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using FluidDbClient.Shell;
+using System.Linq;
 using FluidDbClient.Sql.Test.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluidDbClient.Sql.Test
 {
     [TestClass]
-    public class DataSetTests
+    public class DataTableMappingTests
     {
-        [ClassInitialize]
-        public static void ClassInit(TestContext context)
+        [TestMethod]
+        public void EntitiesMapToDataTables()
         {
-            Initializer.Initialize();
-
             var composites = GetSourceComposites();
+            var components = composites.SelectMany(c => c.Components).ToArray();
+            var widgets = components.SelectMany(c => c.Widgets).ToArray();
 
-            SaveComposites(composites);
-        }
-        
-        [TestMethod]
-        public void RetrievedDataTable_IncludesExpectedRows()
-        {
-            var dataTable = Db.GetDataTable("SELECT * FROM Component", nameof(Component));
+            var compositeDt = composites.ToDataTable();
 
-            RetrievedDataTable_IncludesExpectedRows(dataTable);
-        }
+            var componentDt = 
+                components
+                    .Select(c => new
+                    {
+                        c.Id,
+                        c.CompositeId,
+                        c.Style,
+                        c.Name,
+                        MaintenanceSchedule_Frequency = c.MaintenanceSchedule.Frequency,
+                        MaintenanceSchedule_StartDate = c.MaintenanceSchedule.StartDate,
+                        ReviewSchedule_Frequency = c.ReviewSchedule.Frequency,
+                        ReviewSchedule_StartDate = c.ReviewSchedule.StartDate
+                    })
+                    .ToDataTable(nameof(Component));
 
-        [TestMethod]
-        public void RetrievedDataTable_IncludesExpectedRows_Async()
-        {
-            var dataTable = Db.GetDataTableAsync("SELECT * FROM Component", nameof(Component));
+            var widgetDt = widgets.ToDataTable();
             
-            RetrievedDataTable_IncludesExpectedRows(dataTable.Result);
+            Trace.WriteLine(compositeDt.ToDiagnosticString());
+            Trace.WriteLine(componentDt.ToDiagnosticString());
+            Trace.WriteLine(widgetDt.ToDiagnosticString());
         }
 
-        [TestMethod]
-        public void RetrievedDataSet_IncludesExpectedTablesAndRows()
-        {
-            var dataSet = Db.GetDataSet(QueryScript, new[] { nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget" });
-
-            RetrievedDataSet_IncludesExpectedTablesAndRows(dataSet);
-        }
-        
-        [TestMethod]
-        public void RetrievedDataSet_IncludesExpectedTablesAndRows_Async()
-        {
-            var dataSet = Db.GetDataSetAsync(QueryScript, new[] { nameof(Composite), nameof(Component), nameof(Widget), "ComponentWidget" });
-
-            RetrievedDataSet_IncludesExpectedTablesAndRows(dataSet.Result);
-        }
-
-        private static void RetrievedDataTable_IncludesExpectedRows(DataTable dataTable)
-        {
-            Trace.WriteLine(dataTable.ToDiagnosticString());
-
-            Assert.AreEqual(4, dataTable.Rows.Count);
-        }
-
-        private static void RetrievedDataSet_IncludesExpectedTablesAndRows(DataSet dataSet)
-        {
-            Trace.WriteLine(dataSet.ToDiagnosticString());
-
-            Assert.AreEqual(2, dataSet.Tables[nameof(Composite)].Rows.Count);
-            Assert.AreEqual(4, dataSet.Tables[nameof(Component)].Rows.Count);
-            Assert.AreEqual(3, dataSet.Tables[nameof(Widget)].Rows.Count);
-            Assert.AreEqual(7, dataSet.Tables["ComponentWidget"].Rows.Count);
-        }
-
-        private static void SaveComposites(IEnumerable<Composite> composites)
-        {
-            using (var dbContext = new DataContext())
-            {
-                foreach (var composite in composites)
-                {
-                    dbContext.Set<Composite>().Add(composite);
-
-                    dbContext.SaveChanges();
-                }
-            }
-        }
-
-        private static IEnumerable<Composite> GetSourceComposites()
+        private static Composite[] GetSourceComposites()
         {
             var widgets = new[]
             {
@@ -208,13 +166,5 @@ namespace FluidDbClient.Sql.Test
 
             return composites;
         }
-
-        private const string QueryScript =
-@"
-SELECT * FROM Composite;
-SELECT * FROM Component;
-SELECT * FROM Widget;
-SELECT * FROM ComponentWidget;
-";
     }
 }

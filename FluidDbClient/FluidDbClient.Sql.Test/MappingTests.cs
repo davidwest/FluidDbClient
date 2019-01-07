@@ -38,7 +38,7 @@ namespace FluidDbClient.Sql.Test
                 Trace.WriteLine(c.ToDiagnosticString());
             }
 
-            CollectionAssert.AreEqual(expected, actual, new CompositeComparer());
+            CollectionAssert.AreEqual(expected, actual, new CompositeIdentityAndValueComparer());
         }
         
         [TestMethod]
@@ -53,7 +53,7 @@ namespace FluidDbClient.Sql.Test
                 Trace.WriteLine(c.ToDiagnosticString());
             }
 
-            CollectionAssert.AreEqual(expected, actual, new CompositeComparer());
+            CollectionAssert.AreEqual(expected, actual, new CompositeIdentityAndValueComparer());
         }
 
         private static Composite[] GetSavedComposites()

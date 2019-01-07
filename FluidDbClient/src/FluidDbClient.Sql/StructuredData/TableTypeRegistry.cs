@@ -39,7 +39,7 @@ namespace FluidDbClient.Sql
         }
 
         /// <summary>
-        /// Gets TableTypeMap of type T; valid only when there is a single map registered for T
+        /// Gets TableTypeMap of type T; useable only when there is a single map registered for T
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
