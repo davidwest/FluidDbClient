@@ -10,8 +10,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluidDbClient.Sql.Test
 {
-    // TODO: add more granular tests
-
     [TestClass]
     public class TvpTests
     {
@@ -28,6 +26,20 @@ namespace FluidDbClient.Sql.Test
         }
 
         [TestMethod]
+        public void EmptyTableValueParameters_ShouldPersistNothing()
+        {
+            var sourceWidgets = new Widget[0];
+
+            var data = sourceWidgets.ToStructuredData(new NewWidgetTableTypeMap());
+
+            Db.Execute(InsertScript, new { data });
+
+            var savedWidgets = GetSavedWidgets();
+
+            CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
+        }
+
+        [TestMethod]
         public void TableValueParameters_ShouldPersistCorrectly()
         {
             var opResult = DoAddAndUpdateOperations();
@@ -40,7 +52,7 @@ namespace FluidDbClient.Sql.Test
                 Trace.WriteLine(w.ToDiagnosticString());
             }
 
-            CollectionAssert.AreEqual(expected, updated, new WidgetComparer());
+            CollectionAssert.AreEqual(expected, updated, new WidgetIdentityAndValueComparer());
         }
         
         [TestMethod]
@@ -56,7 +68,7 @@ namespace FluidDbClient.Sql.Test
                 Trace.WriteLine(w.ToDiagnosticString());
             }
 
-            CollectionAssert.AreEqual(expected, updated, new WidgetComparer());
+            CollectionAssert.AreEqual(expected, updated, new WidgetIdentityAndValueComparer());
         }
 
         private static Tuple<Widget[], Widget[]> DoAddAndUpdateOperations()
@@ -144,7 +156,7 @@ namespace FluidDbClient.Sql.Test
             Db.Execute("DELETE FROM Widget;");
         }
 
-        private static Widget[] GetSourceWidgets()
+        private static IEnumerable<Widget> GetSourceWidgets()
         {
             return new[]
             {

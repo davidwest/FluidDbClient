@@ -9,7 +9,6 @@ namespace FluidDbClient.Sql.Test.Entities
         public static bool HasTheSameValue(this Composite c1, Composite c2)
         {
             return
-                c1.Id == c2.Id &&
                 c1.Name == c2.Name &&
                 c1.Components.Count == c2.Components.Count &&
                 c1.Components
@@ -17,10 +16,19 @@ namespace FluidDbClient.Sql.Test.Entities
                     .All(pair => HasTheSameValue(pair.test1, pair.test2));
         }
 
-        public static bool HasTheSameValue(this Component c1, Component c2)
+        public static bool HasTheSameIdentityAndValue(this Composite c1, Composite c2)
         {
             return
                 c1.Id == c2.Id &&
+                c1.Components.Count == c2.Components.Count &&
+                c1.Components
+                    .Zip(c2.Components, (test1, test2) => new { test1, test2 })
+                    .All(pair => HasTheSameIdentityAndValue(pair.test1, pair.test2));
+        }
+
+        public static bool HasTheSameValue(this Component c1, Component c2)
+        {
+            return
                 c1.Name == c2.Name &&
                 c1.Style == c2.Style &&
                 HasTheSameValue(c1.MaintenanceSchedule, c2.MaintenanceSchedule) &&
@@ -31,6 +39,20 @@ namespace FluidDbClient.Sql.Test.Entities
                     .All(pair => HasTheSameValue(pair.test1, pair.test2));
         }
 
+        public static bool HasTheSameIdentityAndValue(this Component c1, Component c2)
+        {
+            return
+                c1.Id == c2.Id &&
+                c1.Name == c2.Name &&
+                c1.Style == c2.Style &&
+                HasTheSameValue(c1.MaintenanceSchedule, c2.MaintenanceSchedule) &&
+                HasTheSameValue(c1.ReviewSchedule, c1.ReviewSchedule) &&
+                c1.Widgets.Count == c2.Widgets.Count &&
+                c1.Widgets
+                    .Zip(c2.Widgets, (test1, test2) => new { test1, test2 })
+                    .All(pair => HasTheSameIdentityAndValue(pair.test1, pair.test2));
+        }
+
         public static bool HasTheSameValue(this Schedule s1, Schedule s2)
         {
             return s1.StartDate == s2.StartDate && s1.Frequency == s2.Frequency;
@@ -39,7 +61,6 @@ namespace FluidDbClient.Sql.Test.Entities
         public static bool HasTheSameValue(this Widget w1, Widget w2)
         {
             return
-                w1.Id == w2.Id &&
                 w1.ExternalId == w2.ExternalId &&
                 w1.IsArchived == w2.IsArchived &&
                 w1.Environment == w2.Environment &&
@@ -50,6 +71,13 @@ namespace FluidDbClient.Sql.Test.Entities
                 w1.SerialCode.SequenceEqual(w2.SerialCode) &&
                 w1.Weight == w2.Weight &&
                 w1.Rating == w2.Rating;
+        }
+
+        public static bool HasTheSameIdentityAndValue(this Widget w1, Widget w2)
+        {
+            return
+                w1.Id == w2.Id &&
+                w1.HasTheSameValue(w2);
         }
 
         public static string ToDiagnosticString(this Composite composite)

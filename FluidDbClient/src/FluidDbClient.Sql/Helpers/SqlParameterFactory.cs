@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace FluidDbClient.Sql
 {
@@ -45,14 +46,15 @@ namespace FluidDbClient.Sql
 
         private static SqlParameter GetParameterFrom(string effectiveName, StructuredData data)
         {
-            var assignableValue = data.Rows.Count > 0 
-                                    ? data.Rows 
-                                    : null;
+            var effectiveValue = 
+                data.Records.Any()
+                    ? data.Records 
+                    : null;
 
             return new SqlParameter(effectiveName, SqlDbType.Structured)
             {
                 TypeName = data.TableTypeName,
-                Value = assignableValue
+                Value = effectiveValue
             };
         }
         

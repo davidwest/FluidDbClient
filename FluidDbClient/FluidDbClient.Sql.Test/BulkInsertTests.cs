@@ -202,7 +202,7 @@ namespace FluidDbClient.Sql.Test
             Assert.AreEqual(0, savedWidgets.Length);
         }
         
-        private static void BulkInserter_PersistsCorrectly(IReadOnlyCollection<Widget> sourceWidgets)
+        private static void BulkInserter_PersistsCorrectly(Widget[] sourceWidgets)
         {
             var savedWidgets = GetSavedWidgets();
 
@@ -211,7 +211,7 @@ namespace FluidDbClient.Sql.Test
                 Trace.WriteLine(w.ToDiagnosticString());
             }
 
-            Assert.AreEqual(sourceWidgets.Count, savedWidgets.Length);
+            CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
         }
 
         private static Widget[] GetSavedWidgets()
