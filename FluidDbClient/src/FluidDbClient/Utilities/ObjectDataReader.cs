@@ -1,18 +1,9 @@
-﻿//===============================================================================
-// Copyright © 2008 Microsoft Corporation.  All rights reserved.
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY
-// OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT
-// LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-// FITNESS FOR A PARTICULAR PURPOSE.
-//===============================================================================
-//
-//This code lives here: http://code.msdn.microsoft.com/LinqObjectDataReader
-//Please visit for comments, issues and updates
-//
+﻿//https://code.msdn.microsoft.com/ObjectDataReader-8476dd72
 
 // Adapted for FluidDbClient with the following changes:
 // * allow enums
-// * rewrite type in Attribute to be primitive schema type (enums, nullables get simplified)
+// * allow DateTimeOffset
+// * rewrite type in Attribute to use primitive schema type if possible (enums, nullables get simplified)
 // * cleaned up
 
 // ReSharper disable StaticMemberInGenericType

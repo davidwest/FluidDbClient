@@ -44,9 +44,7 @@ namespace FluidDbClient.Sql
 
         public SqlBulkInserter FromSource<T>(IEnumerable<T> items) where T : class
         {
-            _dataReader = items.AsDataReader();
-            _dataTable = null;
-            return this;
+            return FromSource(items.AsDataReader());
         }
 
         public SqlBulkInserter HasOptions(SqlBulkCopyOptions options)
@@ -109,7 +107,7 @@ namespace FluidDbClient.Sql
 
         public void Write()
         {
-            using (var copier = GetCopier())
+            using (var copier = CreateSqlBulkCopy())
             {
                 if (_dataReader != null)
                 {
@@ -124,7 +122,7 @@ namespace FluidDbClient.Sql
 
         public async Task WriteAsync()
         {
-            using (var copier = GetCopier())
+            using (var copier = CreateSqlBulkCopy())
             {
                 if (_dataReader != null)
                 {
@@ -136,8 +134,8 @@ namespace FluidDbClient.Sql
                 }
             }
         }
-
-        private SqlBulkCopy GetCopier()
+        
+        private SqlBulkCopy CreateSqlBulkCopy()
         {
             SqlBulkCopy copier;
 
