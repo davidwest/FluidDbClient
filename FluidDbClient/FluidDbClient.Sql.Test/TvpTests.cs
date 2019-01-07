@@ -24,7 +24,7 @@ namespace FluidDbClient.Sql.Test
         [TestInitialize]
         public void Initialize()
         {
-            Db.Execute("DELETE FROM Widget;");
+            DeleteAllWidgets();
         }
 
         [TestMethod]
@@ -139,7 +139,12 @@ namespace FluidDbClient.Sql.Test
             return (await Db.CollectResultSetAsync("SELECT * FROM Widget ORDER BY Id;")).Map<Widget>().ToArray();
         }
 
-        private static IEnumerable<Widget> GetSourceWidgets()
+        private static void DeleteAllWidgets()
+        {
+            Db.Execute("DELETE FROM Widget;");
+        }
+
+        private static Widget[] GetSourceWidgets()
         {
             return new[]
             {

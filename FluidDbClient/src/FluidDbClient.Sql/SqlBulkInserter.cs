@@ -13,7 +13,9 @@ namespace FluidDbClient.Sql
         private int _timeout;
         private int _notifyAfter;
         private SqlRowsCopiedEventHandler[] _copiedEventHandlers = new SqlRowsCopiedEventHandler[0];
+
         private DataTable _dataTable = new DataTable();
+        private IDataReader _dataReader;
 
         private string _connectionString = DbRegistry.GetDatabase()?.ConnectionString;
         private SqlConnection _connection;
@@ -31,12 +33,20 @@ namespace FluidDbClient.Sql
             return this;
         }
         
+        public SqlBulkInserter FromSource(IDataReader reader)
+        {
+            _dataTable = null;
+            _dataReader = reader;
+            return this;
+        }
+
         public SqlBulkInserter FromSource<T>(IEnumerable<T> items) where T : class
         {
+            _dataReader = null;
             _dataTable = items.ToDataTable();
             return this;
         }
-        
+
         public SqlBulkInserter HasOptions(SqlBulkCopyOptions options)
         {
             _options = options;
@@ -99,7 +109,14 @@ namespace FluidDbClient.Sql
         {
             using (var copier = GetCopier())
             {
-                copier.WriteToServer(_dataTable);
+                if (_dataReader != null)
+                {
+                    copier.WriteToServer(_dataReader);
+                }
+                else
+                {
+                    copier.WriteToServer(_dataTable);
+                }
             }
         }
 
@@ -107,7 +124,14 @@ namespace FluidDbClient.Sql
         {
             using (var copier = GetCopier())
             {
-                await copier.WriteToServerAsync(_dataTable);
+                if (_dataReader != null)
+                {
+                    await copier.WriteToServerAsync(_dataReader);
+                }
+                else
+                {
+                    await copier.WriteToServerAsync(_dataTable);
+                }
             }
         }
 

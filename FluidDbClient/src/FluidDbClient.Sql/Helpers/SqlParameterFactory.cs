@@ -19,12 +19,12 @@ namespace FluidDbClient.Sql
             {
                 return GetParameterFrom(effectiveName, structuredData);
             }
-
+            
             if (value is SqlParamDef paramDef)
             {
                 return GetParameterFrom(effectiveName, paramDef);
             }
-
+            
             var type = DefaultClrToSqlTypeMap.GetSqlTypeFor(value);
 
             if (type.HasValue)
