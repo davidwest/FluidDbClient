@@ -19,7 +19,7 @@
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageReleaseNotes>Added SqlBulkInserter, a fluent wrapper for SqlBulkCopy.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added SqlBulkInserter, a fluent wrapper for SqlBulkCopy; memory-optimized StructuredData creation.</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
