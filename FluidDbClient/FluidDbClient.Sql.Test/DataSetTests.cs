@@ -20,7 +20,7 @@ namespace FluidDbClient.Sql.Test
 
             SaveComposites(composites);
         }
-
+        
         [TestMethod]
         public void RetrievedDataTable_IncludesExpectedRows()
         {

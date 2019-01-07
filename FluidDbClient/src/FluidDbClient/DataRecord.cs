@@ -7,7 +7,7 @@ namespace FluidDbClient
 {
     public class DataRecord : IDataRecord
     {
-        internal class DataField
+        private class DataField
         {
             public DataField(int index, string name, object value)
             {
@@ -16,9 +16,9 @@ namespace FluidDbClient
                 Value = value;
             }
 
-            public int Index { get; set; }
-            public string Name { get; set; }
-            public object Value { get; set; }
+            public int Index { get; }
+            public string Name { get; }
+            public object Value { get; }
         }
 
         private readonly List<DataField> _dataFields = new List<DataField>();
@@ -75,33 +75,32 @@ namespace FluidDbClient
         public int GetInt32(int i) => (int) Get(i);
         public long GetInt64(int i) => (long) Get(i);
         public string GetString(int i) => (string) Get(i);
-
-        #region --- Unavailable ---
-
+        
         public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
-            throw NewUnavailableException();
+            var buf = (byte[])Get(i);
+            var bytes = Math.Min(length, buf.Length - (int)fieldOffset);
+            Buffer.BlockCopy(buf, (int)fieldOffset, buffer, bufferoffset, bytes);
+            return bytes;
         }
 
         public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
-            throw NewUnavailableException();
+            var s = (string)Get(i);
+            var chars = Math.Min(length, s.Length - (int)fieldoffset);
+            s.CopyTo((int)fieldoffset, buffer ?? throw new ArgumentNullException(nameof(buffer)), bufferoffset, chars);
+
+            return chars;
         }
 
         public IDataReader GetData(int i)
         {
-            throw NewUnavailableException();
+            throw new NotSupportedException("Cannot get IDataReader for buffered records");
         }
-        #endregion 
-
+        
         private object Get(int i)
         {
             return _dataFields[i].Value;
-        }
-
-        private static InvalidOperationException NewUnavailableException()
-        {
-            return new InvalidOperationException("Method unavailable for buffered data records");
         }
     }
 }

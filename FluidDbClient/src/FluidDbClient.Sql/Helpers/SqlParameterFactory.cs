@@ -19,7 +19,7 @@ namespace FluidDbClient.Sql
             {
                 return GetParameterFrom(effectiveName, structuredData);
             }
-            
+
             if (value is SqlParamDef paramDef)
             {
                 return GetParameterFrom(effectiveName, paramDef);
@@ -38,7 +38,6 @@ namespace FluidDbClient.Sql
             return new SqlParameter(effectiveName, value);
         }
 
-        
         private static string GetEffectiveParameterName(string sourceName)
         {
             return sourceName.StartsWith("@") ? sourceName : $"@{sourceName}";
@@ -56,7 +55,7 @@ namespace FluidDbClient.Sql
                 Value = assignableValue
             };
         }
-
+        
         private static SqlParameter GetParameterFrom(string effectiveName, SqlParamDef paramDef)
         {
             var param = new SqlParameter(effectiveName, paramDef.Type)

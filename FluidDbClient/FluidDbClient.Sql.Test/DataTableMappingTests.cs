@@ -17,14 +17,7 @@ namespace FluidDbClient.Sql.Test
             var components = composites.SelectMany(c => c.Components).ToArray();
             var widgets = components.SelectMany(c => c.Widgets).ToArray();
 
-            var compositeDt = 
-                composites
-                    .Select(c => new
-                    {
-                        c.Id,
-                        c.Name
-                    })
-                    .ToDataTable(nameof(Composite));
+            var compositeDt = composites.ToDataTable();
 
             var componentDt = 
                 components

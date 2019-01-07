@@ -33,7 +33,7 @@ namespace FluidDbClient.Sql
 
         public static SqlDbType? GetSqlTypeFor(Type clrType)
         {
-            clrType = clrType.GetPrimitiveTypeForSchema();
+            clrType = clrType.GetUnderlyingScalarFieldType();
 
             return Map.TryGetValue(clrType, out var value) ? (SqlDbType?)value : null;
         }

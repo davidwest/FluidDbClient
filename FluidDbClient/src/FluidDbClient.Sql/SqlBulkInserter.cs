@@ -30,20 +30,22 @@ namespace FluidDbClient.Sql
         public SqlBulkInserter FromSource(DataTable dataTable)
         {
             _dataTable = dataTable;
+            _dataReader = null;
             return this;
         }
         
         public SqlBulkInserter FromSource(IDataReader reader)
         {
-            _dataTable = null;
             _dataReader = reader;
+            _dataTable = null;
+            
             return this;
         }
 
         public SqlBulkInserter FromSource<T>(IEnumerable<T> items) where T : class
         {
-            _dataReader = null;
-            _dataTable = items.ToDataTable();
+            _dataReader = items.AsDataReader();
+            _dataTable = null;
             return this;
         }
 

@@ -4,7 +4,7 @@ namespace FluidDbClient
 {
     public static class TypeExtensions
     {
-        public static Type GetPrimitiveTypeForSchema(this Type t)
+        public static Type GetUnderlyingScalarFieldType(this Type t)
         {
             t = Nullable.GetUnderlyingType(t) ?? t;
 
@@ -12,7 +12,7 @@ namespace FluidDbClient
             {
                 t = t.GetEnumUnderlyingType();
             }
-
+            
             return t;
         }
     }
