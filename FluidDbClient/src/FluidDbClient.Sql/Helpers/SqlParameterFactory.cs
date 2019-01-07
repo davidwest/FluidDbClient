@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace FluidDbClient.Sql
 {
@@ -24,7 +25,7 @@ namespace FluidDbClient.Sql
             {
                 return GetParameterFrom(effectiveName, paramDef);
             }
-
+            
             var type = DefaultClrToSqlTypeMap.GetSqlTypeFor(value);
 
             if (type.HasValue)
@@ -38,7 +39,6 @@ namespace FluidDbClient.Sql
             return new SqlParameter(effectiveName, value);
         }
 
-        
         private static string GetEffectiveParameterName(string sourceName)
         {
             return sourceName.StartsWith("@") ? sourceName : $"@{sourceName}";
@@ -46,17 +46,18 @@ namespace FluidDbClient.Sql
 
         private static SqlParameter GetParameterFrom(string effectiveName, StructuredData data)
         {
-            var assignableValue = data.Rows.Count > 0 
-                                    ? data.Rows 
-                                    : null;
+            var effectiveValue = 
+                data.Records.Any()
+                    ? data.Records 
+                    : null;
 
             return new SqlParameter(effectiveName, SqlDbType.Structured)
             {
                 TypeName = data.TableTypeName,
-                Value = assignableValue
+                Value = effectiveValue
             };
         }
-
+        
         private static SqlParameter GetParameterFrom(string effectiveName, SqlParamDef paramDef)
         {
             var param = new SqlParameter(effectiveName, paramDef.Type)

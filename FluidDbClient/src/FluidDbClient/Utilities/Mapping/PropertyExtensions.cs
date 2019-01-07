@@ -8,7 +8,7 @@ namespace FluidDbClient
 {
     public static class PropertyExtensions
     {
-        public static Dictionary<string, object> GetPropertyMap(this object obj)
+        public static IReadOnlyDictionary<string, object> GetPropertyMap(this object obj)
         {
             if (obj == null) return null;
 

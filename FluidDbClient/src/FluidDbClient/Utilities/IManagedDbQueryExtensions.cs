@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FluidDbClient
 { 
-    public static class DataCollectionExtensions
+    public static class IManagedDbQueryExtensions
     {
         public static List<T>[] CollectResultSets<T>(this IManagedDbQuery query, int resultCount, Func<IDataRecord, T> map)
         {
@@ -24,7 +24,7 @@ namespace FluidDbClient
 
             return sets;
         }
-
+        
         public static List<IDataRecord>[] CollectResultSets(this IManagedDbQuery query, int resultCount)
         {
             return query.CollectResultSets(resultCount, dr => dr.Copy());
