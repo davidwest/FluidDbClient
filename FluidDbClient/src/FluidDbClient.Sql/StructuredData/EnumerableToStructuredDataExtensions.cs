@@ -45,7 +45,7 @@ namespace FluidDbClient.Sql
 
             return builder.Build();
         }
-
+        
         internal static IReadOnlyDictionary<string, ColumnDefinition> InferColumnMap(this IReadOnlyDictionary<string, object> propertyMap)
         {
             var columnMap = new Dictionary<string, ColumnDefinition>();
@@ -66,35 +66,37 @@ namespace FluidDbClient.Sql
             this IReadOnlyDictionary<string, object> propertyMap, 
             IReadOnlyDictionary<string, ColumnDefinition> columnMap)
         {
-            var columnList = new List<ColumnDefinition>();
-            var valueList = new List<object>();
+            var metaValuePairs = propertyMap.GetMetaValuePairs(columnMap).ToArray();
 
-            foreach (var kvp in propertyMap)
-            {
-                var name = kvp.Key;
-                var value = kvp.Value;
-
-                if (!columnMap.TryGetValue(name, out var columnDef))
-                {
-                    continue;
-                }
-
-                if (columnDef.IsIgnored)
-                {
-                    continue;
-                }
-
-                columnList.Add(columnDef);
-                valueList.Add(value);
-            }
-
-            var metaArray = columnList.Select(c => c.MetaData).ToArray();
-
-            var record = new SqlDataRecord(metaArray);
-
-            record.SetValues(valueList.ToArray());
+            var record = new SqlDataRecord(metaValuePairs.Select(p => p.Item1).ToArray());
+            
+            record.SetValues(metaValuePairs.Select(p => p.Item2).ToArray());
 
             return record;
+        }
+
+        private static IEnumerable<Tuple<SqlMetaData, object>> GetMetaValuePairs(
+            this IReadOnlyDictionary<string, object> propertyMap,
+            IReadOnlyDictionary<string, ColumnDefinition> columnMap)
+        {
+            foreach (var kvp in columnMap)
+            {
+                var columnDef = kvp.Value;
+
+                if (columnDef.IsIgnored) continue;
+
+                var name = kvp.Key;
+
+                if (!propertyMap.TryGetValue(name, out var value))
+                {
+                    if (columnDef.Behavior != ColumnBehavior.Nullable)
+                    {
+                        throw new InvalidOperationException($"Column \"{name}\" is required");
+                    }
+                }
+
+                yield return new Tuple<SqlMetaData, object>(columnDef.MetaData, value);
+            }
         }
 
         private static IEnumerable<SqlDataRecord> ToSqlRecords<T>(this IEnumerable<T> items, TableTypeDefinition def) where T : class

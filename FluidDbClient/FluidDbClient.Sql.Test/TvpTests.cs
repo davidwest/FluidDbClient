@@ -26,7 +26,7 @@ namespace FluidDbClient.Sql.Test
         }
 
         [TestMethod]
-        public void EmptyTableValueParameters_ShouldPersistNothing()
+        public void EmptyTableValueParameter_ShouldPersistNothing()
         {
             var sourceWidgets = new Widget[0];
 
@@ -40,7 +40,7 @@ namespace FluidDbClient.Sql.Test
         }
 
         [TestMethod]
-        public void TableValueParameters_ShouldPersistCorrectly()
+        public void TableValueParameter_ShouldPersistCorrectly()
         {
             var opResult = DoAddAndUpdateOperations();
 
@@ -56,7 +56,7 @@ namespace FluidDbClient.Sql.Test
         }
         
         [TestMethod]
-        public void TableValueParameters_ShouldPersistCorrectly_Async()
+        public void TableValueParameter_ShouldPersistCorrectly_Async()
         {
             var opResult = DoAddAndUpdateOperationsAsync().Result;
 
@@ -69,6 +69,71 @@ namespace FluidDbClient.Sql.Test
             }
 
             CollectionAssert.AreEqual(expected, updated, new WidgetIdentityAndValueComparer());
+        }
+        
+        [TestMethod]
+        public void TableValueParameter_SourcedFromCompatibleObjects_ShouldPersistCorrectly()
+        {
+            var sourceWidgets = GetSourceWidgets();
+
+            var data = 
+                sourceWidgets
+                    .Select(w => new 
+                    {
+                        // NOTE:
+                        // * properties out of order relative to Widget
+                        // * extra properties have been added
+
+                        ExtraProperty1 = "Hello World!",
+                        ExtraProperty2 = 100,
+                        w.Rating,
+                        w.Weight,
+                        w.SerialCode,
+                        w.ReleaseDate,
+                        w.CreatedTimestamp,
+                        w.Cost,
+                        w.Name,
+                        w.Environment,
+                        w.IsArchived,
+                        w.ExternalId
+                    })
+                    .ToStructuredData(new NewWidgetTableTypeMap());
+            
+            Db.Execute(InsertScript, new {data});
+
+            var savedWidgets = GetSavedWidgets();
+
+            CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException), "\"ExternalId\" is required")]
+        public void TableValueParameter_SourcedFromIncompatibleObjects_ShouldThrowException()
+        {
+            var sourceWidgets = GetSourceWidgets();
+
+            var data =
+                sourceWidgets
+                    .Select(w => new
+                    {                        
+                        ExtraProperty1 = "Hello World!",
+                        ExtraProperty2 = 100,
+                        w.Rating,
+                        w.Weight,
+                        w.SerialCode,
+                        w.ReleaseDate,
+                        w.CreatedTimestamp,
+                        w.Cost,
+                        w.Name,
+                        w.Environment,
+                        w.IsArchived
+
+                        // uh oh: no ExternalId
+
+                    })
+                    .ToStructuredData(new NewWidgetTableTypeMap());
+
+            Db.Execute(InsertScript, new { data });
         }
 
         private static Tuple<Widget[], Widget[]> DoAddAndUpdateOperations()
@@ -143,12 +208,12 @@ namespace FluidDbClient.Sql.Test
 
         private static Widget[] GetSavedWidgets()
         {
-            return Db.GetResultSet("SELECT * FROM Widget ORDER BY Id;").Map<Widget>().ToArray();
+            return Db.GetResultSet("SELECT * FROM Widget ORDER BY Name;").Map<Widget>().ToArray();
         }
 
         private static async Task<Widget[]> GetSavedWidgetsAsync()
         {
-            return (await Db.CollectResultSetAsync("SELECT * FROM Widget ORDER BY Id;")).Map<Widget>().ToArray();
+            return (await Db.CollectResultSetAsync("SELECT * FROM Widget ORDER BY Name;")).Map<Widget>().ToArray();
         }
 
         private static void DeleteAllWidgets()
@@ -156,7 +221,7 @@ namespace FluidDbClient.Sql.Test
             Db.Execute("DELETE FROM Widget;");
         }
 
-        private static IEnumerable<Widget> GetSourceWidgets()
+        private static Widget[] GetSourceWidgets()
         {
             return new[]
             {
@@ -183,7 +248,7 @@ namespace FluidDbClient.Sql.Test
                     Weight = 5.554,
                     SerialCode = new byte[]{1, 2, 33, 53, 249}
                 }
-            };
+            }.OrderBy(w => w.Name).ToArray();
         }
 
         private const string InsertScript =

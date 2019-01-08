@@ -126,6 +126,20 @@ namespace FluidDbClient
                 ReleaseResources();
             }
         }
+        
+        public void UseDataReader(Action<DbDataReader> doThis)
+        {
+            try
+            {
+                EstablishReaderResources(CommandBehavior.Default);
+
+                doThis(_reader);
+            }
+            finally
+            {
+                ReleaseResources();
+            }
+        }
 
         private IEnumerable<IDataRecord> GetResultSet(CommandBehavior readBehavior, Func<IDataRecord, IDataRecord> yieldRecord)
         {

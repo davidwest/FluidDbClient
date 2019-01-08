@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace FluidDbClient
@@ -111,6 +112,20 @@ namespace FluidDbClient
                         await _reader.NextResultAsync();
                     }
                 }
+            }
+            finally
+            {
+                ReleaseResources();
+            }
+        }
+
+        public async Task UseDataReaderAsync(Action<DbDataReader> doThis)
+        {
+            try
+            {
+                await CreateReaderResourcesAsync(CommandBehavior.Default);
+
+                doThis(_reader);
             }
             finally
             {
