@@ -38,7 +38,7 @@ namespace FluidDbClient.Sql
                     Type = p.PropertyType,
                     MetaData = SqlMetaDataFactory.CreateSqlMetaData(p.Name, p.SqlType.Value)
                 })
-                .Select(p => new ColumnDefinition(p.MetaData, p.Type.IsNullableType() ? ColumnBehavior.Nullable : ColumnBehavior.NotNullable))
+                .Select(p => new ColumnDefinition(p.Type, p.MetaData, p.Type.IsNullableType() ? ColumnBehavior.Nullable : ColumnBehavior.NotNullable))
                 .ToDictionary(cd => cd.MetaData.Name, cd => cd);
         }
         

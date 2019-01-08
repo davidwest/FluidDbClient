@@ -12,29 +12,38 @@ namespace FluidDbClient.Sql
 
         private readonly SqlMetaData[] _preOrderedMetaData;
         private IReadOnlyDictionary<string, ColumnDefinition> _columnMap;
-        
-        public StructuredDataBuilder(string tableTypeName, params SqlMetaData[] preOrderedMetaData)
+
+        private readonly TypeMapOption _typeMapOption;
+
+        public StructuredDataBuilder(string tableTypeName, TypeMapOption mapOption, params SqlMetaData[] preOrderedMetaData)
         {
             _tableTypeName = tableTypeName;
+            _typeMapOption = mapOption;
 
             _preOrderedMetaData = preOrderedMetaData;
 
-            _columnMap = 
+            _columnMap =
                 preOrderedMetaData
-                .Select(md => new ColumnDefinition(md, ColumnBehavior.Nullable))
-                .ToDictionary(m => m.MetaData.Name, m => m);
+                    .Select(md => new ColumnDefinition(typeof(object), md, ColumnBehavior.Nullable))
+                    .ToDictionary(m => m.MetaData.Name, m => m);
         }
 
-        public StructuredDataBuilder(TableTypeDefinition def)
+        public StructuredDataBuilder(string tableTypeName, params SqlMetaData[] preOrderedMetaData) 
+            : this(tableTypeName, TypeMapOption.Strict, preOrderedMetaData)
+        { }
+
+        public StructuredDataBuilder(TableTypeDefinition def, TypeMapOption mapOption = TypeMapOption.Strict)
         {
             _tableTypeName = def.TypeName;
+            _typeMapOption = mapOption;
 
             _columnMap = 
                 def.Columns
                 .ToDictionary(c => c.MetaData.Name, c => c, StringComparer.OrdinalIgnoreCase);
         }
-
-        public StructuredDataBuilder(TableTypeMap map) : this(map.GetDefinition())
+        
+        public StructuredDataBuilder(TableTypeMap map, TypeMapOption mapOption = TypeMapOption.Strict) 
+            : this(map.GetDefinition(), mapOption)
         { }
                 
         public StructuredDataBuilder Append(IReadOnlyDictionary<string, object> propertyMap)
@@ -44,7 +53,7 @@ namespace FluidDbClient.Sql
                 _columnMap = propertyMap.InferColumnMap();
             }
 
-            var record = propertyMap.GetSqlDataRecord(_columnMap);
+            var record = propertyMap.GetSqlDataRecord(_columnMap, _typeMapOption);
 
             _records.Add(record);
 

@@ -23,8 +23,8 @@ namespace FluidDbClient.Sql
             var meta = _columnDef.MetaData;
 
             var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, meta.MaxLength);
-
-            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior, true);
+            
+            var newColumnDef = new ColumnDefinition(_columnDef.ScalarType, newMeta, _columnDef.Behavior, true);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
@@ -37,7 +37,7 @@ namespace FluidDbClient.Sql
                 ? SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.Precision, meta.Scale)
                 : SqlMetaDataFactory.CreateSqlMetaData(name, meta.SqlDbType, meta.MaxLength);
 
-            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
+            var newColumnDef = new ColumnDefinition(_columnDef.ScalarType, newMeta, _columnDef.Behavior);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
@@ -50,7 +50,7 @@ namespace FluidDbClient.Sql
                 ? SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.Precision, meta.Scale)
                 : SqlMetaDataFactory.CreateSqlMetaData(meta.Name, type, meta.MaxLength);
             
-            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
+            var newColumnDef = new ColumnDefinition(_columnDef.ScalarType, newMeta, _columnDef.Behavior);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
@@ -63,7 +63,7 @@ namespace FluidDbClient.Sql
             
             var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, encodedSize);
 
-            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
+            var newColumnDef = new ColumnDefinition(_columnDef.ScalarType, newMeta, _columnDef.Behavior);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
@@ -74,14 +74,14 @@ namespace FluidDbClient.Sql
             
             var newMeta = SqlMetaDataFactory.CreateSqlMetaData(meta.Name, meta.SqlDbType, precision, scale);
 
-            var newColumnDef = new ColumnDefinition(newMeta, _columnDef.Behavior);
+            var newColumnDef = new ColumnDefinition(_columnDef.ScalarType, newMeta, _columnDef.Behavior);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }
                 
         public TableTypePropertyConfiguration HasBehavior(ColumnBehavior behavior)
         {
-            var newColumnDef = new ColumnDefinition(_columnDef.MetaData, behavior);
+            var newColumnDef = new ColumnDefinition(_columnDef.ScalarType, _columnDef.MetaData, behavior);
 
             return new TableTypePropertyConfiguration(_propertyName, newColumnDef, _onChange);
         }

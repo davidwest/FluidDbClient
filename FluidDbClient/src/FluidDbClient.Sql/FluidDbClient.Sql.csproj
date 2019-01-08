@@ -5,9 +5,9 @@
     <Title>FluidDbClient.Sql</Title>
     <AssemblyName>FluidDbClient.Sql</AssemblyName>
     <AssemblyTitle>FluidDbClient.Sql</AssemblyTitle>
-    <AssemblyVersion>1.1.5</AssemblyVersion>
-    <FileVersion>1.1.5</FileVersion>
-    <Version>1.1.5</Version>
+    <AssemblyVersion>1.1.6</AssemblyVersion>
+    <FileVersion>1.1.6</FileVersion>
+    <Version>1.1.6</Version>
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <Description>SQL Server provider for FluidDbClient.  This library also makes working with Table Valued Parameters a snap.</Description>
     <Authors>David West, Brandon Johnson</Authors>
@@ -19,7 +19,7 @@
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageReleaseNotes>Added SqlBulkInserter, a fluent wrapper for SqlBulkCopy; memory-optimized StructuredData creation.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added TypeMapOption enum to allow coersion of types when creating StructuredData</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
