@@ -26,7 +26,7 @@ namespace FluidDbClient.Sql.Test
         }
 
         [TestMethod]
-        public void EmptyTableValueParameter_ShouldPersistNothing()
+        public void EmptyTableValueParameter_PersistsNothing()
         {
             var sourceWidgets = new Widget[0];
 
@@ -38,9 +38,9 @@ namespace FluidDbClient.Sql.Test
 
             CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
         }
-
+        
         [TestMethod]
-        public void TableValueParameter_ShouldPersistCorrectly()
+        public void TableValueParameter_PersistsCorrectly()
         {
             var opResult = DoAddAndUpdateOperations();
 
@@ -56,7 +56,7 @@ namespace FluidDbClient.Sql.Test
         }
         
         [TestMethod]
-        public void TableValueParameter_ShouldPersistCorrectly_Async()
+        public void TableValueParameter_PersistsCorrectly_Async()
         {
             var opResult = DoAddAndUpdateOperationsAsync().Result;
 
@@ -72,16 +72,16 @@ namespace FluidDbClient.Sql.Test
         }
         
         [TestMethod]
-        public void TableValueParameter_SourcedFromCompatibleObjects_ShouldPersistCorrectly()
+        public void TableValueParameter_SourcedFromCompatibleObjects_WithStrictTypeMapping_PersistsCorrectly()
         {
             var sourceWidgets = GetSourceWidgets();
 
-            var data = 
+            var data =
                 sourceWidgets
-                    .Select(w => new 
+                    .Select(w => new
                     {
                         // NOTE:
-                        // * properties out of order relative to Widget
+                        // * properties are out of order relative to Widget
                         // * extra properties have been added
 
                         ExtraProperty1 = "Hello World!",
@@ -98,14 +98,90 @@ namespace FluidDbClient.Sql.Test
                         w.ExternalId
                     })
                     .ToStructuredData(new NewWidgetTableTypeMap());
+
+            Db.Execute(InsertScript, new { data });
+
+            var savedWidgets = GetSavedWidgets();
+            
+            CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
+        }
+
+        [TestMethod]
+        public void TableValueParameter_SourcedFromNearlyCompatibleObjects_WithCoercedTypeMapping_PersistsCorrectly()
+        {
+            var sourceWidgets = GetSourceWidgets();
+
+            var data = 
+                sourceWidgets
+                    .Select(w => new 
+                    {
+                        // NOTE:
+                        // * properties are out of order relative to Widget
+                        // * property types differ
+                        // * extra properties have been added
+
+                        ExtraProperty1 = "Hello World!",
+                        ExtraProperty2 = 100,
+                        Rating = (decimal?)w.Rating,
+                        Weight = (float?)w.Weight,
+                        w.SerialCode,
+                        w.ReleaseDate,
+                        w.CreatedTimestamp,
+                        Cost = (float)w.Cost,
+                        w.Name,
+                        Environment = (long)w.Environment,
+                        w.IsArchived,
+                        w.ExternalId
+                    })
+                    .ToStructuredData(new NewWidgetTableTypeMap(), TypeMapOption.Coerce);
             
             Db.Execute(InsertScript, new {data});
 
             var savedWidgets = GetSavedWidgets();
 
-            CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
+            foreach (var w in savedWidgets)
+            {
+                Trace.WriteLine(w.ToDiagnosticString());
+            }
+
+            // NOTE: we cannot assert equal property values due to casting in intermediate objects
+
+            Assert.AreEqual(sourceWidgets.Length, savedWidgets.Length);
         }
         
+        [TestMethod]
+        [ExpectedException(typeof(InvalidCastException))]
+        public void TableValueParameter_SourcedFromNearlyCompatibleObjects_WithStrictTypeMapping_ThrowsException()
+        {
+            var sourceWidgets = GetSourceWidgets();
+
+            var data =
+                sourceWidgets
+                    .Select(w => new
+                    {
+                        // NOTE:
+                        // * properties are out of order relative to Widget
+                        // * property types differ
+                        // * extra properties have been added
+
+                        ExtraProperty1 = "Hello World!",
+                        ExtraProperty2 = 100,
+                        Rating = (decimal?)w.Rating,
+                        Weight = (float?)w.Weight,
+                        w.SerialCode,
+                        w.ReleaseDate,
+                        w.CreatedTimestamp,
+                        Cost = (float)w.Cost,
+                        w.Name,
+                        Environment = (long)w.Environment,
+                        w.IsArchived,
+                        w.ExternalId
+                    })
+                    .ToStructuredData(new NewWidgetTableTypeMap());
+
+            Db.Execute(InsertScript, new { data });
+        }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException), "\"ExternalId\" is required")]
         public void TableValueParameter_SourcedFromIncompatibleObjects_ShouldThrowException()

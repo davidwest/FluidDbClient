@@ -7,36 +7,48 @@ namespace FluidDbClient.Sql
 {
     public static class EnumerableToStructuredDataExtensions
     {
-        public static StructuredData ToStructuredData<T>(this IEnumerable<T> items) where T : class
+        public static StructuredData ToStructuredData<T>(
+            this IEnumerable<T> items, 
+            TypeMapOption option = TypeMapOption.Strict) where T : class
         {
             var tableTypeMap = TableTypeRegistry.GetMap<T>();
 
             return tableTypeMap != null 
                 ? items.ToStructuredData(tableTypeMap) 
-                : items.ToStructuredData(typeof(T).Name);
+                : items.ToStructuredData(typeof(T).Name, option);
         }
 
-        public static StructuredData ToStructuredData<T>(this IEnumerable<T> items, TableTypeMap map) where T : class
+        public static StructuredData ToStructuredData<T>(
+            this IEnumerable<T> items, 
+            TableTypeMap map, 
+            TypeMapOption option = TypeMapOption.Strict) where T : class
         {
-            return items.ToStructuredData(map.GetDefinition());
+            return items.ToStructuredData(map.GetDefinition(), option);
         }
         
-        public static StructuredData ToStructuredData<T>(this IEnumerable<T> items, TableTypeDefinition def) where T : class
+        public static StructuredData ToStructuredData<T>(
+            this IEnumerable<T> items, 
+            TableTypeDefinition def, 
+            TypeMapOption option = TypeMapOption.Strict) 
+            where T : class
         {
-            return new StructuredData(def.TypeName, items.ToSqlRecords(def));
+            return new StructuredData(def.TypeName, items.ToSqlRecords(def, option));
         }
-
-        public static StructuredData ToStructuredData<T>(this IEnumerable<T> items, string tableTypeName) where T : class
+        
+        public static StructuredData ToStructuredData<T>(
+            this IEnumerable<T> items, 
+            string tableTypeName, 
+            TypeMapOption option = TypeMapOption.Strict) where T : class
         {
             var tableTypeMap = TableTypeRegistry.GetMap(tableTypeName);
 
             if (tableTypeMap != null)
             {
-                return items.ToStructuredData(tableTypeMap);
+                return items.ToStructuredData(tableTypeMap, option);
             }
 
             // fall back to using a builder, which allows inference:
-            var builder = new StructuredDataBuilder(tableTypeName);
+            var builder = new StructuredDataBuilder(tableTypeName, option);
 
             foreach (var item in items)
             {
@@ -54,7 +66,7 @@ namespace FluidDbClient.Sql
             {
                 var meta = SqlMetaData.InferFromValue(kvp.Value, kvp.Key);
 
-                var columnDef = new ColumnDefinition(meta, ColumnBehavior.Nullable);
+                var columnDef = new ColumnDefinition(kvp.Value.GetType(), meta, ColumnBehavior.Nullable);
 
                 columnMap.Add(kvp.Key, columnDef);
             }
@@ -64,9 +76,10 @@ namespace FluidDbClient.Sql
 
         internal static SqlDataRecord GetSqlDataRecord(
             this IReadOnlyDictionary<string, object> propertyMap, 
-            IReadOnlyDictionary<string, ColumnDefinition> columnMap)
+            IReadOnlyDictionary<string, ColumnDefinition> columnMap, 
+            TypeMapOption option)
         {
-            var metaValuePairs = propertyMap.GetMetaValuePairs(columnMap).ToArray();
+            var metaValuePairs = propertyMap.GetMetaValuePairs(columnMap, option).ToArray();
 
             var record = new SqlDataRecord(metaValuePairs.Select(p => p.Item1).ToArray());
             
@@ -77,7 +90,8 @@ namespace FluidDbClient.Sql
 
         private static IEnumerable<Tuple<SqlMetaData, object>> GetMetaValuePairs(
             this IReadOnlyDictionary<string, object> propertyMap,
-            IReadOnlyDictionary<string, ColumnDefinition> columnMap)
+            IReadOnlyDictionary<string, ColumnDefinition> columnMap, 
+            TypeMapOption option)
         {
             foreach (var kvp in columnMap)
             {
@@ -95,22 +109,35 @@ namespace FluidDbClient.Sql
                     }
                 }
 
-                yield return new Tuple<SqlMetaData, object>(columnDef.MetaData, value);
+                var effectiveValue = 
+                    option == TypeMapOption.Strict 
+                        ? value 
+                        : value != null 
+                            ? Convert.ChangeType(value, columnDef.ScalarType) 
+                            : null;
+                
+                yield return new Tuple<SqlMetaData, object>(columnDef.MetaData, effectiveValue);
             }
         }
 
-        private static IEnumerable<SqlDataRecord> ToSqlRecords<T>(this IEnumerable<T> items, TableTypeDefinition def) where T : class
+        private static IEnumerable<SqlDataRecord> ToSqlRecords<T>(
+            this IEnumerable<T> items, 
+            TableTypeDefinition def, 
+            TypeMapOption option) where T : class
         {
             var columnMap =
                 def.Columns
                     .ToDictionary(c => c.MetaData.Name, c => c, StringComparer.OrdinalIgnoreCase);
 
-            return items.ToSqlRecords(columnMap);
+            return items.ToSqlRecords(columnMap, option);
         }
 
-        private static IEnumerable<SqlDataRecord> ToSqlRecords<T>(this IEnumerable<T> items, IReadOnlyDictionary<string, ColumnDefinition> columnMap) where T : class
+        private static IEnumerable<SqlDataRecord> ToSqlRecords<T>(
+            this IEnumerable<T> items, 
+            IReadOnlyDictionary<string, ColumnDefinition> columnMap, 
+            TypeMapOption option) where T : class
         {
-            return items.Select(item => item.GetPropertyMap().GetSqlDataRecord(columnMap));
+            return items.Select(item => item.GetPropertyMap().GetSqlDataRecord(columnMap, option));
         }
     }
 }
