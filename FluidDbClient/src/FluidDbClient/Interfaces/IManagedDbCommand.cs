@@ -7,6 +7,10 @@ namespace FluidDbClient
     {
         void Execute(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 
+        void ExecuteWithoutTransaction();
+
         Task ExecuteAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+
+        Task ExecuteWithoutTransactionAsync();
     }
 }

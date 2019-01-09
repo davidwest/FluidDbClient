@@ -9,46 +9,46 @@ namespace FluidDbClient.Sql
     {
         public static StructuredData ToStructuredData<T>(
             this IEnumerable<T> items, 
-            TypeMapOption option = TypeMapOption.Strict) where T : class
+            DataBindingOptions bindingOptions = DataBindingOptions.Default) where T : class
         {
             var tableTypeMap = TableTypeRegistry.GetMap<T>();
 
             return tableTypeMap != null 
                 ? items.ToStructuredData(tableTypeMap) 
-                : items.ToStructuredData(typeof(T).Name, option);
+                : items.ToStructuredData(typeof(T).Name, bindingOptions);
         }
-
+        
         public static StructuredData ToStructuredData<T>(
             this IEnumerable<T> items, 
             TableTypeMap map, 
-            TypeMapOption option = TypeMapOption.Strict) where T : class
+            DataBindingOptions bindingOptions = DataBindingOptions.Default) where T : class
         {
-            return items.ToStructuredData(map.GetDefinition(), option);
+            return items.ToStructuredData(map.GetDefinition(), bindingOptions);
         }
         
         public static StructuredData ToStructuredData<T>(
             this IEnumerable<T> items, 
             TableTypeDefinition def, 
-            TypeMapOption option = TypeMapOption.Strict) 
+            DataBindingOptions bindingOptions = DataBindingOptions.Default) 
             where T : class
         {
-            return new StructuredData(def.TypeName, items.ToSqlRecords(def, option));
+            return new StructuredData(def.TypeName, items.ToSqlRecords(def, bindingOptions));
         }
         
         public static StructuredData ToStructuredData<T>(
             this IEnumerable<T> items, 
             string tableTypeName, 
-            TypeMapOption option = TypeMapOption.Strict) where T : class
+            DataBindingOptions bindingOptions = DataBindingOptions.Default) where T : class
         {
             var tableTypeMap = TableTypeRegistry.GetMap(tableTypeName);
 
             if (tableTypeMap != null)
             {
-                return items.ToStructuredData(tableTypeMap, option);
+                return items.ToStructuredData(tableTypeMap, bindingOptions);
             }
 
             // fall back to using a builder, which allows inference:
-            var builder = new StructuredDataBuilder(tableTypeName, option);
+            var builder = new StructuredDataBuilder(tableTypeName, bindingOptions);
 
             foreach (var item in items)
             {
@@ -73,13 +73,13 @@ namespace FluidDbClient.Sql
 
             return columnMap;
         }
-
+        
         internal static SqlDataRecord GetSqlDataRecord(
             this IReadOnlyDictionary<string, object> propertyMap, 
             IReadOnlyDictionary<string, ColumnDefinition> columnMap, 
-            TypeMapOption option)
+            DataBindingOptions bindingOptions)
         {
-            var metaValuePairs = propertyMap.GetMetaValuePairs(columnMap, option).ToArray();
+            var metaValuePairs = propertyMap.GetMetaValuePairs(columnMap, bindingOptions).ToArray();
 
             var record = new SqlDataRecord(metaValuePairs.Select(p => p.Item1).ToArray());
             
@@ -91,53 +91,72 @@ namespace FluidDbClient.Sql
         private static IEnumerable<Tuple<SqlMetaData, object>> GetMetaValuePairs(
             this IReadOnlyDictionary<string, object> propertyMap,
             IReadOnlyDictionary<string, ColumnDefinition> columnMap, 
-            TypeMapOption option)
+            DataBindingOptions bindingOptions)
         {
-            foreach (var kvp in columnMap)
-            {
-                var columnDef = kvp.Value;
-
-                if (columnDef.IsIgnored) continue;
-
-                var name = kvp.Key;
-
-                if (!propertyMap.TryGetValue(name, out var value))
-                {
-                    if (columnDef.Behavior != ColumnBehavior.Nullable)
-                    {
-                        throw new InvalidOperationException($"Column \"{name}\" is required");
-                    }
-                }
-
-                var effectiveValue = 
-                    option == TypeMapOption.Strict 
-                        ? value 
-                        : value != null 
-                            ? Convert.ChangeType(value, columnDef.ScalarType) 
-                            : null;
-                
-                yield return new Tuple<SqlMetaData, object>(columnDef.MetaData, effectiveValue);
-            }
+            return 
+                from kvp in columnMap
+                select kvp.Value into columnDef
+                where !columnDef.IsIgnored
+                select GetMetaValuePair(propertyMap, columnDef, bindingOptions);
         }
 
+        private static Tuple<SqlMetaData, object> GetMetaValuePair(
+            this IReadOnlyDictionary<string, object> propertyMap, 
+            ColumnDefinition columnDef, 
+            DataBindingOptions bindingOptions)
+        {
+            var columnName = columnDef.MetaData.Name;
+
+            if (!propertyMap.TryGetValue(columnName, out var value))
+            {
+                if (columnDef.Behavior != ColumnBehavior.Nullable)
+                {
+                    if (bindingOptions.HasFlag(DataBindingOptions.AllowMissingProperties))
+                    {
+                        if (columnDef.ScalarType.IsValueType)
+                        {
+                            value = Activator.CreateInstance(columnDef.ScalarType);
+                        }
+                        else
+                        {
+                            throw new NotImplementedException("Cannot create object with default value");
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Column \"{columnName}\" is required");
+                    }
+                }
+            }
+
+            var effectiveValue =
+                !bindingOptions.HasFlag(DataBindingOptions.CoerceTypes)
+                    ? value
+                    : value != null
+                        ? Convert.ChangeType(value, columnDef.ScalarType)
+                        : null;
+
+            return new Tuple<SqlMetaData, object>(columnDef.MetaData, effectiveValue);
+        }
+        
         private static IEnumerable<SqlDataRecord> ToSqlRecords<T>(
             this IEnumerable<T> items, 
             TableTypeDefinition def, 
-            TypeMapOption option) where T : class
+            DataBindingOptions bindingOptions) where T : class
         {
             var columnMap =
                 def.Columns
                     .ToDictionary(c => c.MetaData.Name, c => c, StringComparer.OrdinalIgnoreCase);
 
-            return items.ToSqlRecords(columnMap, option);
+            return items.ToSqlRecords(columnMap, bindingOptions);
         }
 
         private static IEnumerable<SqlDataRecord> ToSqlRecords<T>(
             this IEnumerable<T> items, 
             IReadOnlyDictionary<string, ColumnDefinition> columnMap, 
-            TypeMapOption option) where T : class
+            DataBindingOptions bindingOptions) where T : class
         {
-            return items.Select(item => item.GetPropertyMap().GetSqlDataRecord(columnMap, option));
+            return items.Select(item => item.GetPropertyMap().GetSqlDataRecord(columnMap, bindingOptions));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Common;
 
 namespace FluidDbClient
@@ -36,11 +37,21 @@ namespace FluidDbClient
 
         public void Execute(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
+            Execute(() => EstablishResources(isolationLevel));
+        }
+
+        public void ExecuteWithoutTransaction()
+        {
+            Execute(EstablishResourcesNoTransaction);
+        }
+        
+        private void Execute(Action setup)
+        {
             try
             {
                 OnOperationStarted();
 
-                EstablishResources(isolationLevel);
+                setup();
 
                 Command.ExecuteNonQuery();
 
@@ -56,6 +67,12 @@ namespace FluidDbClient
         {            
             EstablishConnection();
             EstablishTransaction(isolationLevel);
+            CreateCommand();
+        }
+
+        private void EstablishResourcesNoTransaction()
+        {
+            EstablishConnection();
             CreateCommand();
         }
         

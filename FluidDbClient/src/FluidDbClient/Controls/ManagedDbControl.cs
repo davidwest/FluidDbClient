@@ -135,7 +135,7 @@ namespace FluidDbClient
                 return;
             }
 
-            Connection = _database.Provider.CreateConnection(_database.ConnectionString);
+            Connection = _database.Provider.CreateConnection();
             Log("Created DbConnection");
 
             TryOpenConnection();
@@ -156,7 +156,7 @@ namespace FluidDbClient
                 return;
             }
 
-            Connection = _database.Provider.CreateConnection(_database.ConnectionString);
+            Connection = _database.Provider.CreateConnection();
             Log("Created DbConnection");
 
             await TryOpenConnectionAsync();

@@ -399,6 +399,16 @@ namespace FluidDbClient.Shell
             new ScriptDbCommand(transaction, script, parameters).Execute();
         }
 
+        public static void ExecuteWithoutTransaction(string script, object parameters = null)
+        {
+            new ScriptDbCommand(script, parameters).ExecuteWithoutTransaction();
+        }
+
+        public static void ExecuteWithoutTransaction(DbConnection connection, string script, object parameters = null)
+        {
+            new ScriptDbCommand(connection, script, parameters).ExecuteWithoutTransaction();
+        }
+
         #endregion
 
 
@@ -427,6 +437,16 @@ namespace FluidDbClient.Shell
         public static async Task ExecuteAsync(DbTransaction transaction, string script, object parameters = null)
         {
             await new ScriptDbCommand(transaction, script, parameters).ExecuteAsync();
+        }
+
+        public static async Task ExecuteWithoutTransactionAsync(string script, object parameters = null)
+        {
+            await new ScriptDbCommand(script, parameters).ExecuteWithoutTransactionAsync();
+        }
+        
+        public static async Task ExecuteWithoutTransactionAsync(DbConnection connection, string script, object parameters = null)
+        {
+            await new ScriptDbCommand(connection, script, parameters).ExecuteWithoutTransactionAsync();
         }
 
         #endregion

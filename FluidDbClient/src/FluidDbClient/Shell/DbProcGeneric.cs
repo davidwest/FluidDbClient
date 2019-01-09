@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 
 namespace FluidDbClient.Shell
@@ -316,6 +317,16 @@ namespace FluidDbClient.Shell
             new StoredProcedureDbCommand<TDatabase>(session, procedureName, parameters).Execute(isolationLevel);
         }
 
+        public static void ExecuteWithoutTransaction(string script, object parameters = null)
+        {
+            new StoredProcedureDbCommand<TDatabase>(script, parameters).ExecuteWithoutTransaction();
+        }
+
+        public static void ExecuteWithoutTransaction(DbConnection connection, string script, object parameters = null)
+        {
+            new StoredProcedureDbCommand<TDatabase>(connection, script, parameters).ExecuteWithoutTransaction();
+        }
+
         #endregion
 
 
@@ -340,6 +351,17 @@ namespace FluidDbClient.Shell
         {
             await new StoredProcedureDbCommand<TDatabase>(session, procedureName, parameters).ExecuteAsync(isolationLevel);
         }
+
+        public static async Task ExecuteWithoutTransactionAsync(string script, object parameters = null)
+        {
+            await new StoredProcedureDbCommand<TDatabase>(script, parameters).ExecuteWithoutTransactionAsync();
+        }
+
+        public static async Task ExecuteWithoutTransactionAsync(DbConnection connection, string script, object parameters = null)
+        {
+            await new StoredProcedureDbCommand<TDatabase>(connection, script, parameters).ExecuteWithoutTransactionAsync();
+        }
+
 
         #endregion
     }

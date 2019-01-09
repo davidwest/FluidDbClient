@@ -3,28 +3,21 @@ using System.Data.SqlClient;
 
 namespace FluidDbClient.Sql
 {
-    public class SqlDbProvider : DbProvider
+    internal class SqlDbProvider : IDbProvider
     {
-        public SqlDbProvider() : base("System.Data.SqlClient")
+        private readonly string _connectionString;
+
+        public SqlDbProvider(string connectionString)
         {
-            Interpreter = new SqlValueInterpreter();
+            _connectionString = connectionString;
         }
 
-        public override DbConnection CreateConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
-        
-        public override DbParameter CreateParameter(string name, object value)
-        {
-            return SqlParameterFactory.CreateParameter(name, value);
-        }
+        public string ProviderId => "System.Data.SqlClient";
 
-        public override IDbProviderValueInterpreter Interpreter { get; }
+        public DbConnection CreateConnection() => new SqlConnection(_connectionString);
 
-        protected override DbConnection GetConnectionUsing(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
+        public DbParameter CreateParameter(string name, object value) => SqlParameterFactory.CreateParameter(name, value);
+
+        public IDbProviderValueInterpreter Interpreter { get; } = new SqlValueInterpreter();
     }
 }

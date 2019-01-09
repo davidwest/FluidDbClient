@@ -13,15 +13,15 @@ namespace FluidDbClient.Sql
         private readonly SqlMetaData[] _preOrderedMetaData;
         private IReadOnlyDictionary<string, ColumnDefinition> _columnMap;
 
-        private readonly TypeMapOption _typeMapOption;
-
-        public StructuredDataBuilder(string tableTypeName, TypeMapOption mapOption, params SqlMetaData[] preOrderedMetaData)
+        private readonly DataBindingOptions _dataBindingOptions;
+        
+        public StructuredDataBuilder(string tableTypeName, DataBindingOptions bindingOptions, params SqlMetaData[] preOrderedMetaData)
         {
             _tableTypeName = tableTypeName;
-            _typeMapOption = mapOption;
+            _dataBindingOptions = bindingOptions;
 
             _preOrderedMetaData = preOrderedMetaData;
-
+            
             _columnMap =
                 preOrderedMetaData
                     .Select(md => new ColumnDefinition(typeof(object), md, ColumnBehavior.Nullable))
@@ -29,21 +29,21 @@ namespace FluidDbClient.Sql
         }
 
         public StructuredDataBuilder(string tableTypeName, params SqlMetaData[] preOrderedMetaData) 
-            : this(tableTypeName, TypeMapOption.Strict, preOrderedMetaData)
+            : this(tableTypeName, DataBindingOptions.Default, preOrderedMetaData)
         { }
 
-        public StructuredDataBuilder(TableTypeDefinition def, TypeMapOption mapOption = TypeMapOption.Strict)
+        public StructuredDataBuilder(TableTypeDefinition def, DataBindingOptions bindingOptions = DataBindingOptions.Default)
         {
             _tableTypeName = def.TypeName;
-            _typeMapOption = mapOption;
+            _dataBindingOptions = bindingOptions;
 
             _columnMap = 
                 def.Columns
                 .ToDictionary(c => c.MetaData.Name, c => c, StringComparer.OrdinalIgnoreCase);
         }
         
-        public StructuredDataBuilder(TableTypeMap map, TypeMapOption mapOption = TypeMapOption.Strict) 
-            : this(map.GetDefinition(), mapOption)
+        public StructuredDataBuilder(TableTypeMap map, DataBindingOptions bindingOptions = DataBindingOptions.Default) 
+            : this(map.GetDefinition(), bindingOptions)
         { }
                 
         public StructuredDataBuilder Append(IReadOnlyDictionary<string, object> propertyMap)
@@ -53,7 +53,7 @@ namespace FluidDbClient.Sql
                 _columnMap = propertyMap.InferColumnMap();
             }
 
-            var record = propertyMap.GetSqlDataRecord(_columnMap, _typeMapOption);
+            var record = propertyMap.GetSqlDataRecord(_columnMap, _dataBindingOptions);
 
             _records.Add(record);
 
