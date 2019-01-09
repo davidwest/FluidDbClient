@@ -1,8 +1,16 @@
-﻿namespace FluidDbClient.Sql
+﻿using System;
+
+namespace FluidDbClient.Sql
 {
-    public enum TypeMapOption
+    [Flags]
+    public enum DataBindingOptions
     {
-        Strict = 0,
-        Coerce = 1
+        /// <summary>
+        /// Strict
+        /// </summary>
+        Default = 0,
+
+        CoerceTypes = 0x1,
+        AllowMissingProperties = 0x2
     }
 }

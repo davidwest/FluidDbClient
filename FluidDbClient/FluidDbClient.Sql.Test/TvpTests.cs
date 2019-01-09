@@ -105,9 +105,9 @@ namespace FluidDbClient.Sql.Test
             
             CollectionAssert.AreEqual(sourceWidgets, savedWidgets, new WidgetValueComparer());
         }
-
+        
         [TestMethod]
-        public void TableValueParameter_SourcedFromNearlyCompatibleObjects_WithCoercedTypeMapping_PersistsCorrectly()
+        public void TableValueParameter_SourcedFromNearlyCompatibleObjects_WithCoercedTypeBinding_PersistsCorrectly()
         {
             var sourceWidgets = GetSourceWidgets();
 
@@ -133,7 +133,7 @@ namespace FluidDbClient.Sql.Test
                         w.IsArchived,
                         w.ExternalId
                     })
-                    .ToStructuredData(new NewWidgetTableTypeMap(), TypeMapOption.Coerce);
+                    .ToStructuredData(new NewWidgetTableTypeMap(), DataBindingOptions.CoerceTypes);
             
             Db.Execute(InsertScript, new {data});
 
@@ -151,7 +151,7 @@ namespace FluidDbClient.Sql.Test
         
         [TestMethod]
         [ExpectedException(typeof(InvalidCastException))]
-        public void TableValueParameter_SourcedFromNearlyCompatibleObjects_WithStrictTypeMapping_ThrowsException()
+        public void TableValueParameter_SourcedFromNearlyCompatibleObjects_WithStrictTypeBinding_ThrowsException()
         {
             var sourceWidgets = GetSourceWidgets();
 
@@ -181,17 +181,21 @@ namespace FluidDbClient.Sql.Test
 
             Db.Execute(InsertScript, new { data });
         }
-
+        
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException), "\"ExternalId\" is required")]
-        public void TableValueParameter_SourcedFromIncompatibleObjects_ShouldThrowException()
+        [ExpectedException(typeof(InvalidOperationException), "\"Cost\" is required")]
+        public void TableValueParameter_SourcedFromObjectsWithMissingRequiredProperties_ThrowsException()
         {
             var sourceWidgets = GetSourceWidgets();
 
             var data =
                 sourceWidgets
                     .Select(w => new
-                    {                        
+                    {
+                        // NOTE:
+                        // * properties are out of order relative to Widget
+                        // * extra properties have been added
+
                         ExtraProperty1 = "Hello World!",
                         ExtraProperty2 = 100,
                         w.Rating,
@@ -199,17 +203,60 @@ namespace FluidDbClient.Sql.Test
                         w.SerialCode,
                         w.ReleaseDate,
                         w.CreatedTimestamp,
-                        w.Cost,
                         w.Name,
                         w.Environment,
-                        w.IsArchived
+                        w.IsArchived,
+                        w.ExternalId
 
-                        // uh oh: no ExternalId
-
+                        // Cost not specified
+                        
                     })
                     .ToStructuredData(new NewWidgetTableTypeMap());
 
             Db.Execute(InsertScript, new { data });
+        }
+        
+        [TestMethod]
+        public void TableValueParameter_SourcedFromObjectsWithMissingRequiredProperties_PersistsCorrectly_WhenDefaultValuesAllowed()
+        {
+            var sourceWidgets = GetSourceWidgets();
+
+            var data =
+                sourceWidgets
+                    .Select(w => new
+                    {
+                        // NOTE:
+                        // * properties are out of order relative to Widget
+                        // * extra properties have been added
+
+                        ExtraProperty1 = "Hello World!",
+                        ExtraProperty2 = 100,
+                        w.Rating,
+                        w.Weight,
+                        w.SerialCode,
+                        w.ReleaseDate,
+                        w.CreatedTimestamp,
+                        w.Name,
+                        w.Environment,
+                        w.IsArchived,
+                        w.ExternalId
+
+                        // Cost not specified
+                    })
+                    .ToStructuredData(new NewWidgetTableTypeMap(), DataBindingOptions.AllowMissingProperties);
+
+            Db.Execute(InsertScript, new { data });
+
+            var savedWidgets = GetSavedWidgets();
+
+            foreach (var w in savedWidgets)
+            {
+                Trace.WriteLine(w.ToDiagnosticString());
+            }
+
+            // NOTE: we cannot assert equal property values due to binding options
+
+            Assert.AreEqual(sourceWidgets.Length, savedWidgets.Length);
         }
 
         private static Tuple<Widget[], Widget[]> DoAddAndUpdateOperations()
