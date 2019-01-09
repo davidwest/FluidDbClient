@@ -4,9 +4,9 @@
     <PackageId>FluidDbClient</PackageId>
     <AssemblyName>FluidDbClient</AssemblyName>
     <AssemblyTitle>FluidDbClient</AssemblyTitle>
-    <AssemblyVersion>1.1.6</AssemblyVersion>
-    <FileVersion>1.1.6</FileVersion>
-    <Version>1.1.6</Version>
+    <AssemblyVersion>1.1.7</AssemblyVersion>
+    <FileVersion>1.1.7</FileVersion>
+    <Version>1.1.7</Version>
     <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <Description>When you absolutely need ADO.NET but want to ditch the boilerplate.  Do parameterized SQL with ease, asynchronously or not.  Map deep POCOs with granular control beyond that of your ORM. This is the core assembly; to use with SQL Server, get FluidDbClient.Sql.</Description>
     <Authors>David West, Brandon Johnson</Authors>
@@ -18,7 +18,7 @@
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageReleaseNotes>Added DbManagedQuery.UseDataReader(Action(DbDataReader) use), exposing DbDataReader directly (for bulk operations, etc.)</PackageReleaseNotes>
+    <PackageReleaseNotes>Added DbManagedCommand.ExecuteWithoutTransaction() / .ExecuteWithoutTransactionAsync()</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
