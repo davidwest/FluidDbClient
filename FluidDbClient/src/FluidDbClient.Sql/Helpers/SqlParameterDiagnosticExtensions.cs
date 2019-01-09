@@ -34,8 +34,7 @@ namespace FluidDbClient.Sql
             {
                 var sizeStr = GetSizeString(param.Size);
 
-                var text = value as string;
-                var excerpt = text != null ? Shorten(text, 20) : TryDbNull(value) ?? "???";
+                var excerpt = value is string text ? Shorten(text, 20) : TryDbNull(value) ?? "???";
 
                 return $"{prefix} | {excerpt, -30} | size limit: {sizeStr}";
             }

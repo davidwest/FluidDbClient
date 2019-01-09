@@ -26,7 +26,7 @@ namespace FluidDbClient.Sql.Test
             
             BuildDatabase();
 
-            DbRegistry.Initialize(new SqlDatabase("DataContext", connString, msg => Debug.WriteLine(msg)));
+            DbRegistry.Initialize(new SqlDatabase("DataContext", connString, msg => Trace.WriteLine(msg)));
 
             TableTypeRegistry.Register(new NewWidgetTableTypeMap(), new UpdatedWidgetTableTypeMap());
         }

@@ -107,6 +107,11 @@ namespace FluidDbClient.Sql
 
         public void Write()
         {
+            if (_connection != null && !_connection.State.HasFlag(ConnectionState.Open))
+            {
+                _connection.Open();
+            }
+
             using (var copier = CreateSqlBulkCopy())
             {
                 if (_dataReader != null)
@@ -122,6 +127,11 @@ namespace FluidDbClient.Sql
 
         public async Task WriteAsync()
         {
+            if (_connection != null && !_connection.State.HasFlag(ConnectionState.Open))
+            {
+                await _connection.OpenAsync();
+            }
+
             using (var copier = CreateSqlBulkCopy())
             {
                 if (_dataReader != null)

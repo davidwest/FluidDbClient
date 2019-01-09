@@ -16,6 +16,7 @@ namespace FluidDbClient
         }
 
         public string Name { get; }
+
         public string ConnectionString { get; }
 
         public IDbProvider Provider { get; }

@@ -6,9 +6,7 @@ namespace FluidDbClient
     {        
         string ProviderId { get; }
         
-        DbConnection CreateConnection<TDatabase>() where TDatabase : Database;
         DbConnection CreateConnection();
-        DbConnection CreateConnection(string connectionString);
         
         DbParameter CreateParameter(string name, object value);
 

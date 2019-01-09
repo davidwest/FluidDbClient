@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace FluidDbClient
@@ -7,11 +8,21 @@ namespace FluidDbClient
     {
         public async Task ExecuteAsync(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
+            await ExecuteAsync(() => EstablishResourcesAsync(isolationLevel));
+        }
+        
+        public async Task ExecuteWithoutTransactionAsync()
+        {
+            await ExecuteAsync(EstablishResourcesNoTransactionAsync);
+        }
+        
+        private async Task ExecuteAsync(Func<Task> setup)
+        {
             try
             {
                 OnOperationStarted();
 
-                await EstablishResourcesAsync(isolationLevel);
+                await setup();
 
                 await Command.ExecuteNonQueryAsync();
 
@@ -28,6 +39,13 @@ namespace FluidDbClient
             await EstablishConnectionAsync();
 
             EstablishTransaction(isolationLevel);
+
+            CreateCommand();
+        }
+
+        private async Task EstablishResourcesNoTransactionAsync()
+        {
+            await EstablishConnectionAsync();
 
             CreateCommand();
         }

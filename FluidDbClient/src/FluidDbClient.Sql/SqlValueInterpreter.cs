@@ -5,33 +5,19 @@ using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
 {
-    public class SqlValueInterpreter : IDbProviderValueInterpreter
+    public class SqlValueInterpreter : DbProviderValueInterpreter
     {
-        public string GetDiagnosticString(DbParameter parameter)
+        public override string GetDiagnosticString(DbParameter parameter)
         {
             var sqlParam = (SqlParameter)parameter;
 
             return sqlParam.ToDiagnosticString();
         }
-
-        public string FormatScriptLiteral(object value)
+        
+        public override bool CanEvaluateAsMultiParameters(object value)
         {
-            return SqlScriptLiteralFormatter.Format(value);
-        }
-
-        public string GetPrefixedParameterName(string parameterName)
-        {
-            return parameterName.StartsWith("@") ? parameterName : $"@{parameterName}";
-        }
-
-        public string GetUnprefixedParameterName(string parameterName)
-        {
-            return parameterName.TrimStart('@');
-        }
-
-        public bool CanEvaluateAsMultiParameters(object value)
-        {
-            return !(value is string) && !(value is byte[]) && !(value is IEnumerable<SqlDataRecord>);
+            return base.CanEvaluateAsMultiParameters(value) && 
+                   !(value is IEnumerable<SqlDataRecord>);
         }
     }
 }

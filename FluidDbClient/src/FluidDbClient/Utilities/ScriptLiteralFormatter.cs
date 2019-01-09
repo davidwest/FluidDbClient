@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FluidDbClient.Sql
+namespace FluidDbClient
 {
-    internal static class SqlScriptLiteralFormatter
+    public static class ScriptLiteralFormatter
     {
         public static string Format(object value)
         {

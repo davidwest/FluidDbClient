@@ -114,7 +114,7 @@ namespace FluidDbClient.Sql.Test
             var sourceWidgets = GetSourceWidgets();
             var inserter = GetInserter(sourceWidgets);
 
-            using (var connection = DbRegistry.GetDatabase().Provider.CreateConnection())
+            using (var connection = DbRegistry.GetDatabase().CreateConnection())
             {
                 connection.Open();
 
@@ -137,7 +137,7 @@ namespace FluidDbClient.Sql.Test
             var sourceWidgets = GetSourceWidgets();
             var inserter = GetInserter(sourceWidgets);
 
-            using (var connection = DbRegistry.GetDatabase().Provider.CreateConnection())
+            using (var connection = DbRegistry.GetDatabase().CreateConnection())
             {
                 connection.Open();
 
