@@ -5,9 +5,9 @@
     <Title>FluidDbClient.Sql</Title>
     <AssemblyName>FluidDbClient.Sql</AssemblyName>
     <AssemblyTitle>FluidDbClient.Sql</AssemblyTitle>
-    <AssemblyVersion>1.1.7</AssemblyVersion>
-    <FileVersion>1.1.7</FileVersion>
-    <Version>1.1.7</Version>
+    <AssemblyVersion>1.1.8</AssemblyVersion>
+    <FileVersion>1.1.8</FileVersion>
+    <Version>1.1.8</Version>
     <TargetFrameworks>net451;net462;netstandard2.0</TargetFrameworks>
     <Description>SQL Server provider for FluidDbClient.  This library also makes working with Table Valued Parameters a snap.</Description>
     <Authors>David West, Brandon Johnson</Authors>
@@ -17,9 +17,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>sql micro orm ado ado.net object relational mapper data table connection transaction parameter</PackageTags>
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
-    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageReleaseNotes>Replaced TypeMapOption enum with DataBindingOptions enum to allow more binding capabilities</PackageReleaseNotes>
+    <PackageReleaseNotes>Added .NET 4.6.2 target</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
