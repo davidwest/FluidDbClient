@@ -8,7 +8,7 @@
     <AssemblyVersion>1.1.7</AssemblyVersion>
     <FileVersion>1.1.7</FileVersion>
     <Version>1.1.7</Version>
-    <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net451;net462;netstandard2.0</TargetFrameworks>
     <Description>SQL Server provider for FluidDbClient.  This library also makes working with Table Valued Parameters a snap.</Description>
     <Authors>David West, Brandon Johnson</Authors>
     <Copyright>© 2019 David West</Copyright>
@@ -21,6 +21,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageReleaseNotes>Replaced TypeMapOption enum with DataBindingOptions enum to allow more binding capabilities</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,12 +36,20 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+
+  </ItemGroup>
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Reflection.Extensions" Version="4.3.0" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
   </ItemGroup>
 </Project>
