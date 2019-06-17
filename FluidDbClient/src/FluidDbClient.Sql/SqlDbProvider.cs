@@ -16,6 +16,8 @@ namespace FluidDbClient.Sql
 
         public DbConnection CreateConnection() => new SqlConnection(_connectionString);
 
+        public DbCommand CreateCommand(DbConnection connection) => connection.CreateCommand();
+
         public DbParameter CreateParameter(string name, object value) => SqlParameterFactory.CreateParameter(name, value);
 
         public IDbProviderValueInterpreter Interpreter { get; } = new SqlValueInterpreter();

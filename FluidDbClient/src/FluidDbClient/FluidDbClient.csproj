@@ -4,9 +4,9 @@
     <PackageId>FluidDbClient</PackageId>
     <AssemblyName>FluidDbClient</AssemblyName>
     <AssemblyTitle>FluidDbClient</AssemblyTitle>
-    <AssemblyVersion>1.1.8</AssemblyVersion>
-    <FileVersion>1.1.8</FileVersion>
-    <Version>1.1.8</Version>
+    <AssemblyVersion>1.1.9</AssemblyVersion>
+    <FileVersion>1.1.9</FileVersion>
+    <Version>1.1.9</Version>
     <TargetFrameworks>net451;net462;netstandard2.0</TargetFrameworks>
     <Description>When you absolutely need ADO.NET but want to ditch the boilerplate.  Do parameterized SQL with ease, asynchronously or not.  Map deep POCOs with granular control beyond that of your ORM. This is the core assembly; to use with SQL Server, get FluidDbClient.Sql.</Description>
     <Authors>David West, Brandon Johnson</Authors>
@@ -18,7 +18,7 @@
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageReleaseNotes>Added .NET 4.6.2 target</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ability to create DbCommand explicitly in IDbProvider</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>

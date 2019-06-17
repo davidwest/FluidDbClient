@@ -164,7 +164,7 @@ namespace FluidDbClient
 
         protected void CreateCommand()
         {
-            var command = Connection.CreateCommand();
+            var command = _database.Provider.CreateCommand(Connection);
             
             if (Transaction != null)
             {
