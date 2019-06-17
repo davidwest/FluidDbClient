@@ -7,7 +7,9 @@ namespace FluidDbClient
         string ProviderId { get; }
         
         DbConnection CreateConnection();
-        
+
+        DbCommand CreateCommand(DbConnection connection);
+
         DbParameter CreateParameter(string name, object value);
 
         IDbProviderValueInterpreter Interpreter { get; }
