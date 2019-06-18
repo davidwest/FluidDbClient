@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\FluidDbClient\FluidDbClient.csproj" />
+    <ProjectReference Include="..\FluidDbClient\FluidDbClient.csproj" />
   </ItemGroup>
 
 </Project>
