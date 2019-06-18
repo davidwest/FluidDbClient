@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://github.com/davidwest/FluidDbClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/davidwest/FluidDbClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>sql micro orm ado ado.net object relational mapper data table connection transaction parameter</PackageTags>
+    <PackageTags>database sql orm ado.net object relational mapper data table connection transaction parameter</PackageTags>
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
@@ -26,6 +26,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FluidDbClient\FluidDbClient.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
@@ -42,14 +46,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
-
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Runtime" Version="4.3.0" />
-  </ItemGroup>
+
 </Project>

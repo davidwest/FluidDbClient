@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/davidwest/FluidDbClient</PackageProjectUrl>
     <RepositoryUrl>https://github.com/davidwest/FluidDbClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>sql micro orm ado ado.net object relational mapper data table connection transaction parameter</PackageTags>
+    <PackageTags>database sql orm ado.net object relational mapper data table connection transaction parameter</PackageTags>
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
