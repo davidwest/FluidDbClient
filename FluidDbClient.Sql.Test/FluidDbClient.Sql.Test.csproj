@@ -99,16 +99,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\FluidDbClient.Sql\FluidDbClient.Sql.csproj">
-      <Project>{5b956103-15af-4387-a55d-c64b37372a66}</Project>
+    <ProjectReference Include="..\FluidDbClient.Sql\FluidDbClient.Sql.csproj">
+      <Project>{d200c2e6-e7d6-42fe-b77b-b9d0a9a259f8}</Project>
       <Name>FluidDbClient.Sql</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\FluidDbClient\FluidDbClient.csproj">
-      <Project>{4fc4ae22-3362-4112-a309-0bd2fe2b9a51}</Project>
+    <ProjectReference Include="..\FluidDbClient\FluidDbClient.csproj">
+      <Project>{e2ca8a4e-d326-4503-a087-ee78e8ca5002}</Project>
       <Name>FluidDbClient</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
