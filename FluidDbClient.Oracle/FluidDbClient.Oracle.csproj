@@ -4,9 +4,9 @@
     <PackageId>FluidDbClient.Oracle</PackageId>
     <AssemblyName>FluidDbClient.Oracle</AssemblyName>
     <AssemblyTitle>FluidDbClient.Oracle</AssemblyTitle>
-    <AssemblyVersion>1.1.9</AssemblyVersion>
-    <FileVersion>1.1.9</FileVersion>
-    <Version>1.1.9</Version>
+    <AssemblyVersion>1.1.901</AssemblyVersion>
+    <FileVersion>1.1.901</FileVersion>
+    <Version>1.1.901</Version>
     <TargetFramework>net451</TargetFramework>
     <Description>Basic Oracle provider for FluidDbClient.</Description>
     <Authors>David West</Authors>
@@ -18,7 +18,7 @@
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>Fix default parameter prefix</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>

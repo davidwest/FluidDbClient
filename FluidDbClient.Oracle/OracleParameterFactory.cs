@@ -19,7 +19,7 @@ namespace FluidDbClient.Oracle
 
         private static string GetEffectiveParameterName(string sourceName)
         {
-            return sourceName.StartsWith("P_", StringComparison.OrdinalIgnoreCase) ? sourceName : $"P_{sourceName}";
+            return sourceName.StartsWith(":") ? sourceName : $":{sourceName}";
         }
     }
 }
