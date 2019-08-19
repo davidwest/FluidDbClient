@@ -7,19 +7,9 @@ namespace FluidDbClient.Oracle
     {
         public static OracleParameter CreateParameter(string name, object value)
         {
-            var effectiveName = GetEffectiveParameterName(name);
-
-            if (value == null)
-            {
-                return new OracleParameter(effectiveName, DBNull.Value);
-            }
-            
-            return new OracleParameter(effectiveName, value);
-        }
-
-        private static string GetEffectiveParameterName(string sourceName)
-        {
-            return sourceName.StartsWith(":") ? sourceName : $":{sourceName}";
+            return value == null 
+                ? new OracleParameter(name, DBNull.Value) 
+                : new OracleParameter(name, value);
         }
     }
 }
