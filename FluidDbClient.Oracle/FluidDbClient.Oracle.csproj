@@ -4,10 +4,10 @@
     <PackageId>FluidDbClient.Oracle</PackageId>
     <AssemblyName>FluidDbClient.Oracle</AssemblyName>
     <AssemblyTitle>FluidDbClient.Oracle</AssemblyTitle>
-    <AssemblyVersion>1.1.901</AssemblyVersion>
-    <FileVersion>1.1.901</FileVersion>
-    <Version>1.1.901</Version>
-    <TargetFramework>net451</TargetFramework>
+    <AssemblyVersion>1.1.902</AssemblyVersion>
+    <FileVersion>1.1.902</FileVersion>
+    <Version>1.1.902</Version>
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <Description>Basic Oracle provider for FluidDbClient.</Description>
     <Authors>David West</Authors>
     <Copyright>© 2019 David West</Copyright>
@@ -18,13 +18,13 @@
     <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageReleaseNotes>Fix default parameter prefix</PackageReleaseNotes>
+    <PackageReleaseNotes>Targets newer version of Oracle provider</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Oracle.ManagedDataAccess" Version="19.3.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.31" />
   </ItemGroup>
 
   <ItemGroup>
