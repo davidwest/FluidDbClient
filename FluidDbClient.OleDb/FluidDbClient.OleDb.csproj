@@ -7,7 +7,7 @@
     <AssemblyVersion>1.1.9</AssemblyVersion>
     <FileVersion>1.1.9</FileVersion>
     <Version>1.1.9</Version>
-    <TargetFramework>net451</TargetFramework>
+    <TargetFramework>net462</TargetFramework>
     <Description>Basic OleDb provider for FluidDbClient.</Description>
     <Authors>David West</Authors>
     <Copyright>© 2019 David West</Copyright>
@@ -15,7 +15,6 @@
     <RepositoryUrl>https://github.com/davidwest/FluidDbClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>database sql orm ado.net object relational mapper data table connection transaction parameter ole oledb</PackageTags>
-    <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageReleaseNotes></PackageReleaseNotes>
