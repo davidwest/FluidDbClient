@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
 {
@@ -64,7 +63,7 @@ namespace FluidDbClient.Sql
             return $"{Wrap(meta.Name)} {CreateSqlType(meta)} {qualifier}";
         }
 
-        private static string CreateSqlType(SqlMetaData meta)
+        private static string CreateSqlType(Microsoft.Data.SqlClient.Server.SqlMetaData meta)
         {
             var sqlType = meta.SqlDbType;
 

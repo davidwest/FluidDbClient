@@ -1,5 +1,5 @@
-﻿using System.Data;
-using Microsoft.SqlServer.Server;
+﻿using Microsoft.Data.SqlClient.Server;
+using System.Data;
 
 namespace FluidDbClient.Sql
 {

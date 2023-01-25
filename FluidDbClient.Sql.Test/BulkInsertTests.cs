@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Transactions;
 using FluidDbClient.Shell;
 using FluidDbClient.Sql.Test.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FluidDbClient.Sql.Test

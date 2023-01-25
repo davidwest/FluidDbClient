@@ -1,5 +1,5 @@
-﻿using System.Data.Common;
-using System.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
+using System.Data.Common;
 
 namespace FluidDbClient.Sql
 {
@@ -12,7 +12,7 @@ namespace FluidDbClient.Sql
             _connectionString = connectionString;
         }
 
-        public string ProviderId => "System.Data.SqlClient";
+        public string ProviderId => "Microsoft.Data.SqlClient";
 
         public DbConnection CreateConnection() => new SqlConnection(_connectionString);
 
