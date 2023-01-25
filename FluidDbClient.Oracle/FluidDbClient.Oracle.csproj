@@ -7,7 +7,7 @@
     <AssemblyVersion>1.1.903</AssemblyVersion>
     <FileVersion>1.1.903</FileVersion>
     <Version>1.1.903</Version>
-    <TargetFrameworks>net462;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
     <Description>Basic Oracle provider for FluidDbClient.</Description>
     <Authors>David West</Authors>
     <Copyright>© 2019 David West</Copyright>
