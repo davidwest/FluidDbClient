@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.SqlServer.Server;
 
 namespace FluidDbClient.Sql
 {
@@ -64,7 +64,7 @@ namespace FluidDbClient.Sql
 
             foreach (var kvp in propertyMap)
             {
-                var meta = SqlMetaData.InferFromValue(kvp.Value, kvp.Key);
+                var meta = Microsoft.Data.SqlClient.Server.SqlMetaData.InferFromValue(kvp.Value, kvp.Key);
 
                 var columnDef = new ColumnDefinition(kvp.Value.GetType(), meta, ColumnBehavior.Nullable);
 

@@ -8,7 +8,7 @@
     <AssemblyVersion>1.1.9</AssemblyVersion>
     <FileVersion>1.1.9</FileVersion>
     <Version>1.1.9</Version>
-    <TargetFrameworks>net451;net462;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
     <Description>SQL Server provider for FluidDbClient.  This library also makes working with Table Valued Parameters a snap.</Description>
     <Authors>David West, Brandon Johnson</Authors>
     <Copyright>© 2019 David West</Copyright>
@@ -16,7 +16,6 @@
     <RepositoryUrl>https://github.com/davidwest/FluidDbClient</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>database sql orm ado.net object relational mapper data table connection transaction parameter</PackageTags>
-    <PackageIconUrl>http://i64.tinypic.com/2hog1du.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <NeutralLanguage>en</NeutralLanguage>
     <PackageReleaseNotes>Added ability to create DbCommand explicitly in IDbProvider</PackageReleaseNotes>
@@ -25,15 +24,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Runtime" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
+    <PackageReference Include="System.Runtime" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
@@ -46,7 +39,6 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>

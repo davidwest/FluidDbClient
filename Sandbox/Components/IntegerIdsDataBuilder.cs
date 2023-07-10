@@ -1,7 +1,7 @@
 ﻿
 using System.Data;
-using Microsoft.SqlServer.Server;
 using FluidDbClient.Sql;
+using Microsoft.Data.SqlClient.Server;
 
 namespace FluidDbClient.Sandbox
 {
